@@ -1,51 +1,54 @@
-import os
-import requests
-import datetime
+import os, requests, datetime
 from collections import defaultdict, Counter
 
-API_KEY = os.getenv("OPENWEATHER_API_KEY")
+API_KEY = os.getenv("OPENWEATHER_API_KEY") or ""
 if not API_KEY:
     raise SystemExit("Falta OPENWEATHER_API_KEY en variables de entorno.")
 
-# Coordenadas de Caguas, PR
-LAT, LON = 18.2341, -66.0485
+LAT, LON = 18.2341, -66.0485  # Caguas, PR
 URL = "https://api.openweathermap.org/data/2.5/forecast"
-params = {
-    "lat": LAT,
-    "lon": LON,
-    "appid": API_KEY,
-    "units": "metric",
-    "lang": "es"
-}
+params = {"lat": LAT, "lon": LON, "appid": API_KEY, "units": "metric", "lang": "es"}
 
 r = requests.get(URL, params=params, timeout=15)
 r.raise_for_status()
-data = r.json()["list"]  # Datos cada 3 horas
+data = r.json()["list"]  # cada 3 h
 
-# Agrupar por día
 dias = defaultdict(list)
-for item in data:
-    ts = datetime.datetime.fromtimestamp(item["dt"])
-    key = ts.date()
-    dias[key].append(item)
+for it in data:
+    key = datetime.datetime.fromtimestamp(it["dt"]).date()
+    dias[key].append(it)
 
-def p_lluvia(it):
-    return int(round(it.get("pop", 0) * 100))
+def pop(it): return int(round(it.get("pop", 0)*100))
 
-salida = []
-for fecha, items in list(dias.items())[:5]:  # próximos 5 días
+rows = []
+for fecha, items in list(dias.items())[:5]:
     tmins = [x["main"]["temp_min"] for x in items]
     tmaxs = [x["main"]["temp_max"] for x in items]
-    pops  = [p_lluvia(x) for x in items]
+    pops  = [pop(x) for x in items]
     descs = [x["weather"][0]["description"] for x in items]
 
-    desc_principal = Counter(descs).most_common(1)[0][0].capitalize()
-    tmin = round(min(tmins))
-    tmax = round(max(tmaxs))
-    pop_dia = max(pops) if pops else 0
-    salida.append((fecha.strftime("%a %d %b"), desc_principal, tmin, tmax, pop_dia))
+    tmin, tmax = round(min(tmins)), round(max(tmaxs))
+    prob_lluvia = max(pops) if pops else 0
+    desc = Counter(descs).most_common(1)[0][0].capitalize()
 
-# Mostrar resultados
+    alerta = ""
+    if prob_lluvia >= 60: alerta += " ⚠️"
+    if tmax >= 34: alerta += " 🔥"
+    rows.append((fecha.strftime("%a %d %b"), desc, tmin, tmax, prob_lluvia, alerta))
+
+# Consola
 print("Pronóstico 5 días – Caguas, PR")
-for dia, desc, tmin, tmax, pop in salida:
-    print(f"{dia}: {desc}, {tmin}°C–{tmax}°C  • Prob. lluvia: {pop}%")
+for d, desc, tmin, tmax, p, alert in rows:
+    print(f"{d}: {desc}, {tmin}°C–{tmax}°C • Lluvia: {p}%{alert}")
+
+# Guardar TXT y Markdown (tabla)
+with open("pronostico.txt", "w", encoding="utf-8") as f:
+    f.write("Pronóstico 5 días – Caguas, PR\n")
+    for d, desc, tmin, tmax, p, alert in rows:
+        f.write(f"{d}: {desc}, {tmin}°C–{tmax}°C • Lluvia: {p}%{alert}\n")
+
+with open("pronostico.md", "w", encoding="utf-8") as f:
+    f.write("| Día | Condición | Min | Max | Lluvia | Alertas |\n")
+    f.write("|---|---|---:|---:|---:|:---:|\n")
+    for d, desc, tmin, tmax, p, alert in rows:
+        f.write(f"| {d} | {desc} | {tmin}°C | {tmax}°C | {p}% | {alert.strip()} |\n")
