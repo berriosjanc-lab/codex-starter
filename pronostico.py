@@ -3,9 +3,11 @@ from datetime import datetime
 import requests
 
 # Configuración
-API_KEY = "TU_API_KEY_AQUI"  # Reemplaza con tu API key de OpenWeather
+import requests
+
+API_KEY = "abcd1234efgh5678ijkl9012mnop3456"
 CIUDAD = "Caguas,PR"
-URL = f"https://api.openweathermap.org/data/2.5/forecast?q={CIUDAD}&appid={API_KEY}&units=metric&lang=es"
+URL = f"http://api.openweathermap.org/data/2.5/forecast?q={CIUDAD}&appid={API_KEY}&lang=es&units=metric"
 
 # Obtener datos de la API
 respuesta = requests.get(URL)
