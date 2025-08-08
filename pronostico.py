@@ -1,81 +1,98 @@
 import requests
 from datetime import datetime
+from collections import defaultdict
 from colorama import Fore, Style, init
+from tabulate import tabulate
 
-# Inicializar colorama
 init(autoreset=True)
 
-# 🔑 API Key de OpenWeather
-API_KEY = "ef0a06800e2efe129d8e688acf083343"
+API_KEY = "ef0a06800e2efe129d8e688acf083343"  # tu key
 CIUDAD = "Caguas,PR"
-UNITS = "metric"  # métrico para °C
+URL = f"http://api.openweathermap.org/data/2.5/forecast?q={CIUDAD}&appid={API_KEY}&lang=es&units=metric"
 
-# 🌐 URL API
-url = f"http://api.openweathermap.org/data/2.5/forecast?q={CIUDAD}&appid={API_KEY}&units={UNITS}&lang=es"
-
-# 📥 Obtener datos
-response = requests.get(url)
-data = response.json()
-
-# Iconos según condición
 ICONOS = {
     "cielo claro": "☀️",
     "algo de nubes": "⛅",
     "nubes dispersas": "🌤️",
+    "muy nuboso": "☁️",
     "nubes": "☁️",
+    "llovizna": "🌦️",
     "lluvia ligera": "🌦️",
     "lluvia": "🌧️",
     "tormenta": "⛈️",
     "nieve": "❄️",
-    "niebla": "🌫️"
+    "niebla": "🌫️",
 }
 
-# Función para °C a °F
-def c_to_f(celsius):
-    return round((celsius * 9/5) + 32, 1)
+def c_to_f(c): return round((c*9/5)+32, 1)
 
-# 📋 Procesar pronóstico
-salida_txt = []
-salida_md = ["# Pronóstico de 5 días — " + CIUDAD + "\n"]
+# --- Llamada a la API ---
+resp = requests.get(URL, timeout=20)
+data = resp.json()
+if "list" not in data:
+    print("❌ Error: revisa tu API Key o la ciudad.\nRespuesta:", data)
+    raise SystemExit(1)
 
-print(Fore.CYAN + f"\n📍 Pronóstico de 5 días para {CIUDAD}\n" + Style.RESET_ALL)
+# --- Agrupar por día y elegir el pronóstico más cercano a las 12:00 ---
+por_dia = defaultdict(list)
+for it in data["list"]:
+    dt = datetime.fromtimestamp(it["dt"])
+    por_dia[dt.date()].append(it)
 
-# Filtrar un pronóstico por día (cada 24 horas)
-dias_mostrados = set()
-for item in data["list"]:
-    fecha = datetime.fromtimestamp(item["dt"])
-    dia = fecha.strftime("%a %d %b")
-    
-    if dia in dias_mostrados:
-        continue
-    dias_mostrados.add(dia)
+def score_hora(it):
+    # preferimos medio día (12:00); menor diferencia gana
+    hora = int(it["dt_txt"].split(" ")[1].split(":")[0])
+    return abs(hora - 12)
 
-    clima = item["weather"][0]["description"]
-    temp_min_c = round(item["main"]["temp_min"], 1)
-    temp_max_c = round(item["main"]["temp_max"], 1)
-    temp_min_f = c_to_f(temp_min_c)
-    temp_max_f = c_to_f(temp_max_c)
-    lluvia = item.get("pop", 0) * 100
+elegidos = []
+for fecha, items in sorted(por_dia.items()):
+    elegido = sorted(items, key=score_hora)[0]
+    elegidos.append((fecha, elegido))
+    if len(elegidos) == 5:  # solo 5 días
+        break
 
-    icono = ICONOS.get(clima.lower(), "🌍")
+# --- Construir tabla ---
+rows = []
+rows_md = []
+rows_txt = []
 
-    linea = (
-        f"{Fore.YELLOW}{dia}{Style.RESET_ALL} {icono} | "
-        f"{Fore.CYAN}{clima.capitalize()}{Style.RESET_ALL} | "
-        f"{Fore.GREEN}{temp_min_c}°C/{temp_min_f}°F - {temp_max_c}°C/{temp_max_f}°F{Style.RESET_ALL} | "
-        f"{Fore.BLUE}Prob. lluvia: {lluvia:.0f}%{Style.RESET_ALL}"
-    )
+for fecha, it in elegidos:
+    desc = it["weather"][0]["description"].lower()
+    icono = ICONOS.get(desc, "🌍")
+    tmin_c = round(it["main"]["temp_min"], 1)
+    tmax_c = round(it["main"]["temp_max"], 1)
+    tmin_f, tmax_f = c_to_f(tmin_c), c_to_f(tmax_c)
+    pop = round(it.get("pop", 0) * 100)
 
-    print(linea)
+    fecha_str = datetime.strftime(fecha, "%a %d %b")
 
-    salida_txt.append(f"{dia} {icono} | {clima.capitalize()} | {temp_min_c}°C/{temp_min_f}°F - {temp_max_c}°C/{temp_max_f}°F | Lluvia: {lluvia:.0f}%")
-    salida_md.append(f"- **{dia}** {icono} | {clima.capitalize()} | {temp_min_c}°C/{temp_min_f}°F - {temp_max_c}°C/{temp_max_f}°F | 🌧️ {lluvia:.0f}%")
+    # Colores (opcional): fecha amarilla, temps verdes, lluvia azul
+    fecha_col = Fore.YELLOW + fecha_str + Style.RESET_ALL
+    clima_col = f"{icono} {desc.capitalize()}"
+    temp_c_col = Fore.GREEN + f"{tmin_c}–{tmax_c}°C" + Style.RESET_ALL
+    temp_f_col = Fore.GREEN + f"{tmin_f}–{tmax_f}°F" + Style.RESET_ALL
+    lluvia_col = Fore.BLUE + f"{pop}%" + Style.RESET_ALL
 
-# 💾 Guardar archivos
+    rows.append([fecha_col, clima_col, temp_c_col, temp_f_col, lluvia_col])
+
+    # planas para guardar
+    rows_txt.append(f"{fecha_str}: {icono} {desc.capitalize()} | {tmin_c}–{tmax_c}°C ({tmin_f}–{tmax_f}°F) | Lluvia {pop}%")
+    rows_md.append([fecha_str, f"{icono} {desc.capitalize()}", f"{tmin_c}–{tmax_c}°C", f"{tmin_f}–{tmax_f}°F", f"{pop}%"])
+
+# --- Imprimir tabla bonita ---
+headers = ["Día", "Clima", "Temp °C", "Temp °F", "Lluvia"]
+print(Fore.CYAN + f"\n📍 Pronóstico 5 días — {CIUDAD}\n" + Style.RESET_ALL)
+print(tabulate(rows, headers=headers, tablefmt="fancy_grid"))
+
+# --- Guardar TXT ---
 with open("pronostico_salida.txt", "w", encoding="utf-8") as f:
-    f.write("\n".join(salida_txt))
+    f.write(f"Pronóstico 5 días — {CIUDAD}\n\n")
+    f.write("\n".join(rows_txt))
 
+# --- Guardar Markdown ---
 with open("pronostico_salida.md", "w", encoding="utf-8") as f:
-    f.write("\n".join(salida_md))
+    f.write(f"# Pronóstico 5 días — {CIUDAD}\n\n")
+    f.write(tabulate(rows_md, headers=headers, tablefmt="github"))
+    f.write("\n")
 
-print(Fore.MAGENTA + "\n✅ Pronóstico guardado en 'pronostico_salida.txt' y 'pronostico_salida.md'\n")
+print(Fore.MAGENTA + "\n✅ Guardado: pronostico_salida.txt y pronostico_salida.md\n")
