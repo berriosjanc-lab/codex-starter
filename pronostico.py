@@ -1,59 +1,39 @@
-from collections import Counter
-from datetime import datetime
 import requests
 
-# Configuración
-import requests
-
-API_KEY = "abcd1234efgh5678ijkl9012mnop3456"
+# === CONFIGURACIÓN ===
+API_KEY = "ef0a06800e2efe129d8e688acf083343"
 CIUDAD = "Caguas,PR"
 URL = f"http://api.openweathermap.org/data/2.5/forecast?q={CIUDAD}&appid={API_KEY}&lang=es&units=metric"
 
-# Obtener datos de la API
+# === FUNCIÓN PARA CONVERTIR °C A °F ===
+def celsius_a_fahrenheit(c):
+    return (c * 9/5) + 32
+
+# === OBTENER DATOS DEL CLIMA ===
 respuesta = requests.get(URL)
 data = respuesta.json()
 
-dias = {}
+if "list" not in data:
+    print("Error: No se recibieron datos válidos. Verifica tu API Key o la ciudad ingresada.")
+else:
+    print(f"\nPronóstico 5 días — {CIUDAD}\n")
+    
+    # Usaremos un set para mostrar solo un pronóstico por día
+    dias_mostrados = set()
 
-# Agrupar datos por fecha
-for item in data["list"]:
-    fecha = datetime.fromtimestamp(item["dt"])
-    fecha_str = fecha.date()
+    for item in data["list"]:
+        fecha = item["dt_txt"].split(" ")[0]
+        
+        if fecha not in dias_mostrados:
+            dias_mostrados.add(fecha)
+            
+            descripcion = item["weather"][0]["description"].capitalize()
+            temp_min_c = item["main"]["temp_min"]
+            temp_max_c = item["main"]["temp_max"]
+            temp_min_f = celsius_a_fahrenheit(temp_min_c)
+            temp_max_f = celsius_a_fahrenheit(temp_max_c)
+            prob_lluvia = item.get("pop", 0) * 100
 
-    if fecha_str not in dias:
-        dias[fecha_str] = []
-
-    dias[fecha_str].append({
-        "temp": item["main"]["temp"],
-        "temp_min": item["main"]["temp_min"],
-        "temp_max": item["main"]["temp_max"],
-        "pop": item.get("pop", 0) * 100,
-        "weather": item["weather"]
-    })
-
-# Mostrar pronóstico para los próximos 5 días
-print(f"\nPronóstico 5 días — {CIUDAD}\n")
-
-for fecha, items in list(dias.items())[:5]:
-    temp_min_c = min(x['temp_min'] for x in items)
-    temp_max_c = max(x['temp_max'] for x in items)
-
-    # Conversión a Fahrenheit
-    temp_min_f = (temp_min_c * 9/5) + 32
-    temp_max_f = (temp_max_c * 9/5) + 32
-
-    # Promedio de probabilidad de lluvia
-    pop = int(sum(x.get("pop", 0) for x in items) / len(items))
-
-    # Descripción más común
-    descs = [x['weather'][0]['description'] for x in items]
-    clima_dia = Counter(descs).most_common(1)[0][0].capitalize()
-
-    # Mostrar resultado
-    print(
-        fecha.strftime("%a %d %b"),
-        f": {clima_dia}, "
-        f"{temp_min_c}°C/{temp_min_f:.1f}°F – "
-        f"{temp_max_c}°C/{temp_max_f:.1f}°F • "
-        f"Lluvia: {pop}%"
-    )
+            print(f"{fecha}: {descripcion}, "
+                  f"{temp_min_c:.0f}°C-{temp_max_c:.0f}°C ({temp_min_f:.0f}°F-{temp_max_f:.0f}°F), "
+                  f"Lluvia: {prob_lluvia:.0f}%")
