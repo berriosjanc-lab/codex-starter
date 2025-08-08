@@ -1,7 +1,7 @@
 import requests
 from datetime import datetime
 from collections import defaultdict
-from colorama import Fore, Style, init
+from colorama import Fore, Back, Style, init
 from tabulate import tabulate
 
 init(autoreset=True)
@@ -11,18 +11,12 @@ CIUDAD = "Caguas,PR"
 URL = f"http://api.openweathermap.org/data/2.5/forecast?q={CIUDAD}&appid={API_KEY}&lang=es&units=metric"
 
 ICONOS = {
-    "cielo claro": "☀️",
-    "algo de nubes": "⛅",
-    "nubes dispersas": "🌤️",
-    "muy nuboso": "☁️",
-    "nubes": "☁️",
-    "llovizna": "🌦️",
-    "lluvia ligera": "🌦️",
-    "lluvia": "🌧️",
-    "tormenta": "⛈️",
-    "nieve": "❄️",
-    "niebla": "🌫️",
+    "cielo claro": "☀️", "algo de nubes": "⛅", "nubes dispersas": "🌤️",
+    "muy nuboso": "☁️", "nubes": "☁️", "llovizna": "🌦️", "lluvia ligera": "🌦️",
+    "lluvia": "🌧️", "tormenta": "⛈️", "nieve": "❄️", "niebla": "🌫️"
 }
+LLUVIA_ALERTA = 60   # %
+CALOR_ALERTA  = 34.0 # °C
 
 def c_to_f(c): return round((c*9/5)+32, 1)
 
@@ -40,7 +34,6 @@ for it in data["list"]:
     por_dia[dt.date()].append(it)
 
 def score_hora(it):
-    # preferimos medio día (12:00); menor diferencia gana
     hora = int(it["dt_txt"].split(" ")[1].split(":")[0])
     return abs(hora - 12)
 
@@ -48,13 +41,14 @@ elegidos = []
 for fecha, items in sorted(por_dia.items()):
     elegido = sorted(items, key=score_hora)[0]
     elegidos.append((fecha, elegido))
-    if len(elegidos) == 5:  # solo 5 días
+    if len(elegidos) == 5:
         break
 
-# --- Construir tabla ---
-rows = []
-rows_md = []
-rows_txt = []
+# --- Construir tabla con alertas ---
+rows      = []
+rows_md   = []
+rows_txt  = []
+headers   = ["Día", "Clima", "Temp °C", "Temp °F", "Lluvia"]
 
 for fecha, it in elegidos:
     desc = it["weather"][0]["description"].lower()
@@ -65,22 +59,42 @@ for fecha, it in elegidos:
     pop = round(it.get("pop", 0) * 100)
 
     fecha_str = datetime.strftime(fecha, "%a %d %b")
+    # Etiquetas con emojis para MD/TXT
+    alerta_pop  = " ⚠️" if pop >= LLUVIA_ALERTA else ""
+    alerta_cal  = " 🔥" if tmax_c >= CALOR_ALERTA else ""
+    desc_show   = f"{icono} {desc.capitalize()}{alerta_pop}{alerta_cal}"
 
-    # Colores (opcional): fecha amarilla, temps verdes, lluvia azul
+    # ---- Coloreado por alertas (solo consola) ----
     fecha_col = Fore.YELLOW + fecha_str + Style.RESET_ALL
-    clima_col = f"{icono} {desc.capitalize()}"
-    temp_c_col = Fore.GREEN + f"{tmin_c}–{tmax_c}°C" + Style.RESET_ALL
-    temp_f_col = Fore.GREEN + f"{tmin_f}–{tmax_f}°F" + Style.RESET_ALL
-    lluvia_col = Fore.BLUE + f"{pop}%" + Style.RESET_ALL
+    temp_c_txt = f"{tmin_c}–{tmax_c}°C"
+    temp_f_txt = f"{tmin_f}–{tmax_f}°F"
+    lluvia_txt = f"{pop}%"
 
-    rows.append([fecha_col, clima_col, temp_c_col, temp_f_col, lluvia_col])
+    # colorear temp si hay calor extremo
+    if tmax_c >= CALOR_ALERTA:
+        temp_c_col = Back.RED + Fore.WHITE + temp_c_txt + Style.RESET_ALL
+        temp_f_col = Back.RED + Fore.WHITE + temp_f_txt + Style.RESET_ALL
+    else:
+        temp_c_col = Fore.GREEN + temp_c_txt + Style.RESET_ALL
+        temp_f_col = Fore.GREEN + temp_f_txt + Style.RESET_ALL
 
-    # planas para guardar
-    rows_txt.append(f"{fecha_str}: {icono} {desc.capitalize()} | {tmin_c}–{tmax_c}°C ({tmin_f}–{tmax_f}°F) | Lluvia {pop}%")
-    rows_md.append([fecha_str, f"{icono} {desc.capitalize()}", f"{tmin_c}–{tmax_c}°C", f"{tmin_f}–{tmax_f}°F", f"{pop}%"])
+    # colorear lluvia si alta
+    if pop >= LLUVIA_ALERTA:
+        lluvia_col = Back.YELLOW + Fore.BLACK + lluvia_txt + Style.RESET_ALL
+    else:
+        lluvia_col = Fore.BLUE + lluvia_txt + Style.RESET_ALL
 
-# --- Imprimir tabla bonita ---
-headers = ["Día", "Clima", "Temp °C", "Temp °F", "Lluvia"]
+    rows.append([fecha_col, desc_show, temp_c_col, temp_f_col, lluvia_col])
+
+    # Versiones planas para archivos
+    rows_txt.append(
+        f"{fecha_str}: {desc_show} | {temp_c_txt} ({temp_f_txt}) | Lluvia {lluvia_txt}"
+    )
+    rows_md.append([
+        fecha_str, desc_show, temp_c_txt, temp_f_txt, lluvia_txt
+    ])
+
+# --- Imprimir tabla pro (con colores) ---
 print(Fore.CYAN + f"\n📍 Pronóstico 5 días — {CIUDAD}\n" + Style.RESET_ALL)
 print(tabulate(rows, headers=headers, tablefmt="fancy_grid"))
 
@@ -89,7 +103,7 @@ with open("pronostico_salida.txt", "w", encoding="utf-8") as f:
     f.write(f"Pronóstico 5 días — {CIUDAD}\n\n")
     f.write("\n".join(rows_txt))
 
-# --- Guardar Markdown ---
+# --- Guardar Markdown (con emojis, sin colores) ---
 with open("pronostico_salida.md", "w", encoding="utf-8") as f:
     f.write(f"# Pronóstico 5 días — {CIUDAD}\n\n")
     f.write(tabulate(rows_md, headers=headers, tablefmt="github"))
