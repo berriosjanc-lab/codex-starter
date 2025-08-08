@@ -2,7 +2,8 @@ from collections import Counter
 from datetime import datetime
 import requests
 
-API_KEY = "TU_API_KEY_AQUI"
+# Configuración
+API_KEY = "TU_API_KEY_AQUI"  # Reemplaza con tu API key de OpenWeather
 CIUDAD = "Caguas,PR"
 URL = f"https://api.openweathermap.org/data/2.5/forecast?q={CIUDAD}&appid={API_KEY}&units=metric&lang=es"
 
@@ -35,14 +36,18 @@ for fecha, items in list(dias.items())[:5]:
     temp_min_c = min(x['temp_min'] for x in items)
     temp_max_c = max(x['temp_max'] for x in items)
 
+    # Conversión a Fahrenheit
     temp_min_f = (temp_min_c * 9/5) + 32
     temp_max_f = (temp_max_c * 9/5) + 32
 
+    # Promedio de probabilidad de lluvia
     pop = int(sum(x.get("pop", 0) for x in items) / len(items))
-    descs = [x['weather'][0]['description'] for x in items]
 
+    # Descripción más común
+    descs = [x['weather'][0]['description'] for x in items]
     clima_dia = Counter(descs).most_common(1)[0][0].capitalize()
 
+    # Mostrar resultado
     print(
         fecha.strftime("%a %d %b"),
         f": {clima_dia}, "
