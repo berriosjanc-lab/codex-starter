@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Asistente de Respiracion</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      font-family: 'Segoe UI', sans-serif;
+      color: #e0f7fa;
+    }
+
+    h1 {
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      text-align: center;
+      font-weight: 300;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: #80cbc4;
+      margin-bottom: 40px;
+      letter-spacing: 1px;
+    }
+
+    /* Pattern selector */
+    .pattern-selector {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .pattern-btn {
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: 1.5px solid #4dd0e1;
+      background: transparent;
+      color: #b2ebf2;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .pattern-btn:hover { background: rgba(77, 208, 225, 0.15); }
+
+    .pattern-btn.active {
+      background: #4dd0e1;
+      color: #0f2027;
+      font-weight: 600;
+    }
+
+    /* Circle animation */
+    .circle-container {
+      position: relative;
+      width: 240px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    .ring {
+      position: absolute;
+      border-radius: 50%;
+      border: 2px solid rgba(77, 208, 225, 0.25);
+    }
+
+    .ring-1 { width: 240px; height: 240px; }
+    .ring-2 { width: 200px; height: 200px; border-color: rgba(77, 208, 225, 0.15); }
+
+    .circle {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 40% 35%, #80deea, #00838f);
+      box-shadow: 0 0 40px rgba(77, 208, 225, 0.5);
+      transition: transform 0.3s ease;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .circle.inhale {
+      animation: expand var(--inhale-duration, 4s) ease-in forwards;
+    }
+
+    .circle.hold {
+      transform: scale(1.6);
+    }
+
+    .circle.hold-out {
+      transform: scale(1.6);
+    }
+
+    .circle.exhale {
+      animation: contract var(--exhale-duration, 6s) ease-out forwards;
+    }
+
+    @keyframes expand {
+      from { transform: scale(1); }
+      to   { transform: scale(1.6); }
+    }
+
+    @keyframes contract {
+      from { transform: scale(1.6); }
+      to   { transform: scale(1); }
+    }
+
+    .phase-label {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+      text-shadow: 0 0 10px rgba(0,0,0,0.4);
+      color: #fff;
+      text-align: center;
+      min-height: 34px;
+    }
+
+    .countdown {
+      font-size: 2.2rem;
+      font-weight: 700;
+      min-height: 48px;
+      text-align: center;
+      color: #e0f7fa;
+      letter-spacing: 2px;
+      margin-bottom: 10px;
+    }
+
+    .cycle-count {
+      font-size: 0.85rem;
+      color: #80cbc4;
+      margin-bottom: 36px;
+      letter-spacing: 1px;
+      min-height: 20px;
+    }
+
+    /* Controls */
+    .controls { display: flex; gap: 16px; }
+
+    .btn {
+      padding: 12px 36px;
+      border-radius: 30px;
+      border: none;
+      font-size: 1rem;
+      cursor: pointer;
+      font-weight: 600;
+      letter-spacing: 1px;
+      transition: all 0.25s;
+    }
+
+    .btn-start {
+      background: linear-gradient(135deg, #4dd0e1, #00838f);
+      color: #fff;
+      box-shadow: 0 4px 20px rgba(77, 208, 225, 0.4);
+    }
+
+    .btn-start:hover { transform: translateY(-2px); box-shadow: 0 6px 24px rgba(77, 208, 225, 0.55); }
+
+    .btn-stop {
+      background: transparent;
+      border: 1.5px solid #ef9a9a;
+      color: #ef9a9a;
+    }
+
+    .btn-stop:hover { background: rgba(239,154,154,0.1); }
+
+    .btn:disabled { opacity: 0.4; cursor: default; transform: none; }
+
+    /* Pattern info */
+    .pattern-info {
+      margin-top: 40px;
+      padding: 16px 24px;
+      background: rgba(255,255,255,0.05);
+      border-radius: 12px;
+      max-width: 380px;
+      text-align: center;
+      font-size: 0.85rem;
+      color: #b2ebf2;
+      line-height: 1.6;
+      border: 1px solid rgba(77, 208, 225, 0.15);
+    }
+
+    .pattern-info strong { color: #4dd0e1; }
+  </style>
+</head>
+<body>
+
+  <h1>Asistente de Respiracion</h1>
+  <p class="subtitle">Calma tu mente. Respira con intención.</p>
+
+  <div class="pattern-selector" id="patternSelector"></div>
+
+  <div class="circle-container">
+    <div class="ring ring-1"></div>
+    <div class="ring ring-2"></div>
+    <div class="circle" id="circle"></div>
+  </div>
+
+  <div class="phase-label" id="phaseLabel">—</div>
+  <div class="countdown" id="countdown"></div>
+  <div class="cycle-count" id="cycleCount"></div>
+
+  <div class="controls">
+    <button class="btn btn-start" id="btnStart">Comenzar</button>
+    <button class="btn btn-stop" id="btnStop" disabled>Detener</button>
+  </div>
+
+  <div class="pattern-info" id="patternInfo"></div>
+
+  <script>
+    const PATTERNS = [
+      {
+        id: 'box',
+        name: 'Respiracion Cuadrada',
+        phases: [
+          { label: 'Inhala', type: 'inhale', duration: 4 },
+          { label: 'Sostén', type: 'hold',   duration: 4 },
+          { label: 'Exhala', type: 'exhale', duration: 4 },
+          { label: 'Sostén', type: 'hold-out', duration: 4 },
+        ],
+        info: '<strong>Respiración Cuadrada (4-4-4-4)</strong><br>Usada por fuerzas especiales para reducir el estrés. Ideal para enfocarse y calmarse rápido.',
+      },
+      {
+        id: '478',
+        name: '4-7-8',
+        phases: [
+          { label: 'Inhala', type: 'inhale', duration: 4 },
+          { label: 'Sostén', type: 'hold',   duration: 7 },
+          { label: 'Exhala', type: 'exhale', duration: 8 },
+        ],
+        info: '<strong>Técnica 4-7-8</strong><br>Desarrollada por el Dr. Andrew Weil. Excelente para conciliar el sueño y reducir la ansiedad.',
+      },
+      {
+        id: 'calm',
+        name: 'Respiracion Calmante',
+        phases: [
+          { label: 'Inhala', type: 'inhale', duration: 5 },
+          { label: 'Sostén', type: 'hold',   duration: 2 },
+          { label: 'Exhala', type: 'exhale', duration: 7 },
+        ],
+        info: '<strong>Respiración Calmante (5-2-7)</strong><br>Activa el sistema nervioso parasimpático. Perfecta para relajarse antes de dormir.',
+      },
+      {
+        id: 'energize',
+        name: 'Energizante',
+        phases: [
+          { label: 'Inhala', type: 'inhale', duration: 3 },
+          { label: 'Exhala', type: 'exhale', duration: 3 },
+        ],
+        info: '<strong>Respiración Energizante (3-3)</strong><br>Ritmo rápido y equilibrado para aumentar el nivel de energía y la concentración.',
+      },
+    ];
+
+    let currentPattern = PATTERNS[0];
+    let running = false;
+    let timer = null;
+    let phaseIndex = 0;
+    let secondsLeft = 0;
+    let cycleCount = 0;
+
+    const circle      = document.getElementById('circle');
+    const phaseLabel  = document.getElementById('phaseLabel');
+    const countdown   = document.getElementById('countdown');
+    const cycleEl     = document.getElementById('cycleCount');
+    const btnStart    = document.getElementById('btnStart');
+    const btnStop     = document.getElementById('btnStop');
+    const patternInfo = document.getElementById('patternInfo');
+    const selector    = document.getElementById('patternSelector');
+
+    // Build pattern buttons
+    PATTERNS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.className = 'pattern-btn' + (p.id === currentPattern.id ? ' active' : '');
+      btn.textContent = p.name;
+      btn.addEventListener('click', () => {
+        if (running) stopSession();
+        currentPattern = p;
+        document.querySelectorAll('.pattern-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        showInfo();
+        reset();
+      });
+      selector.appendChild(btn);
+    });
+
+    function showInfo() {
+      patternInfo.innerHTML = currentPattern.info;
+    }
+
+    function reset() {
+      phaseLabel.textContent = '—';
+      countdown.textContent  = '';
+      cycleEl.textContent    = '';
+      circle.className       = 'circle';
+    }
+
+    function applyCirclePhase(phase) {
+      const style = document.documentElement.style;
+      if (phase.type === 'inhale') {
+        style.setProperty('--inhale-duration', phase.duration + 's');
+      } else if (phase.type === 'exhale') {
+        style.setProperty('--exhale-duration', phase.duration + 's');
+      }
+      circle.className = 'circle ' + phase.type;
+    }
+
+    function startPhase() {
+      if (!running) return;
+      const phase = currentPattern.phases[phaseIndex];
+      secondsLeft = phase.duration;
+      applyCirclePhase(phase);
+      phaseLabel.textContent = phase.label;
+      countdown.textContent  = secondsLeft;
+
+      timer = setInterval(() => {
+        secondsLeft--;
+        countdown.textContent = secondsLeft > 0 ? secondsLeft : '';
+        if (secondsLeft <= 0) {
+          clearInterval(timer);
+          phaseIndex++;
+          if (phaseIndex >= currentPattern.phases.length) {
+            phaseIndex = 0;
+            cycleCount++;
+            cycleEl.textContent = `Ciclo ${cycleCount}`;
+          }
+          startPhase();
+        }
+      }, 1000);
+    }
+
+    function startSession() {
+      running    = true;
+      phaseIndex = 0;
+      cycleCount = 0;
+      cycleEl.textContent   = '';
+      btnStart.disabled = true;
+      btnStop.disabled  = false;
+      document.querySelectorAll('.pattern-btn').forEach(b => b.disabled = true);
+      startPhase();
+    }
+
+    function stopSession() {
+      running = false;
+      clearInterval(timer);
+      btnStart.disabled = false;
+      btnStop.disabled  = true;
+      document.querySelectorAll('.pattern-btn').forEach(b => b.disabled = false);
+      reset();
+    }
+
+    btnStart.addEventListener('click', startSession);
+    btnStop.addEventListener('click', stopSession);
+
+    // Init
+    showInfo();
+  </script>
+</body>
+</html>
