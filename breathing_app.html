@@ -222,111 +222,103 @@
   <div class="pattern-info" id="patternInfo"></div>
 
   <script>
-    const PATTERNS = [
+    var PATTERNS = [
       {
-        id: 'box',
         name: 'Respiracion Cuadrada',
         phases: [
-          { label: 'Inhala', type: 'inhale', duration: 4 },
-          { label: 'Sostén', type: 'hold',   duration: 4 },
-          { label: 'Exhala', type: 'exhale', duration: 4 },
-          { label: 'Sostén', type: 'hold-out', duration: 4 },
+          { label: 'Inhala',  type: 'inhale',   duration: 4 },
+          { label: 'Sost\u00e9n', type: 'hold',     duration: 4 },
+          { label: 'Exhala',  type: 'exhale',   duration: 4 },
+          { label: 'Sost\u00e9n', type: 'hold-out', duration: 4 }
         ],
-        info: '<strong>Respiración Cuadrada (4-4-4-4)</strong><br>Usada por fuerzas especiales para reducir el estrés. Ideal para enfocarse y calmarse rápido.',
+        info: '<strong>Respiraci\u00f3n Cuadrada (4-4-4-4)</strong><br>Usada por fuerzas especiales para reducir el estr\u00e9s. Ideal para enfocarse y calmarse r\u00e1pido.'
       },
       {
-        id: '478',
         name: '4-7-8',
         phases: [
-          { label: 'Inhala', type: 'inhale', duration: 4 },
-          { label: 'Sostén', type: 'hold',   duration: 7 },
-          { label: 'Exhala', type: 'exhale', duration: 8 },
+          { label: 'Inhala',  type: 'inhale', duration: 4 },
+          { label: 'Sost\u00e9n', type: 'hold',   duration: 7 },
+          { label: 'Exhala',  type: 'exhale', duration: 8 }
         ],
-        info: '<strong>Técnica 4-7-8</strong><br>Desarrollada por el Dr. Andrew Weil. Excelente para conciliar el sueño y reducir la ansiedad.',
+        info: '<strong>T\u00e9cnica 4-7-8</strong><br>Desarrollada por el Dr. Andrew Weil. Excelente para conciliar el sue\u00f1o y reducir la ansiedad.'
       },
       {
-        id: 'calm',
         name: 'Respiracion Calmante',
         phases: [
-          { label: 'Inhala', type: 'inhale', duration: 5 },
-          { label: 'Sostén', type: 'hold',   duration: 2 },
-          { label: 'Exhala', type: 'exhale', duration: 7 },
+          { label: 'Inhala',  type: 'inhale', duration: 5 },
+          { label: 'Sost\u00e9n', type: 'hold',   duration: 2 },
+          { label: 'Exhala',  type: 'exhale', duration: 7 }
         ],
-        info: '<strong>Respiración Calmante (5-2-7)</strong><br>Activa el sistema nervioso parasimpático. Perfecta para relajarse antes de dormir.',
+        info: '<strong>Respiraci\u00f3n Calmante (5-2-7)</strong><br>Activa el sistema nervioso parasimp\u00e1tico. Perfecta para relajarse antes de dormir.'
       },
       {
-        id: 'energize',
         name: 'Energizante',
         phases: [
           { label: 'Inhala', type: 'inhale', duration: 3 },
-          { label: 'Exhala', type: 'exhale', duration: 3 },
+          { label: 'Exhala', type: 'exhale', duration: 3 }
         ],
-        info: '<strong>Respiración Energizante (3-3)</strong><br>Ritmo rápido y equilibrado para aumentar el nivel de energía y la concentración.',
-      },
+        info: '<strong>Respiraci\u00f3n Energizante (3-3)</strong><br>Ritmo r\u00e1pido y equilibrado para aumentar el nivel de energ\u00eda y la concentraci\u00f3n.'
+      }
     ];
 
-    let currentPattern = PATTERNS[0];
-    let running = false;
-    let timer = null;
-    let phaseIndex = 0;
-    let secondsLeft = 0;
-    let cycleCount = 0;
+    var currentPattern = PATTERNS[0];
+    var running    = false;
+    var timer      = null;
+    var phaseIndex = 0;
+    var secondsLeft = 0;
+    var cycleCount = 0;
 
-    const circle      = document.getElementById('circle');
-    const phaseLabel  = document.getElementById('phaseLabel');
-    const countdown   = document.getElementById('countdown');
-    const cycleEl     = document.getElementById('cycleCount');
-    const btnStart    = document.getElementById('btnStart');
-    const btnStop     = document.getElementById('btnStop');
-    const patternInfo = document.getElementById('patternInfo');
-    const selector    = document.getElementById('patternSelector');
+    var circle      = document.getElementById('circle');
+    var phaseLabel  = document.getElementById('phaseLabel');
+    var countdown   = document.getElementById('countdown');
+    var cycleEl     = document.getElementById('cycleCount');
+    var btnStart    = document.getElementById('btnStart');
+    var btnStop     = document.getElementById('btnStop');
+    var patternInfo = document.getElementById('patternInfo');
+    var selector    = document.getElementById('patternSelector');
 
-    // Build pattern buttons
-    PATTERNS.forEach(p => {
-      const btn = document.createElement('button');
-      btn.className = 'pattern-btn' + (p.id === currentPattern.id ? ' active' : '');
-      btn.textContent = p.name;
-      btn.addEventListener('click', () => {
+    PATTERNS.forEach(function(pat, idx) {
+      var btn = document.createElement('button');
+      btn.className = idx === 0 ? 'pattern-btn active' : 'pattern-btn';
+      btn.textContent = pat.name;
+      btn.addEventListener('click', function() {
         if (running) stopSession();
-        currentPattern = p;
-        document.querySelectorAll('.pattern-btn').forEach(b => b.classList.remove('active'));
+        currentPattern = pat;
+        document.querySelectorAll('.pattern-btn').forEach(function(b) {
+          b.classList.remove('active');
+        });
         btn.classList.add('active');
-        showInfo();
+        patternInfo.innerHTML = pat.info;
         reset();
       });
       selector.appendChild(btn);
     });
 
-    function showInfo() {
-      patternInfo.innerHTML = currentPattern.info;
-    }
-
     function reset() {
-      phaseLabel.textContent = '—';
+      phaseLabel.textContent = '\u2014';
       countdown.textContent  = '';
       cycleEl.textContent    = '';
       circle.className       = 'circle';
     }
 
     function applyCirclePhase(phase) {
-      const style = document.documentElement.style;
       if (phase.type === 'inhale') {
-        style.setProperty('--inhale-duration', phase.duration + 's');
+        document.documentElement.style.setProperty('--inhale-duration', phase.duration + 's');
       } else if (phase.type === 'exhale') {
-        style.setProperty('--exhale-duration', phase.duration + 's');
+        document.documentElement.style.setProperty('--exhale-duration', phase.duration + 's');
       }
       circle.className = 'circle ' + phase.type;
     }
 
     function startPhase() {
       if (!running) return;
-      const phase = currentPattern.phases[phaseIndex];
+      var phase = currentPattern.phases[phaseIndex];
       secondsLeft = phase.duration;
       applyCirclePhase(phase);
       phaseLabel.textContent = phase.label;
       countdown.textContent  = secondsLeft;
 
-      timer = setInterval(() => {
+      timer = setInterval(function() {
         secondsLeft--;
         countdown.textContent = secondsLeft > 0 ? secondsLeft : '';
         if (secondsLeft <= 0) {
@@ -335,7 +327,7 @@
           if (phaseIndex >= currentPattern.phases.length) {
             phaseIndex = 0;
             cycleCount++;
-            cycleEl.textContent = `Ciclo ${cycleCount}`;
+            cycleEl.textContent = 'Ciclo ' + cycleCount;
           }
           startPhase();
         }
@@ -343,13 +335,13 @@
     }
 
     function startSession() {
-      running    = true;
-      phaseIndex = 0;
-      cycleCount = 0;
-      cycleEl.textContent   = '';
+      running     = true;
+      phaseIndex  = 0;
+      cycleCount  = 0;
+      cycleEl.textContent = '';
       btnStart.disabled = true;
       btnStop.disabled  = false;
-      document.querySelectorAll('.pattern-btn').forEach(b => b.disabled = true);
+      document.querySelectorAll('.pattern-btn').forEach(function(b) { b.disabled = true; });
       startPhase();
     }
 
@@ -358,15 +350,13 @@
       clearInterval(timer);
       btnStart.disabled = false;
       btnStop.disabled  = true;
-      document.querySelectorAll('.pattern-btn').forEach(b => b.disabled = false);
+      document.querySelectorAll('.pattern-btn').forEach(function(b) { b.disabled = false; });
       reset();
     }
 
     btnStart.addEventListener('click', startSession);
     btnStop.addEventListener('click', stopSession);
-
-    // Init
-    showInfo();
+    patternInfo.innerHTML = currentPattern.info;
   </script>
 </body>
 </html>
