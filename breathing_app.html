@@ -1,333 +1,391 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
-  <title>Respirar</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Respirar · Calma</title>
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+    *, *::before, *::after {
+      box-sizing: border-box; margin: 0; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    :root {
+      --ease: cubic-bezier(.4,0,.2,1);
+    }
 
     body {
-      min-height: 100vh;
-      font-family: -apple-system, 'Helvetica Neue', sans-serif;
-      color: #fff;
-      overflow: hidden;
-      transition: background 1s ease;
+      min-height: 100vh; min-height: 100dvh;
+      font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      color: #fff; overflow: hidden;
     }
 
-    /* ── BACKGROUNDS ── */
-    .bg {
+    /* ── BACKGROUND ── */
+    #bgLayer {
       position: fixed; inset: 0; z-index: 0;
-      transition: opacity 0.8s ease;
+      transition: background 1.4s var(--ease);
+      background: linear-gradient(155deg, #0d2137 0%, #0e3d52 35%, #145c6e 65%, #1a7a8a 100%);
     }
-    .bg-ocean    { background: linear-gradient(160deg, #0d3b5e 0%, #1a6b8a 40%, #2d9cad 70%, #7ecac4 100%); }
-    .bg-forest   { background: linear-gradient(160deg, #0a2e1a 0%, #1a5c2e 40%, #2e8b57 70%, #7fbf7f 100%); }
-    .bg-sunset   { background: linear-gradient(160deg, #1a0a2e 0%, #6b2d6b 30%, #c0634d 60%, #f4a460 100%); }
-    .bg-mountain { background: linear-gradient(160deg, #1a1a2e 0%, #2d3561 40%, #4a6fa5 70%, #8ab4d4 100%); }
+    #bgLayer.forest   { background: linear-gradient(155deg, #071a0e 0%, #0d3320 35%, #165a35 65%, #1e7a4a 100%); }
+    #bgLayer.sunset   { background: linear-gradient(155deg, #12061f 0%, #3d1040 35%, #8c3060 65%, #d4604a 100%); }
+    #bgLayer.mountain { background: linear-gradient(155deg, #080c1a 0%, #141e3c 35%, #243a6e 65%, #3a5f9e 100%); }
 
-    .bg-overlay {
+    #bgLayer::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.07) 0%, transparent 70%),
+                  radial-gradient(ellipse at 80% 100%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    }
+
+    #bgNoise {
       position: fixed; inset: 0; z-index: 1;
-      background: rgba(0,0,0,0.35);
-      backdrop-filter: blur(2px);
-      -webkit-backdrop-filter: blur(2px);
+      background: rgba(0,0,0,0.28);
+      backdrop-filter: blur(0px);
+      -webkit-backdrop-filter: blur(0px);
     }
 
-    /* ── SHARED ── */
+    /* ── SCREENS ── */
     .screen {
       position: fixed; inset: 0; z-index: 2;
       display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-start;
-      padding: 60px 28px 40px;
+      align-items: center;
+      padding: env(safe-area-inset-top, 52px) 24px env(safe-area-inset-bottom, 32px);
       overflow-y: auto;
-      transition: opacity 0.5s ease;
+      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
     }
-    .screen.hidden { opacity: 0; pointer-events: none; }
+    .screen.out {
+      opacity: 0; transform: translateY(-24px); pointer-events: none;
+    }
+    .screen.in-below {
+      opacity: 0; transform: translateY(24px); pointer-events: none;
+    }
 
-    /* ── SETUP SCREEN ── */
-    .logo-icon {
-      width: 64px; height: 64px;
-      border-radius: 50%;
-      border: 2.5px solid rgba(255,255,255,0.6);
-      box-shadow: 0 0 0 10px rgba(255,255,255,0.12), 0 0 0 20px rgba(255,255,255,0.06);
-      margin-bottom: 16px;
+    /* ── SETUP ── */
+    #setup { padding-top: max(env(safe-area-inset-top, 52px), 52px); }
+
+    .logo-wrap {
+      margin-bottom: 20px; margin-top: 8px;
+      display: flex; flex-direction: column; align-items: center; gap: 14px;
+    }
+
+    .logo-rings {
+      position: relative; width: 64px; height: 64px;
       display: flex; align-items: center; justify-content: center;
     }
-    .logo-inner {
-      width: 28px; height: 28px; border-radius: 50%;
-      background: rgba(255,255,255,0.85);
+    .logo-rings span {
+      position: absolute; border-radius: 50%;
+      border: 1.5px solid rgba(255,255,255,0.55);
+    }
+    .logo-rings span:nth-child(1) { width: 64px; height: 64px; border-color: rgba(255,255,255,0.22); }
+    .logo-rings span:nth-child(2) { width: 46px; height: 46px; border-color: rgba(255,255,255,0.38); }
+    .logo-rings span:nth-child(3) { width: 28px; height: 28px; background: rgba(255,255,255,0.82); border: none; }
+
+    .logo-label {
+      font-size: 0.68rem; letter-spacing: 5px;
+      color: rgba(255,255,255,0.55); text-transform: uppercase;
     }
 
-    .app-label {
-      font-size: 0.75rem; letter-spacing: 4px; color: rgba(255,255,255,0.7);
-      text-transform: uppercase; margin-bottom: 4px;
+    .hero-title {
+      font-size: 3rem; font-weight: 700; letter-spacing: 3px;
+      margin-bottom: 10px; text-align: center;
     }
-    .app-title {
-      font-size: 2.2rem; font-weight: 700; letter-spacing: 2px;
-      margin-bottom: 10px;
-    }
-    .app-subtitle {
-      font-style: italic; font-size: 0.95rem; color: rgba(255,255,255,0.75);
-      text-align: center; line-height: 1.6; margin-bottom: 36px;
+    .hero-sub {
+      font-style: italic; font-size: 1rem; line-height: 1.7;
+      color: rgba(255,255,255,0.65); text-align: center;
+      margin-bottom: 40px;
     }
 
-    .section-label {
-      font-size: 0.7rem; letter-spacing: 3px; color: rgba(255,255,255,0.6);
-      text-transform: uppercase; margin-bottom: 14px; align-self: flex-start;
+    .section-title {
+      align-self: flex-start;
+      font-size: 0.65rem; letter-spacing: 3.5px;
+      color: rgba(255,255,255,0.45); text-transform: uppercase;
+      margin-bottom: 12px;
     }
 
-    /* Duration pills */
-    .duration-row {
-      display: flex; gap: 12px; margin-bottom: 32px; width: 100%;
+    /* Duration */
+    .dur-row {
+      display: flex; gap: 10px; width: 100%; margin-bottom: 30px;
     }
     .dur-btn {
-      flex: 1; padding: 14px 0; border-radius: 14px;
-      background: rgba(255,255,255,0.12);
-      border: 1.5px solid rgba(255,255,255,0.2);
-      color: rgba(255,255,255,0.75); font-size: 1rem;
-      cursor: pointer; transition: all 0.25s;
+      flex: 1; padding: 15px 0; border-radius: 16px;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      color: rgba(255,255,255,0.6); font-size: 0.95rem;
+      cursor: pointer; transition: all 0.25s var(--ease);
+      font-family: inherit;
     }
-    .dur-btn.active {
-      background: rgba(255,255,255,0.28);
-      border-color: rgba(255,255,255,0.7);
+    .dur-btn.sel {
+      background: rgba(255,255,255,0.18);
+      border-color: rgba(255,255,255,0.55);
       color: #fff; font-weight: 600;
     }
 
-    /* Scene cards */
+    /* Scenes */
     .scenes-row {
-      display: flex; gap: 10px; width: 100%; margin-bottom: 32px;
-      overflow-x: auto; padding-bottom: 4px;
+      display: flex; gap: 10px; width: 100%;
+      margin-bottom: 30px;
     }
-    .scenes-row::-webkit-scrollbar { display: none; }
     .scene-card {
-      flex: 0 0 110px; height: 130px; border-radius: 18px;
+      flex: 1; height: 90px; border-radius: 18px;
+      cursor: pointer; position: relative; overflow: hidden;
       border: 2px solid transparent;
-      cursor: pointer; transition: all 0.25s;
-      display: flex; align-items: flex-end;
-      padding: 10px;
-      position: relative; overflow: hidden;
+      transition: border-color 0.25s var(--ease), transform 0.2s var(--ease);
     }
-    .scene-card.active { border-color: rgba(255,255,255,0.9); }
-    .scene-ocean    { background: linear-gradient(160deg, #1a6b8a, #7ecac4); }
-    .scene-forest   { background: linear-gradient(160deg, #1a5c2e, #7fbf7f); }
-    .scene-sunset   { background: linear-gradient(160deg, #6b2d6b, #f4a460); }
-    .scene-mountain { background: linear-gradient(160deg, #2d3561, #8ab4d4); }
-    .scene-name {
-      font-size: 0.8rem; font-weight: 600; color: #fff;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5); letter-spacing: 0.5px;
-    }
+    .scene-card.sel { border-color: rgba(255,255,255,0.85); }
+    .scene-card:active { transform: scale(0.96); }
 
-    /* Pattern selector */
-    .patterns-col { width: 100%; margin-bottom: 36px; }
-    .pat-btn {
-      width: 100%; padding: 14px 18px; border-radius: 14px;
-      background: rgba(255,255,255,0.1);
-      border: 1.5px solid rgba(255,255,255,0.18);
-      color: rgba(255,255,255,0.8); font-size: 0.9rem;
-      cursor: pointer; transition: all 0.25s;
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 8px;
+    .sc-ocean    { background: linear-gradient(160deg, #1a6b8a 0%, #2eb8c8 60%, #7ee8e0 100%); }
+    .sc-forest   { background: linear-gradient(160deg, #1a5c2e 0%, #2d9c55 60%, #7fd490 100%); }
+    .sc-sunset   { background: linear-gradient(160deg, #6b2060 0%, #c04060 60%, #f08050 100%); }
+    .sc-mountain { background: linear-gradient(160deg, #243a6e 0%, #4a70b0 60%, #90b8e0 100%); }
+
+    .scene-card::after {
+      content: attr(data-label);
+      position: absolute; bottom: 8px; left: 0; right: 0;
+      text-align: center; font-size: 0.72rem; font-weight: 600;
+      letter-spacing: 0.5px; color: #fff;
+      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
     }
-    .pat-btn.active {
-      background: rgba(255,255,255,0.22);
-      border-color: rgba(255,255,255,0.6);
+    .scene-check {
+      position: absolute; top: 7px; right: 8px;
+      width: 18px; height: 18px; border-radius: 50%;
+      background: #fff; display: none;
+      align-items: center; justify-content: center;
+    }
+    .scene-check::after { content: '✓'; font-size: 10px; color: #333; font-weight: 700; }
+    .scene-card.sel .scene-check { display: flex; }
+
+    /* Patterns */
+    .pat-list { width: 100%; margin-bottom: 32px; }
+    .pat-btn {
+      width: 100%; padding: 16px 20px; border-radius: 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: rgba(255,255,255,0.7); cursor: pointer;
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 8px; transition: all 0.22s var(--ease);
+      font-family: inherit;
+    }
+    .pat-btn .pname { font-size: 0.92rem; }
+    .pat-btn .ptiming {
+      font-size: 0.75rem; color: rgba(255,255,255,0.38);
+      font-variant-numeric: tabular-nums; letter-spacing: 0.5px;
+    }
+    .pat-btn.sel {
+      background: rgba(255,255,255,0.16);
+      border-color: rgba(255,255,255,0.5);
       color: #fff;
     }
-    .pat-timing { font-size: 0.75rem; color: rgba(255,255,255,0.55); }
-    .pat-btn.active .pat-timing { color: rgba(255,255,255,0.8); }
+    .pat-btn.sel .ptiming { color: rgba(255,255,255,0.7); }
 
-    /* Begin button */
+    /* Begin */
     .btn-begin {
-      width: 100%; padding: 18px;
-      border-radius: 50px; border: none;
-      background: rgba(255,255,255,0.22);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      color: #fff; font-size: 1.1rem; font-weight: 600;
-      letter-spacing: 1px; cursor: pointer;
-      border: 1.5px solid rgba(255,255,255,0.4);
-      transition: all 0.25s;
+      width: 100%; padding: 20px; border-radius: 50px;
+      background: rgba(255,255,255,0.16);
+      border: 1.5px solid rgba(255,255,255,0.38);
+      color: #fff; font-size: 1.05rem; font-weight: 600;
+      letter-spacing: 1.5px; cursor: pointer;
+      transition: all 0.25s var(--ease); font-family: inherit;
+      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
     }
-    .btn-begin:hover { background: rgba(255,255,255,0.32); }
+    .btn-begin:active { background: rgba(255,255,255,0.26); transform: scale(0.98); }
 
-    /* ── SESSION SCREEN ── */
-    #sessionScreen {
+    /* ── SESSION ── */
+    #session {
       justify-content: center; gap: 0;
     }
 
-    .session-top {
+    .sess-header {
       position: fixed; top: 0; left: 0; right: 0;
-      padding: 20px 28px 0;
+      padding: max(env(safe-area-inset-top, 52px), 52px) 24px 0;
       display: flex; justify-content: space-between; align-items: center;
       z-index: 10;
     }
     .btn-end {
-      background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; padding: 8px 18px; border-radius: 20px;
-      font-size: 0.85rem; cursor: pointer;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: rgba(255,255,255,0.8); padding: 9px 20px;
+      border-radius: 20px; font-size: 0.85rem; cursor: pointer;
+      font-family: inherit;
     }
-    .session-timer {
-      font-size: 1rem; color: rgba(255,255,255,0.7); letter-spacing: 1px;
+    .sess-time {
+      font-size: 0.95rem; font-weight: 300; letter-spacing: 2px;
+      color: rgba(255,255,255,0.6); font-variant-numeric: tabular-nums;
     }
 
-    /* Breathing circle */
-    .breath-wrap {
-      position: relative; width: 260px; height: 260px;
+    /* Circle */
+    .circle-stage {
+      position: relative; width: 280px; height: 280px;
       display: flex; align-items: center; justify-content: center;
-      margin-bottom: 48px;
+      margin-bottom: 52px;
     }
-    .pulse-ring {
+
+    .aura {
       position: absolute; border-radius: 50%;
-      border: 1.5px solid rgba(255,255,255,0.2);
-      animation: pulseRing 3s ease-out infinite;
+      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
+      animation: auraBreath 4s ease-in-out infinite;
     }
-    .pulse-ring:nth-child(2) { animation-delay: 1s; }
-    .pulse-ring:nth-child(3) { animation-delay: 2s; }
-    @keyframes pulseRing {
-      0%   { width: 100px; height: 100px; opacity: 0.6; }
-      100% { width: 260px; height: 260px; opacity: 0; }
+    .aura:nth-child(1) { width: 280px; height: 280px; }
+    .aura:nth-child(2) { width: 220px; height: 220px; animation-delay: 0.5s; animation-duration: 5s; }
+    @keyframes auraBreath {
+      0%, 100% { opacity: 0.5; transform: scale(0.95); }
+      50% { opacity: 1; transform: scale(1.05); }
     }
 
-    .breath-circle {
-      width: 110px; height: 110px; border-radius: 50%;
-      background: radial-gradient(circle at 38% 35%, rgba(255,255,255,0.9), rgba(255,255,255,0.35));
-      box-shadow: 0 0 60px rgba(255,255,255,0.3);
+    .ring-outer {
+      position: absolute; width: 210px; height: 210px;
+      border-radius: 50%; border: 1px solid rgba(255,255,255,0.15);
+    }
+    .ring-mid {
+      position: absolute; width: 168px; height: 168px;
+      border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .main-circle {
+      width: 110px; height: 110px; border-radius: 50%; z-index: 2;
+      background: radial-gradient(circle at 38% 33%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 60%, rgba(255,255,255,0.25) 100%);
+      box-shadow: 0 0 50px rgba(255,255,255,0.25), 0 0 100px rgba(255,255,255,0.1);
+      transition: transform 0.5s ease;
+    }
+    .main-circle.inhale  { animation: cIn  var(--inhale-dur, 4s)  ease-in  forwards; }
+    .main-circle.hold    { transform: scale(1.72); }
+    .main-circle.holdout { transform: scale(1.72); }
+    .main-circle.exhale  { animation: cOut var(--exhale-dur, 6s) ease-out forwards; }
+
+    @keyframes cIn  { from { transform: scale(1);    } to { transform: scale(1.72); } }
+    @keyframes cOut { from { transform: scale(1.72); } to { transform: scale(1);    } }
+
+    .sess-phase {
+      font-size: 1.6rem; font-weight: 600; letter-spacing: 1.5px;
+      min-height: 42px; text-align: center; margin-bottom: 6px;
+    }
+    .sess-count {
+      font-size: 3.5rem; font-weight: 100; letter-spacing: 3px;
+      min-height: 70px; text-align: center;
+      font-variant-numeric: tabular-nums;
+    }
+    .sess-cycle {
+      font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); text-align: center; min-height: 20px;
+    }
+
+    /* Sound FAB */
+    .fab-sound {
+      position: fixed; bottom: max(env(safe-area-inset-bottom, 32px), 32px); right: 24px;
+      width: 48px; height: 48px; border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 1px solid rgba(255,255,255,0.25);
+      color: #fff; font-size: 1.15rem; cursor: pointer;
       display: flex; align-items: center; justify-content: center;
-      transition: transform 0.4s ease;
+      z-index: 10; transition: background 0.2s;
+      font-family: inherit;
     }
+    .fab-sound.muted { opacity: 0.45; }
 
-    .breath-circle.inhale {
-      animation: breathIn var(--inhale-dur, 4s) ease-in forwards;
-    }
-    .breath-circle.hold, .breath-circle.hold-out {
-      transform: scale(1.7);
-    }
-    .breath-circle.exhale {
-      animation: breathOut var(--exhale-dur, 6s) ease-out forwards;
-    }
-
-    @keyframes breathIn  { from { transform: scale(1);   } to { transform: scale(1.7); } }
-    @keyframes breathOut { from { transform: scale(1.7); } to { transform: scale(1);   } }
-
-    .breath-phase {
-      font-size: 1.5rem; font-weight: 700;
-      letter-spacing: 1px; text-align: center;
-      min-height: 38px; margin-bottom: 8px;
-      text-shadow: 0 2px 12px rgba(0,0,0,0.3);
-    }
-    .breath-count {
-      font-size: 3rem; font-weight: 200;
-      min-height: 64px; text-align: center;
-      letter-spacing: 2px;
-    }
-    .breath-cycle {
-      font-size: 0.85rem; color: rgba(255,255,255,0.6);
-      letter-spacing: 2px; min-height: 22px;
-      text-align: center; text-transform: uppercase;
-    }
-
-    /* Sound toggle */
-    .sound-btn {
-      position: fixed; bottom: 36px; right: 28px;
-      width: 46px; height: 46px; border-radius: 50%;
-      background: rgba(255,255,255,0.15);
-      border: 1px solid rgba(255,255,255,0.3);
-      color: #fff; font-size: 1.2rem;
-      cursor: pointer; display: flex; align-items: center; justify-content: center;
-      z-index: 10;
-    }
+    /* Scrollbar hide */
+    .screen::-webkit-scrollbar { display: none; }
   </style>
 </head>
 <body>
 
-<!-- Backgrounds -->
-<div class="bg bg-ocean" id="bg"></div>
-<div class="bg-overlay"></div>
+<div id="bgLayer"></div>
+<div id="bgNoise"></div>
 
-<!-- ── SETUP SCREEN ── -->
-<div class="screen" id="setupScreen">
-  <div class="logo-icon"><div class="logo-inner"></div></div>
-  <p class="app-label">Respirar</p>
-  <h1 class="app-title">CALMA</h1>
-  <p class="app-subtitle">Suelta la ansiedad.<br>Inhala paz y claridad.</p>
+<!-- ══ SETUP ══ -->
+<div class="screen" id="setup">
 
-  <p class="section-label">\u00bfCu\u00e1nto tiempo?</p>
-  <div class="duration-row" id="durRow">
-    <button class="dur-btn active" data-min="3">3 min</button>
+  <div class="logo-wrap">
+    <div class="logo-rings">
+      <span></span><span></span><span></span>
+    </div>
+    <span class="logo-label">Respirar</span>
+  </div>
+
+  <h1 class="hero-title">CALMA</h1>
+  <p class="hero-sub">Suelta la ansiedad.<br>Inhala paz y claridad.</p>
+
+  <p class="section-title">¿Cuánto tiempo?</p>
+  <div class="dur-row" id="durRow">
+    <button class="dur-btn sel" data-min="3">3 min</button>
     <button class="dur-btn" data-min="5">5 min</button>
     <button class="dur-btn" data-min="10">10 min</button>
   </div>
 
-  <p class="section-label">Ambiente visual</p>
+  <p class="section-title">Ambiente visual</p>
   <div class="scenes-row" id="scenesRow">
-    <div class="scene-card scene-ocean active" data-scene="ocean">
-      <span class="scene-name">Oc\u00e9ano</span>
+    <div class="scene-card sc-ocean sel" data-scene="ocean" data-label="Océano">
+      <div class="scene-check"></div>
     </div>
-    <div class="scene-card scene-forest" data-scene="forest">
-      <span class="scene-name">Bosque</span>
+    <div class="scene-card sc-forest" data-scene="forest" data-label="Bosque">
+      <div class="scene-check"></div>
     </div>
-    <div class="scene-card scene-sunset" data-scene="sunset">
-      <span class="scene-name">Atardecer</span>
+    <div class="scene-card sc-sunset" data-scene="sunset" data-label="Atardecer">
+      <div class="scene-check"></div>
     </div>
-    <div class="scene-card scene-mountain" data-scene="mountain">
-      <span class="scene-name">Monta\u00f1a</span>
+    <div class="scene-card sc-mountain" data-scene="mountain" data-label="Montaña">
+      <div class="scene-check"></div>
     </div>
   </div>
 
-  <p class="section-label">T\u00e9cnica de respiraci\u00f3n</p>
-  <div class="patterns-col" id="patternsCol"></div>
+  <p class="section-title">Técnica de respiración</p>
+  <div class="pat-list" id="patList"></div>
 
-  <button class="btn-begin" id="btnBegin">Comenzar Sesi\u00f3n</button>
+  <button class="btn-begin" id="btnBegin">Comenzar Sesión</button>
+
 </div>
 
-<!-- ── SESSION SCREEN ── -->
-<div class="screen hidden" id="sessionScreen">
-  <div class="session-top">
+<!-- ══ SESSION ══ -->
+<div class="screen in-below" id="session">
+
+  <div class="sess-header">
     <button class="btn-end" id="btnEnd">Terminar</button>
-    <span class="session-timer" id="sessionTimer"></span>
+    <span class="sess-time" id="sessTime">—</span>
   </div>
 
-  <div class="breath-wrap">
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring"></div>
-    <div class="pulse-ring"></div>
-    <div class="breath-circle" id="breathCircle"></div>
+  <div class="circle-stage">
+    <div class="aura"></div>
+    <div class="aura"></div>
+    <div class="ring-outer"></div>
+    <div class="ring-mid"></div>
+    <div class="main-circle" id="mainCircle"></div>
   </div>
 
-  <div class="breath-phase" id="breathPhase"></div>
-  <div class="breath-count" id="breathCount"></div>
-  <div class="breath-cycle" id="breathCycle"></div>
+  <div class="sess-phase" id="sessPhase"></div>
+  <div class="sess-count" id="sessCount"></div>
+  <div class="sess-cycle" id="sessCycle"></div>
 
-  <button class="sound-btn" id="soundBtn" title="Sonido">&#128264;</button>
+  <button class="fab-sound" id="fabSound">🔔</button>
 </div>
 
 <script>
+/* ── DATA ── */
 var PATTERNS = [
   {
     name: 'Respiraci\u00f3n Cuadrada',
     timing: '4 \u2013 4 \u2013 4 \u2013 4',
     phases: [
-      { label: 'Inhala',  type: 'inhale',   dur: 4 },
-      { label: 'Sost\u00e9n',  type: 'hold',     dur: 4 },
-      { label: 'Exhala',  type: 'exhale',   dur: 4 },
-      { label: 'Sost\u00e9n',  type: 'hold-out', dur: 4 }
+      { label: 'Inhala', type: 'inhale',  dur: 4 },
+      { label: 'Sost\u00e9n', type: 'hold',    dur: 4 },
+      { label: 'Exhala', type: 'exhale',  dur: 4 },
+      { label: 'Sost\u00e9n', type: 'holdout', dur: 4 }
     ]
   },
   {
     name: 'T\u00e9cnica 4-7-8',
     timing: '4 \u2013 7 \u2013 8',
     phases: [
-      { label: 'Inhala',  type: 'inhale', dur: 4 },
-      { label: 'Sost\u00e9n',  type: 'hold',   dur: 7 },
-      { label: 'Exhala',  type: 'exhale', dur: 8 }
+      { label: 'Inhala', type: 'inhale', dur: 4 },
+      { label: 'Sost\u00e9n', type: 'hold',   dur: 7 },
+      { label: 'Exhala', type: 'exhale', dur: 8 }
     ]
   },
   {
     name: 'Respiraci\u00f3n Calmante',
     timing: '5 \u2013 2 \u2013 7',
     phases: [
-      { label: 'Inhala',  type: 'inhale', dur: 5 },
-      { label: 'Sost\u00e9n',  type: 'hold',   dur: 2 },
-      { label: 'Exhala',  type: 'exhale', dur: 7 }
+      { label: 'Inhala', type: 'inhale', dur: 5 },
+      { label: 'Sost\u00e9n', type: 'hold',   dur: 2 },
+      { label: 'Exhala', type: 'exhale', dur: 7 }
     ]
   },
   {
@@ -340,169 +398,216 @@ var PATTERNS = [
   }
 ];
 
-var SCENES = {
-  ocean:    'bg-ocean',
-  forest:   'bg-forest',
-  sunset:   'bg-sunset',
-  mountain: 'bg-mountain'
-};
+var BG_CLASSES = { ocean: '', forest: 'forest', sunset: 'sunset', mountain: 'mountain' };
 
-var selectedDuration = 3;
-var selectedScene    = 'ocean';
-var selectedPattern  = PATTERNS[0];
+/* ── STATE ── */
+var selDuration = 3;
+var selScene    = 'ocean';
+var selPattern  = PATTERNS[0];
+var running     = false;
+var phaseIdx    = 0;
+var secLeft     = 0;
+var cycleNum    = 0;
+var sessLeft    = 0;
+var soundOn     = true;
+var phaseTimerId   = null;
+var sessTimerId    = null;
 
-var running      = false;
-var phaseTimer   = null;
-var sessionTimer = null;
-var phaseIndex   = 0;
-var secondsLeft  = 0;
-var cycleCount   = 0;
-var sessionLeft  = 0;
-var soundOn      = true;
+/* ── DOM ── */
+var bgLayer    = document.getElementById('bgLayer');
+var setupEl    = document.getElementById('setup');
+var sessionEl  = document.getElementById('session');
+var mainCircle = document.getElementById('mainCircle');
+var sessPhase  = document.getElementById('sessPhase');
+var sessCount  = document.getElementById('sessCount');
+var sessCycle  = document.getElementById('sessCycle');
+var sessTimeEl = document.getElementById('sessTime');
+var fabSound   = document.getElementById('fabSound');
 
-// Audio
-var audioCtx = null;
-var droneNode = null;
-var gainNode  = null;
+/* ── AUDIO ENGINE ── */
+var actx = null;
+var ambiGain = null;
+var ambiNodes = [];
 
-function getAudioCtx() {
-  if (!audioCtx) {
-    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+function ctx() {
+  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+  if (actx.state === 'suspended') actx.resume();
+  return actx;
+}
+
+function makeReverb(c, seconds) {
+  var len = c.sampleRate * seconds;
+  var buf = c.createBuffer(2, len, c.sampleRate);
+  for (var ch = 0; ch < 2; ch++) {
+    var d = buf.getChannelData(ch);
+    for (var i = 0; i < len; i++) {
+      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
+    }
   }
-  return audioCtx;
+  var conv = c.createConvolver();
+  conv.buffer = buf;
+  return conv;
 }
 
-function startDrone() {
+function startAmbience() {
   if (!soundOn) return;
-  var ctx = getAudioCtx();
-  if (ctx.state === 'suspended') ctx.resume();
+  var c = ctx();
+  ambiGain = c.createGain();
+  ambiGain.gain.setValueAtTime(0, c.currentTime);
+  ambiGain.gain.linearRampToValueAtTime(0.22, c.currentTime + 3);
+  var reverb = makeReverb(c, 4);
+  var reverbGain = c.createGain();
+  reverbGain.gain.value = 0.6;
+  ambiGain.connect(reverb);
+  reverb.connect(reverbGain);
+  reverbGain.connect(c.destination);
+  ambiGain.connect(c.destination);
 
-  gainNode  = ctx.createGain();
-  gainNode.gain.setValueAtTime(0, ctx.currentTime);
-  gainNode.gain.linearRampToValueAtTime(0.08, ctx.currentTime + 2);
-  gainNode.connect(ctx.destination);
-
-  droneNode = ctx.createOscillator();
-  droneNode.type = 'sine';
-  droneNode.frequency.setValueAtTime(174.6, ctx.currentTime);
-  droneNode.connect(gainNode);
-  droneNode.start();
-}
-
-function stopDrone() {
-  if (droneNode) {
-    try {
-      gainNode.gain.linearRampToValueAtTime(0, audioCtx.currentTime + 1);
-      droneNode.stop(audioCtx.currentTime + 1);
-    } catch(e) {}
-    droneNode = null;
-    gainNode  = null;
-  }
-}
-
-function playTone(freq, duration) {
-  if (!soundOn) return;
-  var ctx = getAudioCtx();
-  if (ctx.state === 'suspended') ctx.resume();
-  var osc = ctx.createOscillator();
-  var gain = ctx.createGain();
-  osc.type = 'sine';
-  osc.frequency.setValueAtTime(freq, ctx.currentTime);
-  gain.gain.setValueAtTime(0, ctx.currentTime);
-  gain.gain.linearRampToValueAtTime(0.18, ctx.currentTime + 0.3);
-  gain.gain.linearRampToValueAtTime(0, ctx.currentTime + duration - 0.2);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + duration);
-}
-
-// DOM refs
-var bg           = document.getElementById('bg');
-var setupScreen  = document.getElementById('setupScreen');
-var sessionScr   = document.getElementById('sessionScreen');
-var breathCircle = document.getElementById('breathCircle');
-var breathPhase  = document.getElementById('breathPhase');
-var breathCount  = document.getElementById('breathCount');
-var breathCycle  = document.getElementById('breathCycle');
-var sessionTimerEl = document.getElementById('sessionTimer');
-var soundBtn     = document.getElementById('soundBtn');
-
-// Build pattern buttons
-var patternsCol = document.getElementById('patternsCol');
-PATTERNS.forEach(function(pat, idx) {
-  var btn = document.createElement('button');
-  btn.className = idx === 0 ? 'pat-btn active' : 'pat-btn';
-  btn.innerHTML = '<span>' + pat.name + '</span><span class="pat-timing">' + pat.timing + '</span>';
-  btn.addEventListener('click', function() {
-    selectedPattern = pat;
-    document.querySelectorAll('.pat-btn').forEach(function(b) { b.classList.remove('active'); });
-    btn.classList.add('active');
+  // Pad: stacked soft sine harmonics
+  var freqs = [110, 165, 220, 330, 440];
+  freqs.forEach(function(f, i) {
+    var osc = c.createOscillator();
+    var g   = c.createGain();
+    osc.type = 'sine';
+    osc.frequency.value = f;
+    g.gain.value = 0.06 / (i + 1);
+    var lfo = c.createOscillator();
+    var lfoG = c.createGain();
+    lfo.frequency.value = 0.05 + i * 0.02;
+    lfoG.gain.value = 1.5;
+    lfo.connect(lfoG);
+    lfoG.connect(osc.frequency);
+    lfo.start();
+    osc.connect(g);
+    g.connect(ambiGain);
+    osc.start();
+    ambiNodes.push(osc, lfo);
   });
-  patternsCol.appendChild(btn);
+
+  // Filtered noise (ocean texture)
+  var bufLen = c.sampleRate * 3;
+  var noiseBuf = c.createBuffer(1, bufLen, c.sampleRate);
+  var nd = noiseBuf.getChannelData(0);
+  for (var i = 0; i < bufLen; i++) nd[i] = Math.random() * 2 - 1;
+  var noiseSource = c.createBufferSource();
+  noiseSource.buffer = noiseBuf;
+  noiseSource.loop = true;
+  var lpf = c.createBiquadFilter();
+  lpf.type = 'lowpass';
+  lpf.frequency.value = 280;
+  lpf.Q.value = 0.8;
+  var noiseGain = c.createGain();
+  noiseGain.gain.value = 0.07;
+  noiseSource.connect(lpf);
+  lpf.connect(noiseGain);
+  noiseGain.connect(ambiGain);
+  noiseSource.start();
+  ambiNodes.push(noiseSource);
+}
+
+function stopAmbience() {
+  if (!ambiGain) return;
+  var c = actx;
+  ambiGain.gain.linearRampToValueAtTime(0, c.currentTime + 1.5);
+  var nodes = ambiNodes.slice();
+  ambiNodes = [];
+  setTimeout(function() {
+    nodes.forEach(function(n) { try { n.stop(); } catch(e) {} });
+    ambiGain = null;
+  }, 1600);
+}
+
+function playChime(freq, dur) {
+  if (!soundOn) return;
+  var c = ctx();
+  var osc  = c.createOscillator();
+  var gain = c.createGain();
+  osc.type = 'sine';
+  osc.frequency.value = freq;
+  gain.gain.setValueAtTime(0, c.currentTime);
+  gain.gain.linearRampToValueAtTime(0.14, c.currentTime + 0.15);
+  gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
+  osc.connect(gain);
+  gain.connect(c.destination);
+  osc.start();
+  osc.stop(c.currentTime + dur);
+}
+
+/* ── BUILD PATTERN BUTTONS ── */
+var patList = document.getElementById('patList');
+PATTERNS.forEach(function(pat, i) {
+  var btn = document.createElement('button');
+  btn.className = 'pat-btn' + (i === 0 ? ' sel' : '');
+  btn.innerHTML = '<span class="pname">' + pat.name + '</span>'
+                + '<span class="ptiming">' + pat.timing + '</span>';
+  btn.addEventListener('click', function() {
+    selPattern = pat;
+    patList.querySelectorAll('.pat-btn').forEach(function(b) { b.classList.remove('sel'); });
+    btn.classList.add('sel');
+  });
+  patList.appendChild(btn);
 });
 
-// Duration buttons
+/* ── DURATION ── */
 document.getElementById('durRow').addEventListener('click', function(e) {
-  var btn = e.target.closest('.dur-btn');
-  if (!btn) return;
-  selectedDuration = parseInt(btn.dataset.min, 10);
-  document.querySelectorAll('.dur-btn').forEach(function(b) { b.classList.remove('active'); });
-  btn.classList.add('active');
+  var b = e.target.closest('.dur-btn');
+  if (!b) return;
+  selDuration = parseInt(b.dataset.min, 10);
+  document.querySelectorAll('.dur-btn').forEach(function(x) { x.classList.remove('sel'); });
+  b.classList.add('sel');
 });
 
-// Scene cards
+/* ── SCENES ── */
 document.getElementById('scenesRow').addEventListener('click', function(e) {
   var card = e.target.closest('.scene-card');
   if (!card) return;
-  selectedScene = card.dataset.scene;
-  document.querySelectorAll('.scene-card').forEach(function(c) { c.classList.remove('active'); });
-  card.classList.add('active');
-  bg.className = 'bg ' + SCENES[selectedScene];
+  selScene = card.dataset.scene;
+  document.querySelectorAll('.scene-card').forEach(function(c) { c.classList.remove('sel'); });
+  card.classList.add('sel');
+  bgLayer.className = BG_CLASSES[selScene];
+  bgLayer.id = 'bgLayer';
 });
 
-// Sound toggle
-soundBtn.addEventListener('click', function() {
+/* ── SOUND ── */
+fabSound.addEventListener('click', function() {
   soundOn = !soundOn;
-  soundBtn.textContent = soundOn ? '\uD83D\uDD14' : '\uD83D\uDD15';
-  if (!soundOn) stopDrone();
-  else if (running) startDrone();
+  fabSound.textContent = soundOn ? '\uD83D\uDD14' : '\uD83D\uDD15';
+  fabSound.classList.toggle('muted', !soundOn);
+  if (!soundOn) stopAmbience();
+  else if (running) startAmbience();
 });
 
-// Begin session
+/* ── BEGIN ── */
 document.getElementById('btnBegin').addEventListener('click', function() {
-  setupScreen.classList.add('hidden');
-  sessionScr.classList.remove('hidden');
+  ctx(); // unlock audio on user gesture
+  setupEl.classList.add('out');
+  sessionEl.classList.remove('in-below');
   startSession();
 });
 
-// End session
-document.getElementById('btnEnd').addEventListener('click', function() {
-  endSession();
-});
+/* ── END ── */
+document.getElementById('btnEnd').addEventListener('click', endSession);
 
-function fmtTime(sec) {
-  var m = Math.floor(sec / 60);
-  var s = sec % 60;
-  return m + ':' + (s < 10 ? '0' : '') + s;
+/* ── SESSION LOGIC ── */
+function fmt(s) {
+  var m = Math.floor(s / 60), ss = s % 60;
+  return m + ':' + (ss < 10 ? '0' : '') + ss;
 }
 
 function startSession() {
-  running     = true;
-  phaseIndex  = 0;
-  cycleCount  = 0;
-  sessionLeft = selectedDuration * 60;
-  breathCycle.textContent = '';
-  sessionTimerEl.textContent = fmtTime(sessionLeft);
+  running   = true;
+  phaseIdx  = 0;
+  cycleNum  = 0;
+  sessLeft  = selDuration * 60;
+  sessCycle.textContent = '';
+  sessTimeEl.textContent = fmt(sessLeft);
 
-  startDrone();
+  startAmbience();
 
-  sessionTimer = setInterval(function() {
-    sessionLeft--;
-    sessionTimerEl.textContent = fmtTime(sessionLeft);
-    if (sessionLeft <= 0) {
-      endSession();
-    }
+  sessTimerId = setInterval(function() {
+    sessLeft--;
+    sessTimeEl.textContent = fmt(sessLeft);
+    if (sessLeft <= 0) endSession();
   }, 1000);
 
   runPhase();
@@ -510,28 +615,29 @@ function startSession() {
 
 function runPhase() {
   if (!running) return;
-  var phase = selectedPattern.phases[phaseIndex];
-  secondsLeft = phase.dur;
+  var phase = selPattern.phases[phaseIdx];
+  secLeft = phase.dur;
+
   document.documentElement.style.setProperty('--inhale-dur', phase.dur + 's');
   document.documentElement.style.setProperty('--exhale-dur', phase.dur + 's');
-  breathCircle.className = 'breath-circle ' + phase.type;
-  breathPhase.textContent = phase.label;
-  breathCount.textContent = secondsLeft;
+  mainCircle.className = 'main-circle ' + phase.type;
+  sessPhase.textContent = phase.label;
+  sessCount.textContent = secLeft;
 
-  if (phase.type === 'inhale') playTone(396, phase.dur);
-  else if (phase.type === 'exhale') playTone(285, phase.dur);
-  else playTone(432, phase.dur);
+  if (phase.type === 'inhale')       playChime(528, 1.2);
+  else if (phase.type === 'exhale')  playChime(396, 1.2);
+  else                               playChime(432, 0.8);
 
-  phaseTimer = setInterval(function() {
-    secondsLeft--;
-    breathCount.textContent = secondsLeft > 0 ? secondsLeft : '';
-    if (secondsLeft <= 0) {
-      clearInterval(phaseTimer);
-      phaseIndex++;
-      if (phaseIndex >= selectedPattern.phases.length) {
-        phaseIndex = 0;
-        cycleCount++;
-        breathCycle.textContent = 'Ciclo ' + cycleCount;
+  phaseTimerId = setInterval(function() {
+    secLeft--;
+    sessCount.textContent = secLeft > 0 ? secLeft : '';
+    if (secLeft <= 0) {
+      clearInterval(phaseTimerId);
+      phaseIdx++;
+      if (phaseIdx >= selPattern.phases.length) {
+        phaseIdx = 0;
+        cycleNum++;
+        sessCycle.textContent = 'Ciclo ' + cycleNum;
       }
       runPhase();
     }
@@ -540,20 +646,21 @@ function runPhase() {
 
 function endSession() {
   running = false;
-  clearInterval(phaseTimer);
-  clearInterval(sessionTimer);
-  stopDrone();
+  clearInterval(phaseTimerId);
+  clearInterval(sessTimerId);
+  stopAmbience();
 
-  breathCircle.className = 'breath-circle';
-  breathPhase.textContent = 'Sesi\u00f3n completa';
-  breathCount.textContent = '';
+  mainCircle.className = 'main-circle';
+  sessPhase.textContent = 'Sesi\u00f3n completa';
+  sessCount.textContent = '';
+  sessCycle.textContent = cycleNum + (cycleNum === 1 ? ' ciclo' : ' ciclos');
 
   setTimeout(function() {
-    sessionScr.classList.add('hidden');
-    setupScreen.classList.remove('hidden');
-    breathPhase.textContent = '';
-    breathCycle.textContent = '';
-  }, 2500);
+    sessionEl.classList.add('in-below');
+    setupEl.classList.remove('out');
+    sessPhase.textContent = '';
+    sessCycle.textContent = '';
+  }, 3000);
 }
 </script>
 </body>
