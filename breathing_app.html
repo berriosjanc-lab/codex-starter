@@ -5,6 +5,9 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
   <title>Respirar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after {
       box-sizing: border-box; margin: 0; padding: 0;
@@ -14,7 +17,7 @@
 
     body {
       min-height: 100vh;
-      font-family: -apple-system, 'Helvetica Neue', sans-serif;
+      font-family: 'Josefin Sans', -apple-system, sans-serif;
       color: #fff; overflow: hidden;
     }
 
@@ -61,23 +64,28 @@
     .rings i:nth-child(2){ width:40px; height:40px; border-color:rgba(255,255,255,0.38); }
     .rings i:nth-child(3){ width:22px; height:22px; background:rgba(255,255,255,0.85); border:none; }
     .logo-lbl {
-      font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase;
-      color: rgba(255,255,255,0.5);
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.6rem; letter-spacing: 6px; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); font-weight: 300;
     }
 
     .h-title {
-      font-size: 2.8rem; font-weight: 700; letter-spacing: 4px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.6rem; font-weight: 300; letter-spacing: 10px;
       margin-bottom: 10px; text-align: center;
     }
     .h-sub {
-      font-style: italic; font-size: 0.97rem; line-height: 1.75;
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.2rem; line-height: 1.85;
       color: rgba(255,255,255,0.6); text-align: center; margin-bottom: 38px;
+      font-weight: 300;
     }
 
     .sec-lbl {
       align-self: flex-start;
-      font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase;
-      color: rgba(255,255,255,0.42); margin-bottom: 12px;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+      color: rgba(255,255,255,0.38); margin-bottom: 12px; font-weight: 300;
     }
 
     /* DURATION */
@@ -153,8 +161,9 @@
     .btn-begin {
       width:100%; padding:20px; border-radius:50px;
       background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.38);
-      color:#fff; font-size:1.05rem; font-weight:600; letter-spacing:1.5px;
-      cursor:pointer; font-family:inherit;
+      color:#fff; font-size:0.85rem; font-weight:400; letter-spacing:4px;
+      text-transform: uppercase;
+      cursor:pointer; font-family:'Josefin Sans',sans-serif;
       transition:all 0.22s var(--ease);
       -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
     }
@@ -212,9 +221,23 @@
     @keyframes cIn  { from{transform:scale(1)}    to{transform:scale(1.72)} }
     @keyframes cOut { from{transform:scale(1.72)} to{transform:scale(1)}    }
 
-    .s-phase { font-size:1.55rem; font-weight:600; letter-spacing:1.5px; text-align:center; min-height:40px; margin-bottom:6px; }
-    .s-count { font-size:3.6rem; font-weight:100; letter-spacing:3px; min-height:68px; text-align:center; }
-    .s-cycle { font-size:0.7rem; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.4); text-align:center; min-height:20px; }
+    .s-phase {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300; letter-spacing: 3px;
+      text-align: center; min-height: 44px; margin-bottom: 4px;
+      font-style: italic;
+    }
+    .s-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem; font-weight: 300; letter-spacing: 4px;
+      min-height: 80px; text-align: center;
+    }
+    .s-cycle {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
+      color: rgba(255,255,255,0.38); text-align: center; min-height: 20px;
+      font-weight: 300;
+    }
 
     .fab {
       position:fixed; bottom:36px; right:24px;
