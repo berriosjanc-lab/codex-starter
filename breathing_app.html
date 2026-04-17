@@ -2,665 +2,477 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
-  <title>Respirar · Calma</title>
+  <title>Respirar</title>
   <style>
     *, *::before, *::after {
       box-sizing: border-box; margin: 0; padding: 0;
       -webkit-tap-highlight-color: transparent;
     }
-
-    :root {
-      --ease: cubic-bezier(.4,0,.2,1);
-    }
+    :root { --ease: cubic-bezier(.4,0,.2,1); }
 
     body {
-      min-height: 100vh; min-height: 100dvh;
-      font-family: -apple-system, 'SF Pro Display', 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      font-family: -apple-system, 'Helvetica Neue', sans-serif;
       color: #fff; overflow: hidden;
     }
 
-    /* ── BACKGROUND ── */
-    #bgLayer {
+    /* BACKGROUND */
+    #bg {
       position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(155deg,#0d2137 0%,#0e3d52 35%,#145c6e 65%,#1a7a8a 100%);
       transition: background 1.4s var(--ease);
-      background: linear-gradient(155deg, #0d2137 0%, #0e3d52 35%, #145c6e 65%, #1a7a8a 100%);
     }
-    #bgLayer.forest   { background: linear-gradient(155deg, #071a0e 0%, #0d3320 35%, #165a35 65%, #1e7a4a 100%); }
-    #bgLayer.sunset   { background: linear-gradient(155deg, #12061f 0%, #3d1040 35%, #8c3060 65%, #d4604a 100%); }
-    #bgLayer.mountain { background: linear-gradient(155deg, #080c1a 0%, #141e3c 35%, #243a6e 65%, #3a5f9e 100%); }
-
-    #bgLayer::after {
-      content: '';
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.07) 0%, transparent 70%),
-                  radial-gradient(ellipse at 80% 100%, rgba(255,255,255,0.04) 0%, transparent 60%);
+    #bg.forest   { background: linear-gradient(155deg,#071a0e 0%,#0d3320 35%,#165a35 65%,#1e7a4a 100%); }
+    #bg.sunset   { background: linear-gradient(155deg,#12061f 0%,#3d1040 35%,#8c3060 65%,#d4604a 100%); }
+    #bg.mountain { background: linear-gradient(155deg,#080c1a 0%,#141e3c 35%,#243a6e 65%,#3a5f9e 100%); }
+    #bg::after {
+      content:''; position:absolute; inset:0;
+      background: rgba(0,0,0,0.3);
     }
 
-    #bgNoise {
-      position: fixed; inset: 0; z-index: 1;
-      background: rgba(0,0,0,0.28);
-      backdrop-filter: blur(0px);
-      -webkit-backdrop-filter: blur(0px);
-    }
-
-    /* ── SCREENS ── */
+    /* SCREENS */
     .screen {
       position: fixed; inset: 0; z-index: 2;
-      display: flex; flex-direction: column;
-      align-items: center;
-      padding: env(safe-area-inset-top, 52px) 24px env(safe-area-inset-bottom, 32px);
+      display: flex; flex-direction: column; align-items: center;
+      padding: 56px 24px 36px;
       overflow-y: auto;
-      transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+      transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
     }
-    .screen.out {
-      opacity: 0; transform: translateY(-24px); pointer-events: none;
-    }
-    .screen.in-below {
-      opacity: 0; transform: translateY(24px); pointer-events: none;
-    }
+    .screen::-webkit-scrollbar { display: none; }
+    .screen.out  { opacity:0; transform:translateY(-20px); pointer-events:none; }
+    .screen.below{ opacity:0; transform:translateY(20px);  pointer-events:none; }
 
-    /* ── SETUP ── */
-    #setup { padding-top: max(env(safe-area-inset-top, 52px), 52px); }
-
+    /* LOGO */
     .logo-wrap {
-      margin-bottom: 20px; margin-top: 8px;
-      display: flex; flex-direction: column; align-items: center; gap: 14px;
+      display: flex; flex-direction: column; align-items: center;
+      gap: 10px; margin-bottom: 18px; margin-top: 4px;
+    }
+    .rings {
+      width: 58px; height: 58px;
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .rings i {
+      position: absolute; border-radius: 50%; display: block;
+      border: 1.5px solid rgba(255,255,255,0.45);
+    }
+    .rings i:nth-child(1){ width:58px; height:58px; border-color:rgba(255,255,255,0.2); }
+    .rings i:nth-child(2){ width:40px; height:40px; border-color:rgba(255,255,255,0.38); }
+    .rings i:nth-child(3){ width:22px; height:22px; background:rgba(255,255,255,0.85); border:none; }
+    .logo-lbl {
+      font-size: 0.65rem; letter-spacing: 5px; text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
     }
 
-    .logo-rings {
-      position: relative; width: 64px; height: 64px;
-      display: flex; align-items: center; justify-content: center;
-    }
-    .logo-rings span {
-      position: absolute; border-radius: 50%;
-      border: 1.5px solid rgba(255,255,255,0.55);
-    }
-    .logo-rings span:nth-child(1) { width: 64px; height: 64px; border-color: rgba(255,255,255,0.22); }
-    .logo-rings span:nth-child(2) { width: 46px; height: 46px; border-color: rgba(255,255,255,0.38); }
-    .logo-rings span:nth-child(3) { width: 28px; height: 28px; background: rgba(255,255,255,0.82); border: none; }
-
-    .logo-label {
-      font-size: 0.68rem; letter-spacing: 5px;
-      color: rgba(255,255,255,0.55); text-transform: uppercase;
-    }
-
-    .hero-title {
-      font-size: 3rem; font-weight: 700; letter-spacing: 3px;
+    .h-title {
+      font-size: 2.8rem; font-weight: 700; letter-spacing: 4px;
       margin-bottom: 10px; text-align: center;
     }
-    .hero-sub {
-      font-style: italic; font-size: 1rem; line-height: 1.7;
-      color: rgba(255,255,255,0.65); text-align: center;
-      margin-bottom: 40px;
+    .h-sub {
+      font-style: italic; font-size: 0.97rem; line-height: 1.75;
+      color: rgba(255,255,255,0.6); text-align: center; margin-bottom: 38px;
     }
 
-    .section-title {
+    .sec-lbl {
       align-self: flex-start;
-      font-size: 0.65rem; letter-spacing: 3.5px;
-      color: rgba(255,255,255,0.45); text-transform: uppercase;
-      margin-bottom: 12px;
+      font-size: 0.62rem; letter-spacing: 3px; text-transform: uppercase;
+      color: rgba(255,255,255,0.42); margin-bottom: 12px;
     }
 
-    /* Duration */
-    .dur-row {
-      display: flex; gap: 10px; width: 100%; margin-bottom: 30px;
-    }
+    /* DURATION */
+    .dur-row { display:flex; gap:10px; width:100%; margin-bottom:28px; }
     .dur-btn {
-      flex: 1; padding: 15px 0; border-radius: 16px;
-      background: rgba(255,255,255,0.07);
-      border: 1px solid rgba(255,255,255,0.14);
-      color: rgba(255,255,255,0.6); font-size: 0.95rem;
-      cursor: pointer; transition: all 0.25s var(--ease);
-      font-family: inherit;
+      flex:1; padding:15px 0; border-radius:14px;
+      background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.14);
+      color:rgba(255,255,255,0.6); font-size:0.95rem; cursor:pointer;
+      transition:all 0.22s var(--ease); font-family:inherit;
     }
-    .dur-btn.sel {
-      background: rgba(255,255,255,0.18);
-      border-color: rgba(255,255,255,0.55);
-      color: #fff; font-weight: 600;
+    .dur-btn.on {
+      background:rgba(255,255,255,0.2); border-color:rgba(255,255,255,0.6);
+      color:#fff; font-weight:600;
     }
 
-    /* Scenes */
+    /* SCENE CARDS */
     .scenes-row {
       display: flex; gap: 10px; width: 100%;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
-    .scene-card {
-      flex: 1; height: 90px; border-radius: 18px;
-      cursor: pointer; position: relative; overflow: hidden;
+    .sc {
+      flex: 1; border-radius: 16px; cursor: pointer;
+      position: relative; overflow: hidden;
       border: 2px solid transparent;
-      transition: border-color 0.25s var(--ease), transform 0.2s var(--ease);
+      transition: border-color 0.25s, transform 0.18s;
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: flex-end;
+      padding-bottom: 10px;
+      min-height: 88px;
     }
-    .scene-card.sel { border-color: rgba(255,255,255,0.85); }
-    .scene-card:active { transform: scale(0.96); }
-
-    .sc-ocean    { background: linear-gradient(160deg, #1a6b8a 0%, #2eb8c8 60%, #7ee8e0 100%); }
-    .sc-forest   { background: linear-gradient(160deg, #1a5c2e 0%, #2d9c55 60%, #7fd490 100%); }
-    .sc-sunset   { background: linear-gradient(160deg, #6b2060 0%, #c04060 60%, #f08050 100%); }
-    .sc-mountain { background: linear-gradient(160deg, #243a6e 0%, #4a70b0 60%, #90b8e0 100%); }
-
-    .scene-card::after {
-      content: attr(data-label);
-      position: absolute; bottom: 8px; left: 0; right: 0;
-      text-align: center; font-size: 0.72rem; font-weight: 600;
-      letter-spacing: 0.5px; color: #fff;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+    .sc.on { border-color: rgba(255,255,255,0.9); }
+    .sc:active { transform: scale(0.95); }
+    .sc-ocean    { background: linear-gradient(160deg,#1565a0,#26c6da); }
+    .sc-forest   { background: linear-gradient(160deg,#1b5e20,#66bb6a); }
+    .sc-sunset   { background: linear-gradient(160deg,#6a1b4d,#ef6c00); }
+    .sc-mountain { background: linear-gradient(160deg,#1a237e,#64b5f6); }
+    .sc-dot {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: rgba(255,255,255,0.25);
+      border: 2px solid rgba(255,255,255,0.6);
+      margin-bottom: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 10px; font-weight: 700;
     }
-    .scene-check {
-      position: absolute; top: 7px; right: 8px;
-      width: 18px; height: 18px; border-radius: 50%;
-      background: #fff; display: none;
-      align-items: center; justify-content: center;
+    .sc.on .sc-dot { background: #fff; color: #333; }
+    .sc-dot::after { content: ''; }
+    .sc.on .sc-dot::after { content: '\2713'; }
+    .sc-name {
+      font-size: 0.7rem; font-weight: 600; color: #fff;
+      text-shadow: 0 1px 4px rgba(0,0,0,0.5); letter-spacing: 0.3px;
+      text-align: center;
     }
-    .scene-check::after { content: '✓'; font-size: 10px; color: #333; font-weight: 700; }
-    .scene-card.sel .scene-check { display: flex; }
 
-    /* Patterns */
-    .pat-list { width: 100%; margin-bottom: 32px; }
+    /* PATTERNS */
+    .pat-list { width:100%; margin-bottom:30px; }
     .pat-btn {
-      width: 100%; padding: 16px 20px; border-radius: 16px;
-      background: rgba(255,255,255,0.06);
-      border: 1px solid rgba(255,255,255,0.12);
-      color: rgba(255,255,255,0.7); cursor: pointer;
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: 8px; transition: all 0.22s var(--ease);
-      font-family: inherit;
+      width:100%; padding:15px 18px; border-radius:14px;
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+      color:rgba(255,255,255,0.65); cursor:pointer;
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:8px; font-family:inherit;
+      transition:all 0.2s var(--ease);
     }
-    .pat-btn .pname { font-size: 0.92rem; }
-    .pat-btn .ptiming {
-      font-size: 0.75rem; color: rgba(255,255,255,0.38);
-      font-variant-numeric: tabular-nums; letter-spacing: 0.5px;
+    .pat-btn .pn { font-size:0.9rem; }
+    .pat-btn .pt { font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.5px; }
+    .pat-btn.on {
+      background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.5);
+      color:#fff;
     }
-    .pat-btn.sel {
-      background: rgba(255,255,255,0.16);
-      border-color: rgba(255,255,255,0.5);
-      color: #fff;
-    }
-    .pat-btn.sel .ptiming { color: rgba(255,255,255,0.7); }
+    .pat-btn.on .pt { color:rgba(255,255,255,0.65); }
 
-    /* Begin */
+    /* BEGIN */
     .btn-begin {
-      width: 100%; padding: 20px; border-radius: 50px;
-      background: rgba(255,255,255,0.16);
-      border: 1.5px solid rgba(255,255,255,0.38);
-      color: #fff; font-size: 1.05rem; font-weight: 600;
-      letter-spacing: 1.5px; cursor: pointer;
-      transition: all 0.25s var(--ease); font-family: inherit;
-      backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+      width:100%; padding:20px; border-radius:50px;
+      background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.38);
+      color:#fff; font-size:1.05rem; font-weight:600; letter-spacing:1.5px;
+      cursor:pointer; font-family:inherit;
+      transition:all 0.22s var(--ease);
+      -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
     }
-    .btn-begin:active { background: rgba(255,255,255,0.26); transform: scale(0.98); }
+    .btn-begin:active { background:rgba(255,255,255,0.26); transform:scale(0.98); }
 
-    /* ── SESSION ── */
-    #session {
-      justify-content: center; gap: 0;
-    }
+    /* SESSION */
+    #sess { justify-content:center; padding-top:0; }
 
-    .sess-header {
-      position: fixed; top: 0; left: 0; right: 0;
-      padding: max(env(safe-area-inset-top, 52px), 52px) 24px 0;
-      display: flex; justify-content: space-between; align-items: center;
-      z-index: 10;
+    .sess-hdr {
+      position:fixed; top:0; left:0; right:0;
+      padding:52px 24px 0;
+      display:flex; justify-content:space-between; align-items:center;
+      z-index:10;
     }
     .btn-end {
-      background: rgba(255,255,255,0.1);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: rgba(255,255,255,0.8); padding: 9px 20px;
-      border-radius: 20px; font-size: 0.85rem; cursor: pointer;
-      font-family: inherit;
+      background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25);
+      color:rgba(255,255,255,0.8); padding:9px 20px; border-radius:20px;
+      font-size:0.85rem; cursor:pointer; font-family:inherit;
     }
-    .sess-time {
-      font-size: 0.95rem; font-weight: 300; letter-spacing: 2px;
-      color: rgba(255,255,255,0.6); font-variant-numeric: tabular-nums;
+    .sess-clock {
+      font-size:0.95rem; font-weight:300; letter-spacing:2px;
+      color:rgba(255,255,255,0.55);
     }
 
-    /* Circle */
-    .circle-stage {
-      position: relative; width: 280px; height: 280px;
-      display: flex; align-items: center; justify-content: center;
-      margin-bottom: 52px;
+    /* CIRCLE */
+    .stage {
+      position:relative; width:280px; height:280px;
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:48px;
     }
-
     .aura {
-      position: absolute; border-radius: 50%;
-      background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
-      animation: auraBreath 4s ease-in-out infinite;
+      position:absolute; border-radius:50%;
+      background:radial-gradient(circle,rgba(255,255,255,0.07) 0%,transparent 70%);
+      animation:aura 4.5s ease-in-out infinite;
     }
-    .aura:nth-child(1) { width: 280px; height: 280px; }
-    .aura:nth-child(2) { width: 220px; height: 220px; animation-delay: 0.5s; animation-duration: 5s; }
-    @keyframes auraBreath {
-      0%, 100% { opacity: 0.5; transform: scale(0.95); }
-      50% { opacity: 1; transform: scale(1.05); }
+    .aura:nth-child(1){ width:280px; height:280px; }
+    .aura:nth-child(2){ width:200px; height:200px; animation-delay:.7s; animation-duration:5.5s; }
+    @keyframes aura {
+      0%,100%{ opacity:.5; transform:scale(.94); }
+      50%{ opacity:1; transform:scale(1.04); }
     }
+    .ring1 { position:absolute; width:210px; height:210px; border-radius:50%; border:1px solid rgba(255,255,255,0.14); }
+    .ring2 { position:absolute; width:162px; height:162px; border-radius:50%; border:1px solid rgba(255,255,255,0.09); }
 
-    .ring-outer {
-      position: absolute; width: 210px; height: 210px;
-      border-radius: 50%; border: 1px solid rgba(255,255,255,0.15);
+    .orb {
+      width:108px; height:108px; border-radius:50%; z-index:2;
+      background:radial-gradient(circle at 36% 32%,rgba(255,255,255,.95) 0%,rgba(255,255,255,.5) 55%,rgba(255,255,255,.2) 100%);
+      box-shadow:0 0 55px rgba(255,255,255,.22),0 0 110px rgba(255,255,255,.08);
+      transition:transform .4s ease;
     }
-    .ring-mid {
-      position: absolute; width: 168px; height: 168px;
-      border-radius: 50%; border: 1px solid rgba(255,255,255,0.1);
-    }
+    .orb.inhale  { animation:cIn  var(--iDur,4s) ease-in  forwards; }
+    .orb.hold    { transform:scale(1.72); }
+    .orb.holdout { transform:scale(1.72); }
+    .orb.exhale  { animation:cOut var(--eDur,6s) ease-out forwards; }
+    @keyframes cIn  { from{transform:scale(1)}    to{transform:scale(1.72)} }
+    @keyframes cOut { from{transform:scale(1.72)} to{transform:scale(1)}    }
 
-    .main-circle {
-      width: 110px; height: 110px; border-radius: 50%; z-index: 2;
-      background: radial-gradient(circle at 38% 33%, rgba(255,255,255,0.95) 0%, rgba(255,255,255,0.55) 60%, rgba(255,255,255,0.25) 100%);
-      box-shadow: 0 0 50px rgba(255,255,255,0.25), 0 0 100px rgba(255,255,255,0.1);
-      transition: transform 0.5s ease;
-    }
-    .main-circle.inhale  { animation: cIn  var(--inhale-dur, 4s)  ease-in  forwards; }
-    .main-circle.hold    { transform: scale(1.72); }
-    .main-circle.holdout { transform: scale(1.72); }
-    .main-circle.exhale  { animation: cOut var(--exhale-dur, 6s) ease-out forwards; }
+    .s-phase { font-size:1.55rem; font-weight:600; letter-spacing:1.5px; text-align:center; min-height:40px; margin-bottom:6px; }
+    .s-count { font-size:3.6rem; font-weight:100; letter-spacing:3px; min-height:68px; text-align:center; }
+    .s-cycle { font-size:0.7rem; letter-spacing:3px; text-transform:uppercase; color:rgba(255,255,255,0.4); text-align:center; min-height:20px; }
 
-    @keyframes cIn  { from { transform: scale(1);    } to { transform: scale(1.72); } }
-    @keyframes cOut { from { transform: scale(1.72); } to { transform: scale(1);    } }
-
-    .sess-phase {
-      font-size: 1.6rem; font-weight: 600; letter-spacing: 1.5px;
-      min-height: 42px; text-align: center; margin-bottom: 6px;
+    .fab {
+      position:fixed; bottom:36px; right:24px;
+      width:46px; height:46px; border-radius:50%;
+      background:rgba(255,255,255,0.11); border:1px solid rgba(255,255,255,0.22);
+      color:#fff; font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      z-index:10; font-family:inherit;
     }
-    .sess-count {
-      font-size: 3.5rem; font-weight: 100; letter-spacing: 3px;
-      min-height: 70px; text-align: center;
-      font-variant-numeric: tabular-nums;
-    }
-    .sess-cycle {
-      font-size: 0.72rem; letter-spacing: 3px; text-transform: uppercase;
-      color: rgba(255,255,255,0.45); text-align: center; min-height: 20px;
-    }
-
-    /* Sound FAB */
-    .fab-sound {
-      position: fixed; bottom: max(env(safe-area-inset-bottom, 32px), 32px); right: 24px;
-      width: 48px; height: 48px; border-radius: 50%;
-      background: rgba(255,255,255,0.12);
-      border: 1px solid rgba(255,255,255,0.25);
-      color: #fff; font-size: 1.15rem; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      z-index: 10; transition: background 0.2s;
-      font-family: inherit;
-    }
-    .fab-sound.muted { opacity: 0.45; }
-
-    /* Scrollbar hide */
-    .screen::-webkit-scrollbar { display: none; }
+    .fab.off { opacity:.4; }
   </style>
 </head>
 <body>
 
-<div id="bgLayer"></div>
-<div id="bgNoise"></div>
+<div id="bg"></div>
 
-<!-- ══ SETUP ══ -->
+<!-- SETUP -->
 <div class="screen" id="setup">
 
   <div class="logo-wrap">
-    <div class="logo-rings">
-      <span></span><span></span><span></span>
-    </div>
-    <span class="logo-label">Respirar</span>
+    <div class="rings"><i></i><i></i><i></i></div>
+    <span class="logo-lbl">Respirar</span>
   </div>
 
-  <h1 class="hero-title">CALMA</h1>
-  <p class="hero-sub">Suelta la ansiedad.<br>Inhala paz y claridad.</p>
+  <h1 class="h-title">CALMA</h1>
+  <p class="h-sub">Suelta la ansiedad.<br>Inhala paz y claridad.</p>
 
-  <p class="section-title">¿Cuánto tiempo?</p>
+  <p class="sec-lbl">&iquest;Cu&aacute;nto tiempo?</p>
   <div class="dur-row" id="durRow">
-    <button class="dur-btn sel" data-min="3">3 min</button>
-    <button class="dur-btn" data-min="5">5 min</button>
-    <button class="dur-btn" data-min="10">10 min</button>
+    <button class="dur-btn on" data-m="3">3 min</button>
+    <button class="dur-btn"    data-m="5">5 min</button>
+    <button class="dur-btn"    data-m="10">10 min</button>
   </div>
 
-  <p class="section-title">Ambiente visual</p>
+  <p class="sec-lbl">Ambiente visual</p>
   <div class="scenes-row" id="scenesRow">
-    <div class="scene-card sc-ocean sel" data-scene="ocean" data-label="Océano">
-      <div class="scene-check"></div>
+    <div class="sc sc-ocean on"    data-s="ocean">
+      <div class="sc-dot"></div>
+      <span class="sc-name">Oc&eacute;ano</span>
     </div>
-    <div class="scene-card sc-forest" data-scene="forest" data-label="Bosque">
-      <div class="scene-check"></div>
+    <div class="sc sc-forest"  data-s="forest">
+      <div class="sc-dot"></div>
+      <span class="sc-name">Bosque</span>
     </div>
-    <div class="scene-card sc-sunset" data-scene="sunset" data-label="Atardecer">
-      <div class="scene-check"></div>
+    <div class="sc sc-sunset"  data-s="sunset">
+      <div class="sc-dot"></div>
+      <span class="sc-name">Atardecer</span>
     </div>
-    <div class="scene-card sc-mountain" data-scene="mountain" data-label="Montaña">
-      <div class="scene-check"></div>
+    <div class="sc sc-mountain" data-s="mountain">
+      <div class="sc-dot"></div>
+      <span class="sc-name">Monta&ntilde;a</span>
     </div>
   </div>
 
-  <p class="section-title">Técnica de respiración</p>
+  <p class="sec-lbl">T&eacute;cnica de respiraci&oacute;n</p>
   <div class="pat-list" id="patList"></div>
 
-  <button class="btn-begin" id="btnBegin">Comenzar Sesión</button>
+  <button class="btn-begin" id="btnBegin">Comenzar Sesi&oacute;n</button>
 
 </div>
 
-<!-- ══ SESSION ══ -->
-<div class="screen in-below" id="session">
+<!-- SESSION -->
+<div class="screen below" id="sess">
 
-  <div class="sess-header">
+  <div class="sess-hdr">
     <button class="btn-end" id="btnEnd">Terminar</button>
-    <span class="sess-time" id="sessTime">—</span>
+    <span class="sess-clock" id="clock"></span>
   </div>
 
-  <div class="circle-stage">
+  <div class="stage">
     <div class="aura"></div>
     <div class="aura"></div>
-    <div class="ring-outer"></div>
-    <div class="ring-mid"></div>
-    <div class="main-circle" id="mainCircle"></div>
+    <div class="ring1"></div>
+    <div class="ring2"></div>
+    <div class="orb" id="orb"></div>
   </div>
 
-  <div class="sess-phase" id="sessPhase"></div>
-  <div class="sess-count" id="sessCount"></div>
-  <div class="sess-cycle" id="sessCycle"></div>
+  <div class="s-phase" id="sPhase"></div>
+  <div class="s-count" id="sCount"></div>
+  <div class="s-cycle" id="sCycle"></div>
 
-  <button class="fab-sound" id="fabSound">🔔</button>
+  <button class="fab" id="fab">&#128276;</button>
+
 </div>
 
 <script>
-/* ── DATA ── */
-var PATTERNS = [
-  {
-    name: 'Respiraci\u00f3n Cuadrada',
-    timing: '4 \u2013 4 \u2013 4 \u2013 4',
-    phases: [
-      { label: 'Inhala', type: 'inhale',  dur: 4 },
-      { label: 'Sost\u00e9n', type: 'hold',    dur: 4 },
-      { label: 'Exhala', type: 'exhale',  dur: 4 },
-      { label: 'Sost\u00e9n', type: 'holdout', dur: 4 }
-    ]
-  },
-  {
-    name: 'T\u00e9cnica 4-7-8',
-    timing: '4 \u2013 7 \u2013 8',
-    phases: [
-      { label: 'Inhala', type: 'inhale', dur: 4 },
-      { label: 'Sost\u00e9n', type: 'hold',   dur: 7 },
-      { label: 'Exhala', type: 'exhale', dur: 8 }
-    ]
-  },
-  {
-    name: 'Respiraci\u00f3n Calmante',
-    timing: '5 \u2013 2 \u2013 7',
-    phases: [
-      { label: 'Inhala', type: 'inhale', dur: 5 },
-      { label: 'Sost\u00e9n', type: 'hold',   dur: 2 },
-      { label: 'Exhala', type: 'exhale', dur: 7 }
-    ]
-  },
-  {
-    name: 'Energizante',
-    timing: '3 \u2013 3',
-    phases: [
-      { label: 'Inhala', type: 'inhale', dur: 3 },
-      { label: 'Exhala', type: 'exhale', dur: 3 }
-    ]
-  }
+var PATS = [
+  { name:'Respiraci\u00f3n Cuadrada', timing:'4\u20134\u20134\u20134',
+    phases:[{l:'Inhala',t:'inhale',d:4},{l:'Sost\u00e9n',t:'hold',d:4},{l:'Exhala',t:'exhale',d:4},{l:'Sost\u00e9n',t:'holdout',d:4}] },
+  { name:'T\u00e9cnica 4-7-8', timing:'4\u20137\u20138',
+    phases:[{l:'Inhala',t:'inhale',d:4},{l:'Sost\u00e9n',t:'hold',d:7},{l:'Exhala',t:'exhale',d:8}] },
+  { name:'Respiraci\u00f3n Calmante', timing:'5\u20132\u20137',
+    phases:[{l:'Inhala',t:'inhale',d:5},{l:'Sost\u00e9n',t:'hold',d:2},{l:'Exhala',t:'exhale',d:7}] },
+  { name:'Energizante', timing:'3\u20133',
+    phases:[{l:'Inhala',t:'inhale',d:3},{l:'Exhala',t:'exhale',d:3}] }
 ];
 
-var BG_CLASSES = { ocean: '', forest: 'forest', sunset: 'sunset', mountain: 'mountain' };
+var cfg = { dur:3, scene:'ocean', pat:PATS[0] };
+var state = { on:false, pIdx:0, sec:0, cyc:0, sessLeft:0 };
+var tPhase=null, tSess=null, soundOn=true;
+var actx=null, ambiGain=null, ambiNodes=[];
 
-/* ── STATE ── */
-var selDuration = 3;
-var selScene    = 'ocean';
-var selPattern  = PATTERNS[0];
-var running     = false;
-var phaseIdx    = 0;
-var secLeft     = 0;
-var cycleNum    = 0;
-var sessLeft    = 0;
-var soundOn     = true;
-var phaseTimerId   = null;
-var sessTimerId    = null;
-
-/* ── DOM ── */
-var bgLayer    = document.getElementById('bgLayer');
-var setupEl    = document.getElementById('setup');
-var sessionEl  = document.getElementById('session');
-var mainCircle = document.getElementById('mainCircle');
-var sessPhase  = document.getElementById('sessPhase');
-var sessCount  = document.getElementById('sessCount');
-var sessCycle  = document.getElementById('sessCycle');
-var sessTimeEl = document.getElementById('sessTime');
-var fabSound   = document.getElementById('fabSound');
-
-/* ── AUDIO ENGINE ── */
-var actx = null;
-var ambiGain = null;
-var ambiNodes = [];
-
-function ctx() {
-  if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-  if (actx.state === 'suspended') actx.resume();
+/* Audio */
+function getCtx(){
+  if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended') actx.resume();
   return actx;
 }
-
-function makeReverb(c, seconds) {
-  var len = c.sampleRate * seconds;
-  var buf = c.createBuffer(2, len, c.sampleRate);
-  for (var ch = 0; ch < 2; ch++) {
-    var d = buf.getChannelData(ch);
-    for (var i = 0; i < len; i++) {
-      d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2);
-    }
-  }
-  var conv = c.createConvolver();
-  conv.buffer = buf;
-  return conv;
+function mkReverb(c,s){
+  var len=c.sampleRate*s, buf=c.createBuffer(2,len,c.sampleRate);
+  for(var ch=0;ch<2;ch++){ var d=buf.getChannelData(ch); for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2); }
+  var conv=c.createConvolver(); conv.buffer=buf; return conv;
 }
-
-function startAmbience() {
-  if (!soundOn) return;
-  var c = ctx();
-  ambiGain = c.createGain();
-  ambiGain.gain.setValueAtTime(0, c.currentTime);
-  ambiGain.gain.linearRampToValueAtTime(0.22, c.currentTime + 3);
-  var reverb = makeReverb(c, 4);
-  var reverbGain = c.createGain();
-  reverbGain.gain.value = 0.6;
-  ambiGain.connect(reverb);
-  reverb.connect(reverbGain);
-  reverbGain.connect(c.destination);
-  ambiGain.connect(c.destination);
-
-  // Pad: stacked soft sine harmonics
-  var freqs = [110, 165, 220, 330, 440];
-  freqs.forEach(function(f, i) {
-    var osc = c.createOscillator();
-    var g   = c.createGain();
-    osc.type = 'sine';
-    osc.frequency.value = f;
-    g.gain.value = 0.06 / (i + 1);
-    var lfo = c.createOscillator();
-    var lfoG = c.createGain();
-    lfo.frequency.value = 0.05 + i * 0.02;
-    lfoG.gain.value = 1.5;
-    lfo.connect(lfoG);
-    lfoG.connect(osc.frequency);
-    lfo.start();
-    osc.connect(g);
-    g.connect(ambiGain);
-    osc.start();
-    ambiNodes.push(osc, lfo);
+function startAmbience(){
+  if(!soundOn) return;
+  var c=getCtx();
+  ambiGain=c.createGain(); ambiGain.gain.setValueAtTime(0,c.currentTime); ambiGain.gain.linearRampToValueAtTime(0.2,c.currentTime+3);
+  var rev=mkReverb(c,4), revG=c.createGain(); revG.gain.value=0.55;
+  ambiGain.connect(rev); rev.connect(revG); revG.connect(c.destination); ambiGain.connect(c.destination);
+  [110,165,220,330].forEach(function(f,i){
+    var o=c.createOscillator(), g=c.createGain(), lfo=c.createOscillator(), lG=c.createGain();
+    o.type='sine'; o.frequency.value=f; g.gain.value=0.065/(i+1);
+    lfo.frequency.value=0.04+i*0.018; lG.gain.value=1.2;
+    lfo.connect(lG); lG.connect(o.frequency); lfo.start();
+    o.connect(g); g.connect(ambiGain); o.start();
+    ambiNodes.push(o,lfo);
   });
-
-  // Filtered noise (ocean texture)
-  var bufLen = c.sampleRate * 3;
-  var noiseBuf = c.createBuffer(1, bufLen, c.sampleRate);
-  var nd = noiseBuf.getChannelData(0);
-  for (var i = 0; i < bufLen; i++) nd[i] = Math.random() * 2 - 1;
-  var noiseSource = c.createBufferSource();
-  noiseSource.buffer = noiseBuf;
-  noiseSource.loop = true;
-  var lpf = c.createBiquadFilter();
-  lpf.type = 'lowpass';
-  lpf.frequency.value = 280;
-  lpf.Q.value = 0.8;
-  var noiseGain = c.createGain();
-  noiseGain.gain.value = 0.07;
-  noiseSource.connect(lpf);
-  lpf.connect(noiseGain);
-  noiseGain.connect(ambiGain);
-  noiseSource.start();
-  ambiNodes.push(noiseSource);
+  var bLen=c.sampleRate*3, nBuf=c.createBuffer(1,bLen,c.sampleRate), nd=nBuf.getChannelData(0);
+  for(var i=0;i<bLen;i++) nd[i]=Math.random()*2-1;
+  var ns=c.createBufferSource(); ns.buffer=nBuf; ns.loop=true;
+  var lpf=c.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.value=260;
+  var nG=c.createGain(); nG.gain.value=0.06;
+  ns.connect(lpf); lpf.connect(nG); nG.connect(ambiGain); ns.start();
+  ambiNodes.push(ns);
+}
+function stopAmbience(){
+  if(!ambiGain||!actx) return;
+  ambiGain.gain.linearRampToValueAtTime(0,actx.currentTime+1.5);
+  var nodes=ambiNodes.slice(); ambiNodes=[];
+  setTimeout(function(){ nodes.forEach(function(n){try{n.stop();}catch(e){}}); ambiGain=null; },1600);
+}
+function chime(freq,dur){
+  if(!soundOn) return;
+  var c=getCtx(), o=c.createOscillator(), g=c.createGain();
+  o.type='sine'; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,c.currentTime);
+  g.gain.linearRampToValueAtTime(0.13,c.currentTime+0.15);
+  g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);
+  o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+dur);
 }
 
-function stopAmbience() {
-  if (!ambiGain) return;
-  var c = actx;
-  ambiGain.gain.linearRampToValueAtTime(0, c.currentTime + 1.5);
-  var nodes = ambiNodes.slice();
-  ambiNodes = [];
-  setTimeout(function() {
-    nodes.forEach(function(n) { try { n.stop(); } catch(e) {} });
-    ambiGain = null;
-  }, 1600);
-}
-
-function playChime(freq, dur) {
-  if (!soundOn) return;
-  var c = ctx();
-  var osc  = c.createOscillator();
-  var gain = c.createGain();
-  osc.type = 'sine';
-  osc.frequency.value = freq;
-  gain.gain.setValueAtTime(0, c.currentTime);
-  gain.gain.linearRampToValueAtTime(0.14, c.currentTime + 0.15);
-  gain.gain.exponentialRampToValueAtTime(0.001, c.currentTime + dur);
-  osc.connect(gain);
-  gain.connect(c.destination);
-  osc.start();
-  osc.stop(c.currentTime + dur);
-}
-
-/* ── BUILD PATTERN BUTTONS ── */
-var patList = document.getElementById('patList');
-PATTERNS.forEach(function(pat, i) {
-  var btn = document.createElement('button');
-  btn.className = 'pat-btn' + (i === 0 ? ' sel' : '');
-  btn.innerHTML = '<span class="pname">' + pat.name + '</span>'
-                + '<span class="ptiming">' + pat.timing + '</span>';
-  btn.addEventListener('click', function() {
-    selPattern = pat;
-    patList.querySelectorAll('.pat-btn').forEach(function(b) { b.classList.remove('sel'); });
-    btn.classList.add('sel');
+/* Build pattern buttons */
+var patList=document.getElementById('patList');
+PATS.forEach(function(p,i){
+  var b=document.createElement('button');
+  b.className='pat-btn'+(i===0?' on':'');
+  b.innerHTML='<span class="pn">'+p.name+'</span><span class="pt">'+p.timing+'</span>';
+  b.addEventListener('click',function(){
+    cfg.pat=p;
+    patList.querySelectorAll('.pat-btn').forEach(function(x){x.classList.remove('on');});
+    b.classList.add('on');
   });
-  patList.appendChild(btn);
+  patList.appendChild(b);
 });
 
-/* ── DURATION ── */
-document.getElementById('durRow').addEventListener('click', function(e) {
-  var b = e.target.closest('.dur-btn');
-  if (!b) return;
-  selDuration = parseInt(b.dataset.min, 10);
-  document.querySelectorAll('.dur-btn').forEach(function(x) { x.classList.remove('sel'); });
-  b.classList.add('sel');
+/* Duration */
+document.getElementById('durRow').addEventListener('click',function(e){
+  var b=e.target.closest('.dur-btn'); if(!b) return;
+  cfg.dur=parseInt(b.dataset.m,10);
+  document.querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
 });
 
-/* ── SCENES ── */
-document.getElementById('scenesRow').addEventListener('click', function(e) {
-  var card = e.target.closest('.scene-card');
-  if (!card) return;
-  selScene = card.dataset.scene;
-  document.querySelectorAll('.scene-card').forEach(function(c) { c.classList.remove('sel'); });
-  card.classList.add('sel');
-  bgLayer.className = BG_CLASSES[selScene];
-  bgLayer.id = 'bgLayer';
+/* Scene */
+document.getElementById('scenesRow').addEventListener('click',function(e){
+  var c=e.target.closest('.sc'); if(!c) return;
+  cfg.scene=c.dataset.s;
+  document.querySelectorAll('.sc').forEach(function(x){x.classList.remove('on');});
+  c.classList.add('on');
+  var bg=document.getElementById('bg');
+  bg.className=cfg.scene==='ocean'?'':cfg.scene;
+  bg.id='bg';
 });
 
-/* ── SOUND ── */
-fabSound.addEventListener('click', function() {
-  soundOn = !soundOn;
-  fabSound.textContent = soundOn ? '\uD83D\uDD14' : '\uD83D\uDD15';
-  fabSound.classList.toggle('muted', !soundOn);
-  if (!soundOn) stopAmbience();
-  else if (running) startAmbience();
+/* Sound */
+document.getElementById('fab').addEventListener('click',function(){
+  soundOn=!soundOn;
+  this.textContent=soundOn?'\uD83D\uDD14':'\uD83D\uDD15';
+  this.classList.toggle('off',!soundOn);
+  if(!soundOn) stopAmbience(); else if(state.on) startAmbience();
 });
 
-/* ── BEGIN ── */
-document.getElementById('btnBegin').addEventListener('click', function() {
-  ctx(); // unlock audio on user gesture
-  setupEl.classList.add('out');
-  sessionEl.classList.remove('in-below');
-  startSession();
+/* Begin */
+document.getElementById('btnBegin').addEventListener('click',function(){
+  getCtx();
+  document.getElementById('setup').classList.add('out');
+  document.getElementById('sess').classList.remove('below');
+  begin();
 });
 
-/* ── END ── */
-document.getElementById('btnEnd').addEventListener('click', endSession);
+/* End */
+document.getElementById('btnEnd').addEventListener('click',finish);
 
-/* ── SESSION LOGIC ── */
-function fmt(s) {
-  var m = Math.floor(s / 60), ss = s % 60;
-  return m + ':' + (ss < 10 ? '0' : '') + ss;
-}
+/* Helpers */
+function fmt(s){ var m=Math.floor(s/60),ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
 
-function startSession() {
-  running   = true;
-  phaseIdx  = 0;
-  cycleNum  = 0;
-  sessLeft  = selDuration * 60;
-  sessCycle.textContent = '';
-  sessTimeEl.textContent = fmt(sessLeft);
-
+function begin(){
+  state.on=true; state.pIdx=0; state.cyc=0;
+  state.sessLeft=cfg.dur*60;
+  document.getElementById('sCycle').textContent='';
+  document.getElementById('clock').textContent=fmt(state.sessLeft);
   startAmbience();
-
-  sessTimerId = setInterval(function() {
-    sessLeft--;
-    sessTimeEl.textContent = fmt(sessLeft);
-    if (sessLeft <= 0) endSession();
-  }, 1000);
-
+  tSess=setInterval(function(){
+    state.sessLeft--;
+    document.getElementById('clock').textContent=fmt(state.sessLeft);
+    if(state.sessLeft<=0) finish();
+  },1000);
   runPhase();
 }
 
-function runPhase() {
-  if (!running) return;
-  var phase = selPattern.phases[phaseIdx];
-  secLeft = phase.dur;
-
-  document.documentElement.style.setProperty('--inhale-dur', phase.dur + 's');
-  document.documentElement.style.setProperty('--exhale-dur', phase.dur + 's');
-  mainCircle.className = 'main-circle ' + phase.type;
-  sessPhase.textContent = phase.label;
-  sessCount.textContent = secLeft;
-
-  if (phase.type === 'inhale')       playChime(528, 1.2);
-  else if (phase.type === 'exhale')  playChime(396, 1.2);
-  else                               playChime(432, 0.8);
-
-  phaseTimerId = setInterval(function() {
-    secLeft--;
-    sessCount.textContent = secLeft > 0 ? secLeft : '';
-    if (secLeft <= 0) {
-      clearInterval(phaseTimerId);
-      phaseIdx++;
-      if (phaseIdx >= selPattern.phases.length) {
-        phaseIdx = 0;
-        cycleNum++;
-        sessCycle.textContent = 'Ciclo ' + cycleNum;
-      }
+function runPhase(){
+  if(!state.on) return;
+  var ph=cfg.pat.phases[state.pIdx];
+  state.sec=ph.d;
+  document.documentElement.style.setProperty('--iDur',ph.d+'s');
+  document.documentElement.style.setProperty('--eDur',ph.d+'s');
+  document.getElementById('orb').className='orb '+ph.t;
+  document.getElementById('sPhase').textContent=ph.l;
+  document.getElementById('sCount').textContent=state.sec;
+  if(ph.t==='inhale') chime(528,1.1);
+  else if(ph.t==='exhale') chime(396,1.1);
+  else chime(432,0.7);
+  tPhase=setInterval(function(){
+    state.sec--;
+    document.getElementById('sCount').textContent=state.sec>0?state.sec:'';
+    if(state.sec<=0){
+      clearInterval(tPhase);
+      state.pIdx++;
+      if(state.pIdx>=cfg.pat.phases.length){ state.pIdx=0; state.cyc++; document.getElementById('sCycle').textContent='Ciclo '+state.cyc; }
       runPhase();
     }
-  }, 1000);
+  },1000);
 }
 
-function endSession() {
-  running = false;
-  clearInterval(phaseTimerId);
-  clearInterval(sessTimerId);
+function finish(){
+  state.on=false;
+  clearInterval(tPhase); clearInterval(tSess);
   stopAmbience();
-
-  mainCircle.className = 'main-circle';
-  sessPhase.textContent = 'Sesi\u00f3n completa';
-  sessCount.textContent = '';
-  sessCycle.textContent = cycleNum + (cycleNum === 1 ? ' ciclo' : ' ciclos');
-
-  setTimeout(function() {
-    sessionEl.classList.add('in-below');
-    setupEl.classList.remove('out');
-    sessPhase.textContent = '';
-    sessCycle.textContent = '';
-  }, 3000);
+  document.getElementById('orb').className='orb';
+  document.getElementById('sPhase').textContent='Sesi\u00f3n completa';
+  document.getElementById('sCount').textContent='';
+  document.getElementById('sCycle').textContent=state.cyc+(state.cyc===1?' ciclo':' ciclos');
+  setTimeout(function(){
+    document.getElementById('sess').classList.add('below');
+    document.getElementById('setup').classList.remove('out');
+    document.getElementById('sPhase').textContent='';
+    document.getElementById('sCycle').textContent='';
+  },3000);
 }
 </script>
 </body>
