@@ -27,9 +27,9 @@
       background: linear-gradient(155deg,#0d2137 0%,#0e3d52 35%,#145c6e 65%,#1a7a8a 100%);
       transition: background 1.4s var(--ease);
     }
-    #bg.forest   { background: linear-gradient(155deg,#071a0e 0%,#0d3320 35%,#165a35 65%,#1e7a4a 100%); }
-    #bg.sunset   { background: linear-gradient(155deg,#12061f 0%,#3d1040 35%,#8c3060 65%,#d4604a 100%); }
-    #bg.mountain { background: linear-gradient(155deg,#080c1a 0%,#141e3c 35%,#243a6e 65%,#3a5f9e 100%); }
+    #bg.forest  { background: linear-gradient(155deg,#040e08 0%,#0a2010 35%,#12341a 65%,#1a4a22 100%); }
+    #bg.sunset  { background: linear-gradient(155deg,#1a0535 0%,#7b1a5a 35%,#d44a30 65%,#f0a040 100%); }
+    #bg.night   { background: linear-gradient(155deg,#020210 0%,#06062a 35%,#0a0a38 65%,#10104a 100%); }
     #bg::after {
       content:''; position:absolute; inset:0;
       background: rgba(0,0,0,0.3);
@@ -102,41 +102,37 @@
     }
 
     /* SCENE CARDS */
-    .scenes-row {
-      display: flex; gap: 10px; width: 100%;
-      margin-bottom: 28px;
-    }
+    .scenes-row { display:flex; gap:8px; width:100%; margin-bottom:28px; }
     .sc {
-      flex: 1; border-radius: 16px; cursor: pointer;
-      position: relative; overflow: hidden;
-      border: 2px solid transparent;
-      transition: border-color 0.25s, transform 0.18s;
-      display: flex; flex-direction: column;
-      align-items: center; justify-content: flex-end;
-      padding-bottom: 10px;
-      min-height: 88px;
+      flex:1; border-radius:16px; cursor:pointer;
+      position:relative; overflow:hidden;
+      border:2px solid transparent;
+      transition:border-color 0.25s, transform 0.18s;
+      min-height:96px;
     }
-    .sc.on { border-color: rgba(255,255,255,0.9); }
-    .sc:active { transform: scale(0.95); }
-    .sc-ocean    { background: linear-gradient(160deg,#1565a0,#26c6da); }
-    .sc-forest   { background: linear-gradient(160deg,#1b5e20,#66bb6a); }
-    .sc-sunset   { background: linear-gradient(160deg,#6a1b4d,#ef6c00); }
-    .sc-mountain { background: linear-gradient(160deg,#1a237e,#64b5f6); }
+    .sc.on { border-color:rgba(255,255,255,0.9); }
+    .sc:active { transform:scale(0.95); }
+    .sc svg { position:absolute; inset:0; width:100%; height:100%; display:block; }
+    .sc-overlay {
+      position:absolute; inset:0;
+      display:flex; flex-direction:column;
+      align-items:center; justify-content:flex-end;
+      padding-bottom:9px; pointer-events:none;
+    }
     .sc-dot {
-      width: 20px; height: 20px; border-radius: 50%;
-      background: rgba(255,255,255,0.25);
-      border: 2px solid rgba(255,255,255,0.6);
-      margin-bottom: 6px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 10px; font-weight: 700;
+      width:18px; height:18px; border-radius:50%;
+      background:rgba(255,255,255,0.2);
+      border:1.5px solid rgba(255,255,255,0.7);
+      margin-bottom:5px;
+      display:flex; align-items:center; justify-content:center;
+      font-size:9px; font-weight:700; color:#fff;
     }
-    .sc.on .sc-dot { background: #fff; color: #333; }
-    .sc-dot::after { content: ''; }
-    .sc.on .sc-dot::after { content: '\2713'; }
+    .sc.on .sc-dot { background:#fff; color:#333; }
     .sc-name {
-      font-size: 0.7rem; font-weight: 600; color: #fff;
-      text-shadow: 0 1px 4px rgba(0,0,0,0.5); letter-spacing: 0.3px;
-      text-align: center;
+      font-size:0.65rem; font-weight:600; color:#fff;
+      text-shadow:0 1px 6px rgba(0,0,0,0.7);
+      letter-spacing:0.5px; text-align:center;
+      font-family:'Josefin Sans',sans-serif;
     }
 
     /* PATTERNS */
@@ -274,22 +270,162 @@
 
   <p class="sec-lbl">Ambiente visual</p>
   <div class="scenes-row" id="scenesRow">
-    <div class="sc sc-ocean on"    data-s="ocean">
-      <div class="sc-dot"></div>
-      <span class="sc-name">Oc&eacute;ano</span>
+
+    <!-- NOCHE -->
+    <div class="sc on" data-s="ocean">
+      <svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="nSky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#020214"/>
+            <stop offset="100%" stop-color="#0c0c38"/>
+          </linearGradient>
+        </defs>
+        <rect width="80" height="96" fill="url(#nSky)"/>
+        <!-- Stars -->
+        <circle cx="8"  cy="10" r="0.8" fill="#fff" opacity="0.95"/>
+        <circle cx="18" cy="5"  r="1.1" fill="#fff"/>
+        <circle cx="32" cy="13" r="0.7" fill="#fff" opacity="0.8"/>
+        <circle cx="47" cy="7"  r="0.9" fill="#fff"/>
+        <circle cx="58" cy="15" r="0.6" fill="#fff" opacity="0.7"/>
+        <circle cx="70" cy="4"  r="1.0" fill="#fff"/>
+        <circle cx="74" cy="20" r="0.7" fill="#fff" opacity="0.9"/>
+        <circle cx="25" cy="26" r="0.6" fill="#fff" opacity="0.6"/>
+        <circle cx="42" cy="20" r="0.8" fill="#fff"/>
+        <circle cx="62" cy="28" r="0.5" fill="#fff" opacity="0.7"/>
+        <circle cx="12" cy="33" r="0.5" fill="#fff" opacity="0.5"/>
+        <circle cx="78" cy="11" r="0.6" fill="#fff" opacity="0.8"/>
+        <!-- Moon -->
+        <circle cx="60" cy="22" r="11" fill="#fffbe6"/>
+        <circle cx="66" cy="16" r="10" fill="#0c0c38"/>
+        <!-- Star sparkle near moon -->
+        <circle cx="40" cy="30" r="1.2" fill="#fff" opacity="0.9"/>
+        <!-- Mountains -->
+        <polygon points="0,96 0,72 14,52 28,72 28,96" fill="#050518"/>
+        <polygon points="18,96 18,62 38,38 58,62 58,96" fill="#080825"/>
+        <polygon points="48,96 48,68 64,50 80,68 80,96" fill="#050518"/>
+      </svg>
+      <div class="sc-overlay">
+        <div class="sc-dot">&#10003;</div>
+        <span class="sc-name">Noche</span>
+      </div>
     </div>
-    <div class="sc sc-forest"  data-s="forest">
-      <div class="sc-dot"></div>
-      <span class="sc-name">Bosque</span>
+
+    <!-- OCÉANO -->
+    <div class="sc" data-s="forest">
+      <svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="oSky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0a1f3a"/>
+            <stop offset="50%" stop-color="#0e3d70"/>
+            <stop offset="100%" stop-color="#0a5a80"/>
+          </linearGradient>
+          <linearGradient id="oSea" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#0d5a80"/>
+            <stop offset="100%" stop-color="#062840"/>
+          </linearGradient>
+          <radialGradient id="oMoonGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#fffde7" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="#fffde7" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="80" height="96" fill="url(#oSky)"/>
+        <!-- Stars -->
+        <circle cx="10" cy="8"  r="0.7" fill="#fff" opacity="0.7"/>
+        <circle cx="25" cy="5"  r="0.6" fill="#fff" opacity="0.6"/>
+        <circle cx="65" cy="10" r="0.8" fill="#fff" opacity="0.8"/>
+        <circle cx="72" cy="6"  r="0.6" fill="#fff" opacity="0.7"/>
+        <circle cx="50" cy="14" r="0.5" fill="#fff" opacity="0.6"/>
+        <!-- Moon glow -->
+        <circle cx="40" cy="22" r="16" fill="url(#oMoonGlow)"/>
+        <!-- Moon -->
+        <circle cx="40" cy="22" r="9" fill="#fffde7" opacity="0.92"/>
+        <!-- Moon reflection -->
+        <rect x="37" y="45" width="6" height="3" rx="2" fill="#fffde7" opacity="0.3"/>
+        <rect x="36" y="50" width="8" height="2" rx="1" fill="#fffde7" opacity="0.2"/>
+        <!-- Sea -->
+        <rect x="0" y="48" width="80" height="48" fill="url(#oSea)"/>
+        <!-- Waves -->
+        <path d="M0,54 Q10,50 20,54 Q30,58 40,54 Q50,50 60,54 Q70,58 80,54 L80,96 L0,96 Z" fill="#0e6090" opacity="0.8"/>
+        <path d="M0,64 Q12,60 24,64 Q36,68 48,64 Q60,60 72,64 Q76,66 80,64 L80,96 L0,96 Z" fill="#0c5070" opacity="0.9"/>
+        <path d="M0,76 Q15,72 30,76 Q45,80 60,76 Q70,73 80,76 L80,96 L0,96 Z" fill="#084060"/>
+      </svg>
+      <div class="sc-overlay">
+        <div class="sc-dot"></div>
+        <span class="sc-name">Oc&eacute;ano</span>
+      </div>
     </div>
-    <div class="sc sc-sunset"  data-s="sunset">
-      <div class="sc-dot"></div>
-      <span class="sc-name">Atardecer</span>
+
+    <!-- BOSQUE -->
+    <div class="sc" data-s="sunset">
+      <svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="fSky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#020e05"/>
+            <stop offset="100%" stop-color="#0a2812"/>
+          </linearGradient>
+        </defs>
+        <rect width="80" height="96" fill="url(#fSky)"/>
+        <!-- Stars -->
+        <circle cx="20" cy="7"  r="0.8" fill="#fff" opacity="0.8"/>
+        <circle cx="40" cy="4"  r="1.0" fill="#fff"/>
+        <circle cx="58" cy="9"  r="0.7" fill="#fff" opacity="0.7"/>
+        <circle cx="30" cy="18" r="0.6" fill="#fff" opacity="0.6"/>
+        <circle cx="68" cy="5"  r="0.8" fill="#fff" opacity="0.9"/>
+        <!-- Moon crescent -->
+        <circle cx="62" cy="18" r="8" fill="#fffbe6" opacity="0.85"/>
+        <circle cx="67" cy="13" r="7" fill="#0a2812"/>
+        <!-- Trees background -->
+        <polygon points="0,96 0,68 8,52 16,68 16,96"  fill="#041008"/>
+        <polygon points="12,96 12,62 21,44 30,62 30,96" fill="#061410"/>
+        <polygon points="52,96 52,65 60,48 68,65 68,96" fill="#041008"/>
+        <polygon points="64,96 64,60 73,43 80,55 80,96"  fill="#061410"/>
+        <!-- Trees foreground -->
+        <polygon points="22,96 22,55 34,30 46,55 46,96" fill="#020c06"/>
+        <polygon points="40,96 40,52 54,26 68,52 68,96" fill="#030e08"/>
+        <!-- Ground -->
+        <rect x="0" y="85" width="80" height="11" fill="#020c06"/>
+      </svg>
+      <div class="sc-overlay">
+        <div class="sc-dot"></div>
+        <span class="sc-name">Bosque</span>
+      </div>
     </div>
-    <div class="sc sc-mountain" data-s="mountain">
-      <div class="sc-dot"></div>
-      <span class="sc-name">Monta&ntilde;a</span>
+
+    <!-- ATARDECER -->
+    <div class="sc" data-s="night">
+      <svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="sSky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#1a0430"/>
+            <stop offset="30%" stop-color="#8a1850"/>
+            <stop offset="62%" stop-color="#d44030"/>
+            <stop offset="100%" stop-color="#f09030"/>
+          </linearGradient>
+          <radialGradient id="sunGlow" cx="50%" cy="68%" r="45%">
+            <stop offset="0%" stop-color="#ffe060" stop-opacity="0.7"/>
+            <stop offset="100%" stop-color="#ff6020" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <rect width="80" height="96" fill="url(#sSky)"/>
+        <!-- Sun glow -->
+        <ellipse cx="40" cy="65" rx="36" ry="22" fill="url(#sunGlow)"/>
+        <!-- Sun -->
+        <circle cx="40" cy="66" r="10" fill="#ffe050"/>
+        <!-- Horizon mask -->
+        <rect x="0" y="66" width="80" height="30" fill="#1a0430"/>
+        <!-- Clouds -->
+        <ellipse cx="18" cy="28" rx="13" ry="5"  fill="rgba(200,70,110,0.45)"/>
+        <ellipse cx="62" cy="22" rx="14" ry="5.5" fill="rgba(180,60,100,0.38)"/>
+        <ellipse cx="42" cy="36" rx="10" ry="4"  fill="rgba(220,90,70,0.35)"/>
+        <!-- Land -->
+        <path d="M0,66 Q20,60 35,66 Q50,72 65,66 Q72,62 80,66 L80,96 L0,96 Z" fill="#100220"/>
+      </svg>
+      <div class="sc-overlay">
+        <div class="sc-dot"></div>
+        <span class="sc-name">Atardecer</span>
+      </div>
     </div>
+
   </div>
 
   <p class="sec-lbl">T&eacute;cnica de respiraci&oacute;n</p>
@@ -335,6 +471,7 @@ var PATS = [
     phases:[{l:'Inhala',t:'inhale',d:3},{l:'Exhala',t:'exhale',d:3}] }
 ];
 
+var BG = { ocean:'', forest:'forest', sunset:'sunset', night:'night' };
 var cfg = { dur:3, scene:'ocean', pat:PATS[0] };
 var state = { on:false, pIdx:0, sec:0, cyc:0, sessLeft:0 };
 var tPhase=null, tSess=null, soundOn=true;
@@ -413,12 +550,18 @@ document.getElementById('durRow').addEventListener('click',function(e){
 
 /* Scene */
 document.getElementById('scenesRow').addEventListener('click',function(e){
-  var c=e.target.closest('.sc'); if(!c) return;
-  cfg.scene=c.dataset.s;
-  document.querySelectorAll('.sc').forEach(function(x){x.classList.remove('on');});
-  c.classList.add('on');
+  var card=e.target.closest('.sc'); if(!card) return;
+  cfg.scene=card.dataset.s;
+  document.querySelectorAll('.sc').forEach(function(x){
+    x.classList.remove('on');
+    var dot=x.querySelector('.sc-dot');
+    if(dot) dot.innerHTML='';
+  });
+  card.classList.add('on');
+  var dot=card.querySelector('.sc-dot');
+  if(dot) dot.innerHTML='&#10003;';
   var bg=document.getElementById('bg');
-  bg.className=cfg.scene==='ocean'?'':cfg.scene;
+  bg.className=BG[cfg.scene]||'';
   bg.id='bg';
 });
 
