@@ -428,6 +428,15 @@
 
   </div>
 
+  <p class="sec-lbl">Sonido ambiental</p>
+  <div class="dur-row" id="soundRow">
+    <button class="dur-btn on" data-snd="ocean">&#127754;<br>Mar</button>
+    <button class="dur-btn" data-snd="river">&#128167;<br>R&iacute;o</button>
+    <button class="dur-btn" data-snd="wind">&#127788;<br>Viento</button>
+    <button class="dur-btn" data-snd="birds">&#128038;<br>P&aacute;jaros</button>
+    <button class="dur-btn" data-snd="none">&#128263;<br>Ninguno</button>
+  </div>
+
   <p class="sec-lbl">T&eacute;cnica de respiraci&oacute;n</p>
   <div class="pat-list" id="patList"></div>
 
@@ -472,10 +481,10 @@ var PATS = [
 ];
 
 var BG = { ocean:'', forest:'forest', sunset:'sunset', night:'night' };
-var cfg = { dur:3, scene:'ocean', pat:PATS[0] };
+var cfg = { dur:3, scene:'ocean', pat:PATS[0], snd:'ocean' };
 var state = { on:false, pIdx:0, sec:0, cyc:0, sessLeft:0 };
 var tPhase=null, tSess=null, soundOn=true;
-var actx=null, ambiGain=null, ambiNodes=[];
+var actx=null, ambiGain=null, ambiNodes=[], birdActive=false;
 
 /* Audio */
 function getCtx(){
@@ -483,47 +492,128 @@ function getCtx(){
   if(actx.state==='suspended') actx.resume();
   return actx;
 }
+
+function mkNoise(c, seconds, type) {
+  var len = c.sampleRate * seconds;
+  var buf = c.createBuffer(1, len, c.sampleRate);
+  var d = buf.getChannelData(0);
+  if(type === 'brown') {
+    var last = 0;
+    for(var i=0;i<len;i++){ var w=Math.random()*2-1; d[i]=(last+(0.02*w))/1.02; last=d[i]; d[i]*=3.5; }
+  } else {
+    for(var i=0;i<len;i++) d[i]=Math.random()*2-1;
+  }
+  var s = c.createBufferSource(); s.buffer=buf; s.loop=true; return s;
+}
+
+function mkLFO(c, freq, amount, target) {
+  var lfo=c.createOscillator(), lg=c.createGain();
+  lfo.frequency.value=freq; lg.gain.value=amount;
+  lfo.connect(lg); lg.connect(target); lfo.start();
+  return lfo;
+}
+
 function mkReverb(c,s){
   var len=c.sampleRate*s, buf=c.createBuffer(2,len,c.sampleRate);
   for(var ch=0;ch<2;ch++){ var d=buf.getChannelData(ch); for(var i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2); }
   var conv=c.createConvolver(); conv.buffer=buf; return conv;
 }
-function startAmbience(){
-  if(!soundOn) return;
-  var c=getCtx();
-  ambiGain=c.createGain(); ambiGain.gain.setValueAtTime(0,c.currentTime); ambiGain.gain.linearRampToValueAtTime(0.2,c.currentTime+3);
-  var rev=mkReverb(c,4), revG=c.createGain(); revG.gain.value=0.55;
-  ambiGain.connect(rev); rev.connect(revG); revG.connect(c.destination); ambiGain.connect(c.destination);
-  [110,165,220,330].forEach(function(f,i){
-    var o=c.createOscillator(), g=c.createGain(), lfo=c.createOscillator(), lG=c.createGain();
-    o.type='sine'; o.frequency.value=f; g.gain.value=0.065/(i+1);
-    lfo.frequency.value=0.04+i*0.018; lG.gain.value=1.2;
-    lfo.connect(lG); lG.connect(o.frequency); lfo.start();
-    o.connect(g); g.connect(ambiGain); o.start();
-    ambiNodes.push(o,lfo);
-  });
-  var bLen=c.sampleRate*3, nBuf=c.createBuffer(1,bLen,c.sampleRate), nd=nBuf.getChannelData(0);
-  for(var i=0;i<bLen;i++) nd[i]=Math.random()*2-1;
-  var ns=c.createBufferSource(); ns.buffer=nBuf; ns.loop=true;
-  var lpf=c.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.value=260;
-  var nG=c.createGain(); nG.gain.value=0.06;
-  ns.connect(lpf); lpf.connect(nG); nG.connect(ambiGain); ns.start();
-  ambiNodes.push(ns);
+
+function startOcean(c, out) {
+  var ns = mkNoise(c, 4, 'brown');
+  var lpf = c.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.value=500;
+  var lfo = mkLFO(c, 0.08, 280, lpf.frequency);
+  var g = c.createGain(); g.gain.value=0.9;
+  ns.connect(lpf); lpf.connect(g); g.connect(out); ns.start();
+  ambiNodes.push(ns, lfo);
 }
+
+function startRiver(c, out) {
+  var ns = mkNoise(c, 3, 'white');
+  var bpf = c.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=900; bpf.Q.value=0.6;
+  var lfo = mkLFO(c, 0.6, 400, bpf.frequency);
+  var g = c.createGain(); g.gain.value=0.55;
+  ns.connect(bpf); bpf.connect(g); g.connect(out); ns.start();
+  // second layer - higher splash
+  var ns2 = mkNoise(c, 2, 'white');
+  var hpf = c.createBiquadFilter(); hpf.type='highpass'; hpf.frequency.value=1800;
+  var g2 = c.createGain(); g2.gain.value=0.18;
+  var lfo2 = mkLFO(c, 1.2, 600, hpf.frequency);
+  ns2.connect(hpf); hpf.connect(g2); g2.connect(out); ns2.start();
+  ambiNodes.push(ns, ns2, lfo, lfo2);
+}
+
+function startWind(c, out) {
+  var ns = mkNoise(c, 5, 'white');
+  var bpf = c.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=380; bpf.Q.value=1.2;
+  var lfo = mkLFO(c, 0.04, 180, bpf.frequency);
+  var ampLfo = c.createOscillator(); var ampG = c.createGain();
+  ampLfo.frequency.value=0.07; ampG.gain.value=0.25;
+  var masterG = c.createGain(); masterG.gain.value=0.5;
+  ampLfo.connect(ampG); ampG.connect(masterG.gain); ampLfo.start();
+  ns.connect(bpf); bpf.connect(masterG); masterG.connect(out); ns.start();
+  ambiNodes.push(ns, lfo, ampLfo);
+}
+
+function startBirds(c, out) {
+  birdActive = true;
+  var bgNs = mkNoise(c, 3, 'white');
+  var bgF = c.createBiquadFilter(); bgF.type='highpass'; bgF.frequency.value=3000;
+  var bgG = c.createGain(); bgG.gain.value=0.04;
+  bgNs.connect(bgF); bgF.connect(bgG); bgG.connect(out); bgNs.start();
+  ambiNodes.push(bgNs);
+
+  function chirp() {
+    if(!birdActive) return;
+    var pitches = [2600,3000,3400,2200,2800,3600];
+    var f = pitches[Math.floor(Math.random()*pitches.length)];
+    var dur = 0.08 + Math.random()*0.12;
+    var o=c.createOscillator(), g=c.createGain();
+    o.type='sine'; o.frequency.setValueAtTime(f,c.currentTime);
+    o.frequency.linearRampToValueAtTime(f*1.25,c.currentTime+dur*0.4);
+    o.frequency.linearRampToValueAtTime(f*0.95,c.currentTime+dur);
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(0.12,c.currentTime+0.02);
+    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);
+    o.connect(g); g.connect(out); o.start(); o.stop(c.currentTime+dur+0.05);
+    if(Math.random()>0.5) setTimeout(function(){ if(birdActive){ var o2=c.createOscillator(),g2=c.createGain(); o2.type='sine'; o2.frequency.value=f*1.15; g2.gain.setValueAtTime(0,c.currentTime); g2.gain.linearRampToValueAtTime(0.09,c.currentTime+0.02); g2.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur*0.8); o2.connect(g2); g2.connect(out); o2.start(); o2.stop(c.currentTime+dur+0.05); }},120+Math.random()*80);
+    setTimeout(chirp, 1200+Math.random()*2800);
+  }
+  setTimeout(chirp, 500);
+}
+
+function startAmbience(){
+  if(!soundOn || cfg.snd==='none') return;
+  var c=getCtx();
+  ambiGain=c.createGain(); ambiGain.gain.setValueAtTime(0,c.currentTime); ambiGain.gain.linearRampToValueAtTime(0.28,c.currentTime+2.5);
+  var rev=mkReverb(c,3), revG=c.createGain(); revG.gain.value=0.4;
+  ambiGain.connect(rev); rev.connect(revG); revG.connect(c.destination); ambiGain.connect(c.destination);
+  if(cfg.snd==='ocean')  startOcean(c, ambiGain);
+  else if(cfg.snd==='river') startRiver(c, ambiGain);
+  else if(cfg.snd==='wind')  startWind(c, ambiGain);
+  else if(cfg.snd==='birds') startBirds(c, ambiGain);
+}
+
 function stopAmbience(){
+  birdActive=false;
   if(!ambiGain||!actx) return;
   ambiGain.gain.linearRampToValueAtTime(0,actx.currentTime+1.5);
   var nodes=ambiNodes.slice(); ambiNodes=[];
   setTimeout(function(){ nodes.forEach(function(n){try{n.stop();}catch(e){}}); ambiGain=null; },1600);
 }
+
 function chime(freq,dur){
   if(!soundOn) return;
   var c=getCtx(), o=c.createOscillator(), g=c.createGain();
   o.type='sine'; o.frequency.value=freq;
   g.gain.setValueAtTime(0,c.currentTime);
-  g.gain.linearRampToValueAtTime(0.13,c.currentTime+0.15);
+  g.gain.linearRampToValueAtTime(0.15,c.currentTime+0.1);
   g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);
   o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+dur);
+}
+
+function haptic() {
+  if(navigator.vibrate) navigator.vibrate(40);
 }
 
 /* Build pattern buttons */
@@ -544,7 +634,15 @@ PATS.forEach(function(p,i){
 document.getElementById('durRow').addEventListener('click',function(e){
   var b=e.target.closest('.dur-btn'); if(!b) return;
   cfg.dur=parseInt(b.dataset.m,10);
-  document.querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');});
+  document.getElementById('durRow').querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+});
+
+/* Sound selector */
+document.getElementById('soundRow').addEventListener('click',function(e){
+  var b=e.target.closest('.dur-btn'); if(!b) return;
+  cfg.snd=b.dataset.snd;
+  document.getElementById('soundRow').querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');});
   b.classList.add('on');
 });
 
@@ -610,6 +708,7 @@ function runPhase(){
   document.getElementById('orb').className='orb '+ph.t;
   document.getElementById('sPhase').textContent=ph.l;
   document.getElementById('sCount').textContent=state.sec;
+  haptic();
   if(ph.t==='inhale') chime(528,1.1);
   else if(ph.t==='exhale') chime(396,1.1);
   else chime(432,0.7);
