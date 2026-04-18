@@ -520,66 +520,195 @@ function mkReverb(c,s){
 }
 
 function startOcean(c, out) {
-  var ns = mkNoise(c, 4, 'brown');
-  var lpf = c.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.value=500;
-  var lfo = mkLFO(c, 0.08, 280, lpf.frequency);
-  var g = c.createGain(); g.gain.value=0.9;
-  ns.connect(lpf); lpf.connect(g); g.connect(out); ns.start();
-  ambiNodes.push(ns, lfo);
+  // Deep rumble layer
+  var rumble = mkNoise(c, 8, 'brown');
+  var rLPF = c.createBiquadFilter(); rLPF.type='lowpass'; rLPF.frequency.value=110;
+  var rG = c.createGain(); rG.gain.value=1.4;
+  rumble.connect(rLPF); rLPF.connect(rG); rG.connect(out); rumble.start();
+
+  // Wave crash layer with organic swell envelope
+  var crash = mkNoise(c, 6, 'brown');
+  var cBPF = c.createBiquadFilter(); cBPF.type='bandpass'; cBPF.frequency.value=420; cBPF.Q.value=0.4;
+  var cG = c.createGain(); cG.gain.value=0.7;
+  var waveLFO = c.createOscillator(); var waveLFOG = c.createGain();
+  waveLFO.type='sine'; waveLFO.frequency.value=0.055;
+  waveLFOG.gain.value=0.55; cG.gain.value=0.55;
+  waveLFO.connect(waveLFOG); waveLFOG.connect(cG.gain); waveLFO.start();
+  // Second slower LFO for beat pattern between waves
+  var wave2LFO = c.createOscillator(); var wave2G = c.createGain();
+  wave2LFO.type='sine'; wave2LFO.frequency.value=0.033;
+  wave2G.gain.value=160;
+  wave2LFO.connect(wave2G); wave2G.connect(cBPF.frequency); wave2LFO.start();
+  crash.connect(cBPF); cBPF.connect(cG); cG.connect(out); crash.start();
+
+  // Foam/spray on wave peaks
+  var foam = mkNoise(c, 4, 'white');
+  var fHPF = c.createBiquadFilter(); fHPF.type='highpass'; fHPF.frequency.value=4000;
+  var fG = c.createGain(); fG.gain.value=0.05;
+  var foamLFO = c.createOscillator(); var foamLFOG = c.createGain();
+  foamLFO.type='sine'; foamLFO.frequency.value=0.055;
+  foamLFOG.gain.value=0.04;
+  foamLFO.connect(foamLFOG); foamLFOG.connect(fG.gain); foamLFO.start();
+  foam.connect(fHPF); fHPF.connect(fG); fG.connect(out); foam.start();
+
+  ambiNodes.push(rumble, crash, foam, waveLFO, wave2LFO, foamLFO);
 }
 
 function startRiver(c, out) {
-  var ns = mkNoise(c, 3, 'white');
-  var bpf = c.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=900; bpf.Q.value=0.6;
-  var lfo = mkLFO(c, 0.6, 400, bpf.frequency);
-  var g = c.createGain(); g.gain.value=0.55;
-  ns.connect(bpf); bpf.connect(g); g.connect(out); ns.start();
-  // second layer - higher splash
-  var ns2 = mkNoise(c, 2, 'white');
-  var hpf = c.createBiquadFilter(); hpf.type='highpass'; hpf.frequency.value=1800;
-  var g2 = c.createGain(); g2.gain.value=0.18;
-  var lfo2 = mkLFO(c, 1.2, 600, hpf.frequency);
-  ns2.connect(hpf); hpf.connect(g2); g2.connect(out); ns2.start();
-  ambiNodes.push(ns, ns2, lfo, lfo2);
+  // Core babbling: multiple bandpass layers on white noise
+  var ns = mkNoise(c, 5, 'white');
+  var bands = [320, 680, 1400, 2800];
+  var bandNodes = [];
+  bands.forEach(function(freq, idx) {
+    var bpf = c.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=freq; bpf.Q.value=0.5+idx*0.2;
+    var g = c.createGain(); g.gain.value=0.28-idx*0.04;
+    // Each band has a slightly different gurgle rate
+    var lfo = c.createOscillator(); var lfoG = c.createGain();
+    lfo.frequency.value=0.4+idx*0.35+Math.random()*0.2;
+    lfoG.gain.value=freq*0.35;
+    lfo.connect(lfoG); lfoG.connect(bpf.frequency); lfo.start();
+    ns.connect(bpf); bpf.connect(g); g.connect(out);
+    bandNodes.push(lfo);
+  });
+  ns.start();
+
+  // Fast turbulence layer
+  var ns2 = mkNoise(c, 3, 'white');
+  var hpf = c.createBiquadFilter(); hpf.type='highpass'; hpf.frequency.value=2200;
+  var hG = c.createGain(); hG.gain.value=0.12;
+  var turbLFO = c.createOscillator(); var turbG = c.createGain();
+  turbLFO.frequency.value=2.1; turbG.gain.value=0.09;
+  turbLFO.connect(turbG); turbG.connect(hG.gain); turbLFO.start();
+  ns2.connect(hpf); hpf.connect(hG); hG.connect(out); ns2.start();
+
+  ambiNodes.push(ns, ns2, turbLFO);
+  bandNodes.forEach(function(n){ ambiNodes.push(n); });
 }
 
 function startWind(c, out) {
-  var ns = mkNoise(c, 5, 'white');
-  var bpf = c.createBiquadFilter(); bpf.type='bandpass'; bpf.frequency.value=380; bpf.Q.value=1.2;
-  var lfo = mkLFO(c, 0.04, 180, bpf.frequency);
-  var ampLfo = c.createOscillator(); var ampG = c.createGain();
-  ampLfo.frequency.value=0.07; ampG.gain.value=0.25;
-  var masterG = c.createGain(); masterG.gain.value=0.5;
-  ampLfo.connect(ampG); ampG.connect(masterG.gain); ampLfo.start();
-  ns.connect(bpf); bpf.connect(masterG); masterG.connect(out); ns.start();
-  ambiNodes.push(ns, lfo, ampLfo);
+  // Brown noise base - "body" of wind
+  var ns = mkNoise(c, 7, 'brown');
+  var lpf = c.createBiquadFilter(); lpf.type='lowpass'; lpf.frequency.value=600;
+  var basG = c.createGain(); basG.gain.value=0.8;
+  var swellLFO = c.createOscillator(); var swellG = c.createGain();
+  swellLFO.type='sine'; swellLFO.frequency.value=0.038;
+  swellG.gain.value=0.55; basG.gain.value=0.45;
+  swellLFO.connect(swellG); swellG.connect(basG.gain); swellLFO.start();
+  ns.connect(lpf); lpf.connect(basG); basG.connect(out); ns.start();
+
+  // Howl: resonant bandpass with very slow frequency wander
+  var ns2 = mkNoise(c, 5, 'white');
+  var howl = c.createBiquadFilter(); howl.type='bandpass'; howl.frequency.value=260; howl.Q.value=3.5;
+  var howlG = c.createGain(); howlG.gain.value=0.35;
+  var howlLFO = c.createOscillator(); var howlLFOG = c.createGain();
+  howlLFO.type='sine'; howlLFO.frequency.value=0.018;
+  howlLFOG.gain.value=120;
+  howlLFO.connect(howlLFOG); howlLFOG.connect(howl.frequency); howlLFO.start();
+  var howlAmpLFO = c.createOscillator(); var howlAmpG = c.createGain();
+  howlAmpLFO.type='sine'; howlAmpLFO.frequency.value=0.06;
+  howlAmpG.gain.value=0.28;
+  howlAmpLFO.connect(howlAmpG); howlAmpG.connect(howlG.gain); howlAmpLFO.start();
+  ns2.connect(howl); howl.connect(howlG); howlG.connect(out); ns2.start();
+
+  // High whistle at peaks
+  var ns3 = mkNoise(c, 4, 'white');
+  var wHPF = c.createBiquadFilter(); wHPF.type='highpass'; wHPF.frequency.value=3500;
+  var wG = c.createGain(); wG.gain.value=0.04;
+  var wLFO = c.createOscillator(); var wLFOG = c.createGain();
+  wLFO.type='sine'; wLFO.frequency.value=0.038;
+  wLFOG.gain.value=0.035;
+  wLFO.connect(wLFOG); wLFOG.connect(wG.gain); wLFO.start();
+  ns3.connect(wHPF); wHPF.connect(wG); wG.connect(out); ns3.start();
+
+  ambiNodes.push(ns, ns2, ns3, swellLFO, howlLFO, howlAmpLFO, wLFO);
 }
 
 function startBirds(c, out) {
   birdActive = true;
-  var bgNs = mkNoise(c, 3, 'white');
-  var bgF = c.createBiquadFilter(); bgF.type='highpass'; bgF.frequency.value=3000;
-  var bgG = c.createGain(); bgG.gain.value=0.04;
-  bgNs.connect(bgF); bgF.connect(bgG); bgG.connect(out); bgNs.start();
+
+  // Background forest noise (distant wind through leaves)
+  var bgNs = mkNoise(c, 5, 'brown');
+  var bgBPF = c.createBiquadFilter(); bgBPF.type='bandpass'; bgBPF.frequency.value=1800; bgBPF.Q.value=0.3;
+  var bgG = c.createGain(); bgG.gain.value=0.06;
+  bgNs.connect(bgBPF); bgBPF.connect(bgG); bgG.connect(out); bgNs.start();
   ambiNodes.push(bgNs);
 
-  function chirp() {
-    if(!birdActive) return;
-    var pitches = [2600,3000,3400,2200,2800,3600];
-    var f = pitches[Math.floor(Math.random()*pitches.length)];
-    var dur = 0.08 + Math.random()*0.12;
-    var o=c.createOscillator(), g=c.createGain();
-    o.type='sine'; o.frequency.setValueAtTime(f,c.currentTime);
-    o.frequency.linearRampToValueAtTime(f*1.25,c.currentTime+dur*0.4);
-    o.frequency.linearRampToValueAtTime(f*0.95,c.currentTime+dur);
-    g.gain.setValueAtTime(0,c.currentTime);
-    g.gain.linearRampToValueAtTime(0.12,c.currentTime+0.02);
-    g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);
-    o.connect(g); g.connect(out); o.start(); o.stop(c.currentTime+dur+0.05);
-    if(Math.random()>0.5) setTimeout(function(){ if(birdActive){ var o2=c.createOscillator(),g2=c.createGain(); o2.type='sine'; o2.frequency.value=f*1.15; g2.gain.setValueAtTime(0,c.currentTime); g2.gain.linearRampToValueAtTime(0.09,c.currentTime+0.02); g2.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur*0.8); o2.connect(g2); g2.connect(out); o2.start(); o2.stop(c.currentTime+dur+0.05); }},120+Math.random()*80);
-    setTimeout(chirp, 1200+Math.random()*2800);
+  // FM chirp helper
+  function fmChirp(freq, fmRatio, fmIdx, vol, attack, sustain) {
+    var t = c.currentTime;
+    var carrier = c.createOscillator();
+    var modulator = c.createOscillator();
+    var modG = c.createGain();
+    var env = c.createGain();
+    carrier.type = 'sine'; modulator.type = 'sine';
+    carrier.frequency.value = freq;
+    modulator.frequency.value = freq * fmRatio;
+    modG.gain.value = freq * fmIdx;
+    modulator.connect(modG); modG.connect(carrier.frequency);
+    env.gain.setValueAtTime(0, t);
+    env.gain.linearRampToValueAtTime(vol, t + attack);
+    env.gain.exponentialRampToValueAtTime(0.001, t + attack + sustain);
+    carrier.connect(env); env.connect(out);
+    modulator.start(t); carrier.start(t);
+    modulator.stop(t + attack + sustain + 0.05);
+    carrier.stop(t + attack + sustain + 0.05);
   }
-  setTimeout(chirp, 500);
+
+  function robin() {
+    if(!birdActive) return;
+    // Melodic 4-5 note ascending phrase
+    var base = 2400 + Math.random()*600;
+    var steps = [1, 1.18, 0.95, 1.28, 1.1];
+    var delay = 0;
+    steps.forEach(function(ratio) {
+      (function(d, r) {
+        setTimeout(function() {
+          if(!birdActive) return;
+          fmChirp(base*r, 2.05, 0.28, 0.11, 0.025, 0.1);
+        }, d);
+      })(delay, ratio);
+      delay += 160 + Math.random()*60;
+    });
+    setTimeout(robin, 5000 + Math.random()*6000);
+  }
+
+  function canary() {
+    if(!birdActive) return;
+    // Rapid trill alternating two notes
+    var base = 3100 + Math.random()*500;
+    var count = 8 + Math.floor(Math.random()*6);
+    for(var i=0; i<count; i++) {
+      (function(idx) {
+        setTimeout(function() {
+          if(!birdActive) return;
+          var f = base * (idx%2===0 ? 1 : 1.22);
+          fmChirp(f, 1.95, 0.22, 0.09, 0.012, 0.065);
+        }, idx * 95);
+      })(i);
+    }
+    setTimeout(canary, 4000 + Math.random()*5000);
+  }
+
+  function wren() {
+    if(!birdActive) return;
+    // Descending waterfall of short notes
+    var base = 4200 + Math.random()*600;
+    var count = 10 + Math.floor(Math.random()*5);
+    for(var j=0; j<count; j++) {
+      (function(jj) {
+        setTimeout(function() {
+          if(!birdActive) return;
+          fmChirp(base * Math.pow(0.91, jj), 1.5, 0.18, 0.08, 0.01, 0.05);
+        }, jj * 65);
+      })(j);
+    }
+    setTimeout(wren, 3500 + Math.random()*4500);
+  }
+
+  // Stagger starts so birds don't all sing at once
+  setTimeout(robin, 600);
+  setTimeout(canary, 2200 + Math.random()*1500);
+  setTimeout(wren, 4000 + Math.random()*2000);
 }
 
 function startAmbience(){
