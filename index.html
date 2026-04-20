@@ -423,15 +423,6 @@
 
   </div>
 
-  <p class="sec-lbl">Sonido ambiental</p>
-  <div class="dur-row" id="soundRow">
-    <button class="dur-btn on" data-snd="ocean">&#127754;<br>Mar</button>
-    <button class="dur-btn" data-snd="river">&#128167;<br>R&iacute;o</button>
-    <button class="dur-btn" data-snd="wind">&#127788;<br>Viento</button>
-    <button class="dur-btn" data-snd="birds">&#128038;<br>P&aacute;jaros</button>
-    <button class="dur-btn" data-snd="none">&#128263;<br>Ninguno</button>
-  </div>
-
   <p class="sec-lbl">T&eacute;cnica de respiraci&oacute;n</p>
   <div class="pat-list" id="patList"></div>
 
@@ -488,7 +479,8 @@ var PATS = [
 ];
 
 var BG = { ocean:'night', forest:'', sunset:'forest' };
-var cfg = { dur:3, scene:'ocean', pat:PATS[0], snd:'ocean' };
+var cfg = { dur:3, scene:'ocean', pat:PATS[0] };
+var SCENE_SND = { ocean:'wind', forest:'ocean', sunset:'birds' };
 var state = { on:false, pIdx:0, sec:0, cyc:0, sessLeft:0 };
 var tPhase=null, tSess=null, soundOn=true;
 var actx=null, ambiGain=null, ambiNodes=[], audioBufs={};
@@ -525,7 +517,7 @@ function loadBuf(url, cb) {
 }
 
 function startAmbience(){
-  if(!soundOn || cfg.snd==='none') return;
+  if(!soundOn) return;
   var c=getCtx();
   ambiGain=c.createGain();
   ambiGain.gain.setValueAtTime(0,c.currentTime);
@@ -533,7 +525,7 @@ function startAmbience(){
   var rev=mkReverb(c,2), revG=c.createGain(); revG.gain.value=0.2;
   ambiGain.connect(rev); rev.connect(revG); revG.connect(c.destination);
   ambiGain.connect(c.destination);
-  var url=SOUND_URLS[cfg.snd]; if(!url) return;
+  var url=SOUND_URLS[SCENE_SND[cfg.scene]]; if(!url) return;
   loadBuf(url, function(buf){
     if(!ambiGain) return;
     var src=c.createBufferSource(); src.buffer=buf; src.loop=true;
@@ -598,14 +590,6 @@ document.getElementById('durRow').addEventListener('click',function(e){
   var b=e.target.closest('.dur-btn'); if(!b) return;
   cfg.dur=parseInt(b.dataset.m,10);
   document.getElementById('durRow').querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');});
-  b.classList.add('on');
-});
-
-/* Sound selector */
-document.getElementById('soundRow').addEventListener('click',function(e){
-  var b=e.target.closest('.dur-btn'); if(!b) return;
-  cfg.snd=b.dataset.snd;
-  document.getElementById('soundRow').querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');});
   b.classList.add('on');
 });
 
