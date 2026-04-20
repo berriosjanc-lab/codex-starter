@@ -420,40 +420,6 @@
       </div>
     </div>
 
-    <!-- ATARDECER -->
-    <div class="sc" data-s="night">
-      <svg viewBox="0 0 80 96" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="sSky" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#1a0430"/>
-            <stop offset="30%" stop-color="#8a1850"/>
-            <stop offset="62%" stop-color="#d44030"/>
-            <stop offset="100%" stop-color="#f09030"/>
-          </linearGradient>
-          <radialGradient id="sunGlow" cx="50%" cy="68%" r="45%">
-            <stop offset="0%" stop-color="#ffe060" stop-opacity="0.7"/>
-            <stop offset="100%" stop-color="#ff6020" stop-opacity="0"/>
-          </radialGradient>
-        </defs>
-        <rect width="80" height="96" fill="url(#sSky)"/>
-        <!-- Sun glow -->
-        <ellipse cx="40" cy="65" rx="36" ry="22" fill="url(#sunGlow)"/>
-        <!-- Sun -->
-        <circle cx="40" cy="66" r="10" fill="#ffe050"/>
-        <!-- Horizon mask -->
-        <rect x="0" y="66" width="80" height="30" fill="#1a0430"/>
-        <!-- Clouds -->
-        <ellipse cx="18" cy="28" rx="13" ry="5"  fill="rgba(200,70,110,0.45)"/>
-        <ellipse cx="62" cy="22" rx="14" ry="5.5" fill="rgba(180,60,100,0.38)"/>
-        <ellipse cx="42" cy="36" rx="10" ry="4"  fill="rgba(220,90,70,0.35)"/>
-        <!-- Land -->
-        <path d="M0,66 Q20,60 35,66 Q50,72 65,66 Q72,62 80,66 L80,96 L0,96 Z" fill="#100220"/>
-      </svg>
-      <div class="sc-overlay">
-        <div class="sc-dot"></div>
-        <span class="sc-name">Atardecer</span>
-      </div>
-    </div>
 
   </div>
 
@@ -477,10 +443,9 @@
 <div class="screen below" id="sess">
   <div id="sceneBg">
 
-    <div class="yt-wrap" id="yt-ocean"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/186070-876973719_ukldpc.mp4"></video></div>
-    <div class="yt-wrap" id="yt-forest"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/163326-827461488_j4wvkr.mp4"></video></div>
-    <div class="yt-wrap" id="yt-sunset"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/78916-567754599_ifzvln.mp4"></video></div>
-    <div class="yt-wrap" id="yt-night"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/198844-908857695_dqxlvu.mp4"></video></div>
+    <div class="yt-wrap" id="yt-ocean"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/198844-908857695_dqxlvu.mp4"></video></div>
+    <div class="yt-wrap" id="yt-forest"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/186070-876973719_ukldpc.mp4"></video></div>
+    <div class="yt-wrap" id="yt-sunset"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/163326-827461488_j4wvkr.mp4"></video></div>
 
 
   </div>
@@ -522,7 +487,7 @@ var PATS = [
     phases:[{l:'Inhala',t:'inhale',d:3},{l:'Exhala',t:'exhale',d:3}] }
 ];
 
-var BG = { ocean:'', forest:'forest', sunset:'sunset', night:'night' };
+var BG = { ocean:'night', forest:'', sunset:'forest' };
 var cfg = { dur:3, scene:'ocean', pat:PATS[0], snd:'ocean' };
 var state = { on:false, pIdx:0, sec:0, cyc:0, sessLeft:0 };
 var tPhase=null, tSess=null, soundOn=true;
