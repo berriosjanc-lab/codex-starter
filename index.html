@@ -646,6 +646,8 @@ function activateScene(s){
 }
 
 function begin(){
+  var sess=document.getElementById('sess');
+  sess.style.display='';
   state.on=true; state.pIdx=0; state.cyc=0;
   state.sessLeft=cfg.dur*60;
   document.getElementById('sCycle').textContent='';
@@ -697,11 +699,13 @@ function finish(){
   document.getElementById('sPhase').textContent='Sesi\u00f3n completa';
   document.getElementById('sCount').textContent='';
   document.getElementById('sCycle').textContent=state.cyc+(state.cyc===1?' ciclo':' ciclos');
+  var sess=document.getElementById('sess');
   setTimeout(function(){
-    document.getElementById('sess').classList.add('below');
+    sess.classList.add('below');
     document.getElementById('setup').classList.remove('out');
     document.getElementById('sPhase').textContent='';
     document.getElementById('sCycle').textContent='';
+    setTimeout(function(){ sess.style.display='none'; }, 600);
   },2000);
 }
 </script>
