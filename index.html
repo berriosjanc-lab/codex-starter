@@ -633,7 +633,10 @@ document.getElementById('btnEnd').addEventListener('click',finish);
 function fmt(s){ var m=Math.floor(s/60),ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
 
 function activateScene(s){
-  document.querySelectorAll('.yt-wrap').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.yt-wrap').forEach(function(el){
+    el.classList.remove('active');
+    var v=el.querySelector('video'); if(v) v.pause();
+  });
   var wrap=document.getElementById('yt-'+s);
   if(wrap){
     wrap.classList.add('active');
@@ -686,7 +689,10 @@ function finish(){
   state.on=false;
   clearInterval(tPhase); clearInterval(tSess);
   stopAmbience();
-  document.querySelectorAll('.yt-wrap').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.yt-wrap').forEach(function(el){
+    el.classList.remove('active');
+    var v=el.querySelector('video'); if(v){ v.pause(); v.currentTime=0; }
+  });
   document.getElementById('orb').className='orb';
   document.getElementById('sPhase').textContent='Sesi\u00f3n completa';
   document.getElementById('sCount').textContent='';
@@ -696,7 +702,7 @@ function finish(){
     document.getElementById('setup').classList.remove('out');
     document.getElementById('sPhase').textContent='';
     document.getElementById('sCycle').textContent='';
-  },3000);
+  },2000);
 }
 </script>
 </body>
