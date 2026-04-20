@@ -109,31 +109,33 @@
       position:relative; overflow:hidden;
       border:2px solid transparent;
       transition:border-color 0.25s, transform 0.18s;
-      min-height:96px;
+      min-height:110px;
     }
     .sc.on { border-color:rgba(255,255,255,0.9); }
     .sc:active { transform:scale(0.95); }
     .sc svg { position:absolute; inset:0; width:100%; height:100%; display:block; }
     .sc-overlay {
-      position:absolute; inset:0;
-      display:flex; flex-direction:column;
-      align-items:center; justify-content:flex-end;
-      padding-bottom:9px; pointer-events:none;
+      position:absolute; inset:0; pointer-events:none;
     }
     .sc-dot {
-      width:18px; height:18px; border-radius:50%;
-      background:rgba(255,255,255,0.2);
-      border:1.5px solid rgba(255,255,255,0.7);
-      margin-bottom:5px;
+      position:absolute; top:7px; right:7px;
+      width:16px; height:16px; border-radius:50%;
+      background:transparent; border:1.5px solid rgba(255,255,255,0.5);
       display:flex; align-items:center; justify-content:center;
-      font-size:9px; font-weight:700; color:#fff;
+      font-size:8px; font-weight:700; color:transparent;
+      transition:all 0.2s;
     }
-    .sc.on .sc-dot { background:#fff; color:#333; }
+    .sc.on .sc-dot {
+      background:#fff; border-color:#fff; color:#333;
+    }
     .sc-name {
+      position:absolute; bottom:0; left:0; right:0;
+      text-align:center; padding:18px 4px 8px;
       font-size:0.65rem; font-weight:600; color:#fff;
       text-shadow:0 1px 6px rgba(0,0,0,0.7);
-      letter-spacing:0.5px; text-align:center;
+      letter-spacing:0.5px;
       font-family:'Josefin Sans',sans-serif;
+      background:linear-gradient(transparent, rgba(0,0,0,0.45));
     }
 
     /* PATTERNS */
@@ -360,7 +362,7 @@
         <polygon points="48,96 48,68 64,50 80,68 80,96" fill="#050518"/>
       </svg>
       <div class="sc-overlay">
-        <div class="sc-dot">&#10003;</div>
+        <div class="sc-dot"></div>
         <span class="sc-name">Noche</span>
       </div>
     </div>
@@ -646,14 +648,8 @@ document.getElementById('durRow').addEventListener('click',function(e){
 document.getElementById('scenesRow').addEventListener('click',function(e){
   var card=e.target.closest('.sc'); if(!card) return;
   cfg.scene=card.dataset.s;
-  document.querySelectorAll('.sc').forEach(function(x){
-    x.classList.remove('on');
-    var dot=x.querySelector('.sc-dot');
-    if(dot) dot.innerHTML='';
-  });
+  document.querySelectorAll('.sc').forEach(function(x){ x.classList.remove('on'); });
   card.classList.add('on');
-  var dot=card.querySelector('.sc-dot');
-  if(dot) dot.innerHTML='&#10003;';
   var bg=document.getElementById('bg');
   bg.className=BG[cfg.scene]||'';
   bg.id='bg';
