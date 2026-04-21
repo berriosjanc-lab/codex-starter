@@ -278,7 +278,35 @@
     }
     .s-msg.show { opacity: 1; }
 
-    /* HRV SCREEN */
+    /* HRV INPUT (setup screen) */
+    .hrv-input-row {
+      display:flex; align-items:center; gap:12px; width:100%;
+      margin-bottom:16px; background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12); border-radius:14px;
+      padding:12px 18px; cursor:text;
+    }
+    .hrv-input-lbl {
+      font-family:'Josefin Sans',sans-serif; font-size:0.62rem;
+      letter-spacing:3px; text-transform:uppercase; font-weight:300;
+      color:rgba(255,255,255,0.45); flex-shrink:0;
+    }
+    .hrv-num-input {
+      flex:1; background:none; border:none; outline:none;
+      font-family:'Cormorant Garamond',serif;
+      font-size:2rem; font-weight:300; letter-spacing:2px;
+      color:#fff; text-align:center; min-width:0;
+      -moz-appearance:textfield;
+    }
+    .hrv-num-input::-webkit-inner-spin-button,
+    .hrv-num-input::-webkit-outer-spin-button { -webkit-appearance:none; }
+    .hrv-num-input::placeholder { color:rgba(255,255,255,0.2); }
+    .hrv-input-hint {
+      font-family:'Josefin Sans',sans-serif; font-size:0.52rem;
+      letter-spacing:1.5px; color:rgba(255,255,255,0.22); font-weight:300;
+      flex-shrink:0; text-align:right; line-height:1.5;
+    }
+
+    /* HRV TREND SCREEN */
     .btn-back {
       align-self:flex-start;
       background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
@@ -288,79 +316,57 @@
     }
     .hrv-title {
       font-family:'Cormorant Garamond',serif;
-      font-size:3rem; font-weight:300; letter-spacing:10px;
-      margin:12px 0 6px; text-align:center;
+      font-size:2.8rem; font-weight:300; letter-spacing:10px;
+      margin:10px 0 4px; text-align:center;
     }
     .hrv-sub {
       font-family:'Cormorant Garamond',serif;
-      font-style:italic; font-size:1rem; font-weight:300;
-      color:rgba(255,255,255,0.5); text-align:center; margin-bottom:20px;
+      font-style:italic; font-size:0.95rem; font-weight:300;
+      color:rgba(255,255,255,0.45); text-align:center; margin-bottom:24px;
     }
-    .hrv-stage {
-      position:relative; width:220px; height:220px;
-      display:flex; flex-direction:column; align-items:center; justify-content:center;
-      margin:4px 0 28px;
+    .hrv-stats-row {
+      display:flex; gap:0; width:100%; margin-bottom:22px;
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+      border-radius:16px; overflow:hidden;
     }
-    .hrv-orb {
-      width:150px; height:150px; border-radius:50%; z-index:2;
-      background:radial-gradient(circle at 36% 32%,rgba(255,130,130,.95) 0%,rgba(200,60,60,.55) 55%,rgba(140,10,10,.25) 100%);
-      box-shadow:0 0 55px rgba(255,80,80,.22),0 0 110px rgba(255,80,80,.08);
+    .hrv-stat {
+      flex:1; display:flex; flex-direction:column; align-items:center;
+      padding:16px 8px; gap:4px;
+      border-right:1px solid rgba(255,255,255,0.08);
+    }
+    .hrv-stat:last-child { border-right:none; }
+    .hrv-stat-val {
+      font-family:'Cormorant Garamond',serif;
+      font-size:2rem; font-weight:300; letter-spacing:2px; color:#fff; line-height:1;
+    }
+    .hrv-stat-lbl {
+      font-family:'Josefin Sans',sans-serif; font-size:0.55rem;
+      letter-spacing:2.5px; text-transform:uppercase;
+      color:rgba(255,255,255,0.35); font-weight:300;
+    }
+    .hrv-chart-wrap {
+      width:100%; background:rgba(255,255,255,0.04);
+      border:1px solid rgba(255,255,255,0.1); border-radius:16px;
+      padding:16px 8px 10px; margin-bottom:18px; min-height:100px;
       display:flex; align-items:center; justify-content:center;
-      font-size:2.4rem; cursor:default;
-      -webkit-user-select:none; user-select:none;
-      transition:transform 0.12s ease;
     }
-    .hrv-orb.ready { cursor:pointer; }
-    .hrv-orb.tap { animation:hrvTap 0.28s ease-out; }
-    @keyframes hrvTap {
-      0%{transform:scale(1)}
-      25%{transform:scale(0.86);box-shadow:0 0 70px rgba(255,80,80,.55);}
-      100%{transform:scale(1)}
+    #hrvChart { width:100%; overflow:visible; }
+    .hrv-chart-empty {
+      font-family:'Cormorant Garamond',serif; font-style:italic;
+      font-size:0.9rem; color:rgba(255,255,255,0.3); text-align:center;
+      line-height:1.6; padding:12px 8px;
     }
-    .hrv-ring1 {
-      position:absolute; width:196px; height:196px; border-radius:50%;
-      border:1px solid rgba(255,120,120,0.18);
+    .hrv-legend {
+      display:flex; gap:16px; margin-bottom:16px;
+      font-family:'Josefin Sans',sans-serif; font-size:0.55rem;
+      letter-spacing:2px; text-transform:uppercase; font-weight:300;
+      color:rgba(255,255,255,0.35);
     }
-    .hrv-ring2 {
-      position:absolute; width:218px; height:218px; border-radius:50%;
-      border:1px solid rgba(255,120,120,0.09);
-    }
-    .hrv-bpm-live {
-      position:absolute; bottom:-6px;
-      font-family:'Cormorant Garamond',serif;
-      font-size:1.5rem; font-weight:300; letter-spacing:2px;
-      color:rgba(255,255,255,0.78);
-    }
-    .hrv-info-row {
-      display:flex; gap:28px; margin-bottom:22px;
-      font-family:'Josefin Sans',sans-serif; font-size:0.6rem;
-      letter-spacing:3px; text-transform:uppercase; font-weight:300;
-      color:rgba(255,255,255,0.38);
-    }
-    .hrv-result-card {
-      width:100%; background:rgba(255,255,255,0.07);
-      border:1px solid rgba(255,255,255,0.14); border-radius:20px;
-      padding:26px 20px; display:flex; flex-direction:column; align-items:center;
-      gap:8px; margin-bottom:20px;
-    }
-    .hrv-rmssd {
-      font-family:'Cormorant Garamond',serif;
-      font-size:4.5rem; font-weight:300; letter-spacing:4px; color:#fff;
-      line-height:1;
-    }
-    .hrv-unit {
-      font-family:'Josefin Sans',sans-serif; font-size:0.58rem;
-      letter-spacing:4px; text-transform:uppercase;
-      color:rgba(255,255,255,0.38); font-weight:300; margin-bottom:8px;
-    }
-    .hrv-score-lbl {
-      font-family:'Cormorant Garamond',serif;
-      font-style:italic; font-size:1.25rem; font-weight:300;
-      color:rgba(255,255,255,0.82);
-    }
-    .hrv-hr-lbl {
-      font-family:'Josefin Sans',sans-serif; font-size:0.7rem;
-      letter-spacing:2px; color:rgba(255,255,255,0.42); font-weight:300;
+    .hrv-legend span { display:flex; align-items:center; gap:5px; }
+    .hrv-insight {
+      font-family:'Cormorant Garamond',serif; font-style:italic;
+      font-size:1rem; font-weight:300; color:rgba(255,255,255,0.65);
+      text-align:center; line-height:1.6; padding:0 4px;
     }
 
     .fab {
@@ -480,16 +486,23 @@
   <p class="sec-lbl" id="txtPatLbl">T&eacute;cnica de respiraci&oacute;n</p>
   <div class="pat-list" id="patList"></div>
 
+  <div class="hrv-input-row" onclick="document.getElementById('hrvInput').focus()">
+    <span class="hrv-input-lbl">HRV hoy</span>
+    <input type="number" id="hrvInput" class="hrv-num-input"
+      placeholder="&mdash;" min="10" max="250" inputmode="numeric"/>
+    <span class="hrv-input-hint">Oura<br>Salud</span>
+  </div>
+
   <button class="btn-begin" id="btnBegin">Comenzar Sesi&oacute;n</button>
 
   <button onclick="showHRV()" style="
     display:inline-flex; align-items:center; gap:7px;
-    margin-top:18px; padding:11px 22px; border-radius:20px;
-    background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.16);
-    color:rgba(255,255,255,0.55); cursor:pointer;
-    font-family:'Josefin Sans',sans-serif; font-size:0.7rem;
+    margin-top:16px; padding:10px 22px; border-radius:20px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.13);
+    color:rgba(255,255,255,0.45); cursor:pointer;
+    font-family:'Josefin Sans',sans-serif; font-size:0.62rem;
     letter-spacing:3px; text-transform:uppercase; font-weight:300;
-  ">&#128202; HRV Tracker</button>
+  ">&#128202; Tendencia HRV</button>
 
 </div>
 
@@ -530,41 +543,47 @@
 
 </div>
 
-<!-- HRV TRACKER -->
+<!-- HRV TENDENCIA -->
 <div class="screen below" id="hrv" style="display:none">
 
   <button class="btn-back" id="btnHrvBack">&#8592; Volver</button>
 
-  <div class="logo-wrap" style="margin-top:8px;margin-bottom:0">
+  <div class="logo-wrap" style="margin-top:6px;margin-bottom:0">
     <div class="rings"><i></i><i></i><i></i></div>
     <span class="logo-lbl">HRV</span>
   </div>
 
-  <h2 class="hrv-title">PULSO</h2>
-  <p class="hrv-sub" id="hrvSub">Toca al ritmo de tu coraz&oacute;n</p>
+  <h2 class="hrv-title">TENDENCIA</h2>
+  <p class="hrv-sub">HRV y constancia de respiraci&oacute;n</p>
 
-  <div class="hrv-stage">
-    <div class="hrv-ring2"></div>
-    <div class="hrv-ring1"></div>
-    <div class="hrv-orb" id="hrvOrb">&#10084;</div>
-    <div class="hrv-bpm-live"><span id="hrvBpm">&mdash;</span> bpm</div>
-  </div>
-
-  <div class="hrv-info-row">
-    <span id="hrvTimer">0:00</span>
-    <span id="hrvTaps">0 toques</span>
-  </div>
-
-  <button class="btn-begin" id="btnHrvStart">Comenzar</button>
-
-  <div id="hrvResults" style="display:none;width:100%;margin-top:20px">
-    <div class="hrv-result-card">
-      <div class="hrv-rmssd" id="hrvRmssd">&mdash;</div>
-      <div class="hrv-unit">ms &nbsp;RMSSD</div>
-      <div class="hrv-score-lbl" id="hrvScore"></div>
-      <div class="hrv-hr-lbl" id="hrvHr"></div>
+  <div class="hrv-stats-row">
+    <div class="hrv-stat">
+      <span class="hrv-stat-val" id="hrvStatToday">&mdash;</span>
+      <span class="hrv-stat-lbl">hoy</span>
+    </div>
+    <div class="hrv-stat">
+      <span class="hrv-stat-val" id="hrvStat7d">&mdash;</span>
+      <span class="hrv-stat-lbl">prom 7d</span>
+    </div>
+    <div class="hrv-stat">
+      <span class="hrv-stat-val" id="hrvStatSess">&mdash;</span>
+      <span class="hrv-stat-lbl">sesiones</span>
     </div>
   </div>
+
+  <div class="hrv-chart-wrap">
+    <svg id="hrvChart" viewBox="0 0 300 100" preserveAspectRatio="none" style="display:none"></svg>
+    <p class="hrv-chart-empty" id="hrvChartEmpty">
+      Ingresa tu HRV antes de cada sesi&oacute;n<br>para ver la tendencia aqu&iacute;
+    </p>
+  </div>
+
+  <div class="hrv-legend" id="hrvLegend" style="display:none">
+    <span><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/><circle cx="10" cy="4" r="2.5" fill="#fff"/></svg> HRV</span>
+    <span><circle-dot style="display:inline-block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.45);margin-right:4px"></circle-dot> sesi&oacute;n</span>
+  </div>
+
+  <p class="hrv-insight" id="hrvInsight"></p>
 
 </div>
 
@@ -874,6 +893,7 @@ function runPhase(){
 
 function finish(){
   state.on=false;
+  upsertDay(null, true);
   clearInterval(tPhase); clearInterval(tSess);
   stopAmbience();
   document.querySelectorAll('.yt-wrap').forEach(function(el){
@@ -896,116 +916,148 @@ function finish(){
   },2000);
 }
 
-/* ===== HRV TRACKER ===== */
-var hrv = { active:false, taps:[], timerInt:null, elapsed:0 };
+/* ===== HRV / TENDENCIA ===== */
+
+function todayStr(){
+  return new Date().toISOString().slice(0,10);
+}
+function getData(){
+  return JSON.parse(localStorage.getItem('calma_log')||'[]');
+}
+function saveData(d){
+  localStorage.setItem('calma_log', JSON.stringify(d));
+}
+function upsertDay(hrv, addSession){
+  var d=getData(), today=todayStr();
+  var rec=d.filter(function(r){return r.date===today;})[0];
+  if(!rec){ rec={date:today,hrv:null,sess:0}; d.push(rec); }
+  if(hrv!==null) rec.hrv=hrv;
+  if(addSession) rec.sess=(rec.sess||0)+1;
+  d.sort(function(a,b){return a.date<b.date?-1:1;});
+  saveData(d);
+}
+
+function logHRVInput(){
+  var v=parseInt(document.getElementById('hrvInput').value,10);
+  if(v>=10&&v<=250) upsertDay(v,false);
+}
 
 function showHRV(){
+  var v=parseInt(document.getElementById('hrvInput').value,10);
+  if(v>=10&&v<=250) upsertDay(v,false);
   document.getElementById('setup').classList.add('out');
   var h=document.getElementById('hrv');
-  h.style.display='';
-  h.classList.remove('below');
-  resetHRV();
+  h.style.display=''; h.classList.remove('below');
+  renderHRV();
 }
 
 function hideHRV(){
   var h=document.getElementById('hrv');
   h.classList.add('below');
   document.getElementById('setup').classList.remove('out');
-  stopHRVTimer();
   setTimeout(function(){ h.style.display='none'; },600);
 }
 
-function resetHRV(){
-  stopHRVTimer();
-  hrv.taps=[]; hrv.elapsed=0;
-  document.getElementById('hrvBpm').innerHTML='&mdash;';
-  document.getElementById('hrvTimer').textContent='0:00';
-  document.getElementById('hrvTaps').textContent='0 toques';
-  document.getElementById('hrvResults').style.display='none';
-  document.getElementById('btnHrvStart').textContent='Comenzar';
-  document.getElementById('btnHrvStart').onclick=startHRV;
-  var orb=document.getElementById('hrvOrb');
-  orb.classList.remove('ready');
-}
+function renderHRV(){
+  var data=getData();
+  var today=todayStr();
+  var todayRec=data.filter(function(r){return r.date===today;})[0];
+  document.getElementById('hrvStatToday').textContent=
+    (todayRec&&todayRec.hrv)?todayRec.hrv:'—';
+  var last7=data.slice(-7).filter(function(r){return r.hrv;});
+  var avg7=last7.length?Math.round(last7.reduce(function(s,r){return s+r.hrv;},0)/last7.length):'—';
+  document.getElementById('hrvStat7d').textContent=avg7;
+  var totalSess=data.reduce(function(s,r){return s+(r.sess||0);},0);
+  document.getElementById('hrvStatSess').textContent=totalSess||'—';
 
-function startHRV(){
-  hrv.active=true; hrv.taps=[]; hrv.elapsed=0;
-  document.getElementById('hrvOrb').classList.add('ready');
-  document.getElementById('btnHrvStart').textContent='Detener';
-  document.getElementById('btnHrvStart').onclick=stopHRVAndShow;
-  document.getElementById('hrvResults').style.display='none';
-  hrv.timerInt=setInterval(function(){
-    hrv.elapsed++;
-    var m=Math.floor(hrv.elapsed/60), s=hrv.elapsed%60;
-    document.getElementById('hrvTimer').textContent=m+':'+(s<10?'0':'')+s;
-    if(hrv.elapsed>=120) stopHRVAndShow();
-  },1000);
-}
-
-function stopHRVTimer(){
-  hrv.active=false;
-  clearInterval(hrv.timerInt); hrv.timerInt=null;
-}
-
-function stopHRVAndShow(){
-  stopHRVTimer();
-  document.getElementById('hrvOrb').classList.remove('ready');
-  document.getElementById('btnHrvStart').textContent='Nueva medición';
-  document.getElementById('btnHrvStart').onclick=resetHRV;
-  var result=calcHRV();
-  var rmssdEl=document.getElementById('hrvRmssd');
-  var scoreEl=document.getElementById('hrvScore');
-  var hrEl=document.getElementById('hrvHr');
-  if(result){
-    rmssdEl.textContent=result.rmssd;
-    var score;
-    if(result.rmssd>=50) score='Excelente variabilidad';
-    else if(result.rmssd>=30) score='Buena variabilidad';
-    else if(result.rmssd>=15) score='Variabilidad moderada';
-    else score='Variabilidad baja — reposa más';
-    scoreEl.textContent=score;
-    hrEl.textContent=result.hr+' bpm promedio · '+result.beats+' latidos';
+  var withHRV=data.filter(function(r){return r.hrv;});
+  var empty=document.getElementById('hrvChartEmpty');
+  var svg=document.getElementById('hrvChart');
+  var legend=document.getElementById('hrvLegend');
+  if(withHRV.length<2){
+    svg.style.display='none'; empty.style.display=''; legend.style.display='none';
   } else {
-    rmssdEl.innerHTML='&mdash;';
-    scoreEl.textContent='Pocos datos — toca al menos 8 veces';
-    hrEl.textContent='';
+    svg.style.display=''; empty.style.display='none'; legend.style.display='flex';
+    drawChart(data.slice(-30));
   }
-  document.getElementById('hrvResults').style.display='';
+
+  var insight='';
+  if(withHRV.length<3){
+    insight='Registra más días para ver correlaciones.';
+  } else {
+    var after=[], noAfter=[];
+    for(var i=1;i<data.length;i++){
+      if(!data[i].hrv) continue;
+      if((data[i-1].sess||0)>0) after.push(data[i].hrv);
+      else noAfter.push(data[i].hrv);
+    }
+    var h1=withHRV.slice(0,Math.floor(withHRV.length/2));
+    var h2=withHRV.slice(Math.floor(withHRV.length/2));
+    var a1=h1.reduce(function(s,r){return s+r.hrv;},0)/h1.length;
+    var a2=h2.reduce(function(s,r){return s+r.hrv;},0)/h2.length;
+    var diff=Math.round(a2-a1);
+    if(after.length>=2&&noAfter.length>=2){
+      var avgAfter=Math.round(after.reduce(function(s,v){return s+v;},0)/after.length);
+      var avgNo=Math.round(noAfter.reduce(function(s,v){return s+v;},0)/noAfter.length);
+      var delta=avgAfter-avgNo;
+      if(delta>=3) insight='Tu HRV sube '+delta+' ms después de respirar ✶';
+      else if(delta<=-3) insight='La constancia tarda semanas. Sé paciente.';
+      else if(diff>3) insight='Tendencia positiva ↗ — sigue así.';
+      else if(diff<-3) insight='Tendencia a la baja — prioriza el descanso.';
+      else insight='HRV estable. La respiración mantiene el equilibrio.';
+    } else {
+      if(diff>3) insight='Tendencia positiva ↗ — sigue así.';
+      else if(diff<-3) insight='Tendencia a la baja — prioriza el descanso.';
+      else insight='HRV estable. Sigue registrando para ver más.';
+    }
+  }
+  document.getElementById('hrvInsight').textContent=insight;
 }
 
-function tapBeat(){
-  if(!hrv.active) return;
-  var now=Date.now();
-  hrv.taps.push(now);
-  var count=hrv.taps.length;
-  document.getElementById('hrvTaps').textContent=count+(count===1?' toque':' toques');
-  var orb=document.getElementById('hrvOrb');
-  orb.classList.remove('tap');
-  void orb.offsetWidth;
-  orb.classList.add('tap');
-  if(count>=3){
-    var last=hrv.taps.slice(-4), ivs=[];
-    for(var i=1;i<last.length;i++) ivs.push(last[i]-last[i-1]);
-    var avg=ivs.reduce(function(a,b){return a+b;},0)/ivs.length;
-    document.getElementById('hrvBpm').textContent=Math.round(60000/avg);
-  }
-}
-
-function calcHRV(){
-  if(hrv.taps.length<5) return null;
-  var rr=[];
-  for(var i=1;i<hrv.taps.length;i++) rr.push(hrv.taps[i]-hrv.taps[i-1]);
-  rr=rr.filter(function(v){return v>300&&v<1500;});
-  if(rr.length<4) return null;
-  var sumSq=0;
-  for(var i=1;i<rr.length;i++){var d=rr[i]-rr[i-1]; sumSq+=d*d;}
-  var rmssd=Math.round(Math.sqrt(sumSq/(rr.length-1)));
-  var meanRR=rr.reduce(function(a,b){return a+b;},0)/rr.length;
-  return {rmssd:rmssd, hr:Math.round(60000/meanRR), beats:hrv.taps.length};
+function drawChart(data){
+  var svg=document.getElementById('hrvChart');
+  var W=300,H=100,PL=28,PR=8,PT=10,PB=18;
+  var cW=W-PL-PR, cH=H-PT-PB;
+  var withHRV=data.filter(function(r){return r.hrv;});
+  if(withHRV.length<2){svg.innerHTML='';return;}
+  var vals=withHRV.map(function(r){return r.hrv;});
+  var minV=Math.min.apply(null,vals), maxV=Math.max.apply(null,vals);
+  if(maxV===minV){minV-=10;maxV+=10;}
+  var pad=Math.round((maxV-minV)*0.15)||5;
+  minV-=pad; maxV+=pad;
+  var n=data.length;
+  function xf(i){return PL+i/(n-1)*cW;}
+  function yf(v){return PT+cH-(v-minV)/(maxV-minV)*cH;}
+  var html='';
+  html+='<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
+  html+='<line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
+  html+='<text x="'+(PL-4)+'" y="'+(PT+5)+'" fill="rgba(255,255,255,0.28)" font-size="7" text-anchor="end">'+Math.round(maxV)+'</text>';
+  html+='<text x="'+(PL-4)+'" y="'+(H-PB+1)+'" fill="rgba(255,255,255,0.28)" font-size="7" text-anchor="end">'+Math.round(minV)+'</text>';
+  var pathParts=[];
+  data.forEach(function(r,i){
+    if(!r.hrv) return;
+    pathParts.push((pathParts.length===0?'M':'L')+xf(i).toFixed(1)+','+yf(r.hrv).toFixed(1));
+  });
+  html+='<path d="'+pathParts.join(' ')+'" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
+  var lastI=data.reduce(function(li,r,i){return r.hrv?i:li;},-1);
+  var firstI=data.findIndex(function(r){return r.hrv;});
+  var areaPath=pathParts.join(' ')+' L'+xf(lastI).toFixed(1)+','+(H-PB)+' L'+xf(firstI).toFixed(1)+','+(H-PB)+' Z';
+  html+='<path d="'+areaPath+'" fill="rgba(255,255,255,0.04)"/>';
+  data.forEach(function(r,i){
+    if(r.hrv){
+      var hasSess=(r.sess||0)>0;
+      html+='<circle cx="'+xf(i).toFixed(1)+'" cy="'+yf(r.hrv).toFixed(1)+'" r="2.8" fill="'+(hasSess?'#fff':'rgba(255,255,255,0.45)')+'"/>';
+    }
+    if((r.sess||0)>0){
+      html+='<circle cx="'+xf(i).toFixed(1)+'" cy="'+(H-PB+8)+'" r="2" fill="rgba(255,255,255,0.45)"/>';
+    }
+  });
+  svg.innerHTML=html;
 }
 
 document.getElementById('btnHrvBack').addEventListener('click', hideHRV);
-document.getElementById('hrvOrb').addEventListener('click', tapBeat);
+document.getElementById('hrvInput').addEventListener('change', logHRVInput);
+document.getElementById('hrvInput').addEventListener('blur', logHRVInput);
 </script>
 </body>
 </html>
