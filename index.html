@@ -1,0 +1,765 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+  <title>Respirar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Josefin+Sans:wght@300;400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box; margin: 0; padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+    :root { --ease: cubic-bezier(.4,0,.2,1); }
+
+    body {
+      min-height: 100vh;
+      font-family: 'Josefin Sans', -apple-system, sans-serif;
+      color: #fff; overflow: hidden;
+    }
+
+    /* BACKGROUND */
+    #bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(155deg,#0d2137 0%,#0e3d52 35%,#145c6e 65%,#1a7a8a 100%);
+      transition: background 1.4s var(--ease);
+    }
+    #bg.forest  { background: linear-gradient(155deg,#040e08 0%,#0a2010 35%,#12341a 65%,#1a4a22 100%); }
+    #bg.sunset  { background: linear-gradient(155deg,#1a0535 0%,#7b1a5a 35%,#d44a30 65%,#f0a040 100%); }
+    #bg.night   { background: linear-gradient(155deg,#020210 0%,#06062a 35%,#0a0a38 65%,#10104a 100%); }
+    #bg::after {
+      content:''; position:absolute; inset:0;
+      background: rgba(0,0,0,0.3);
+    }
+
+    /* SCREENS */
+    .screen {
+      position: fixed; inset: 0; z-index: 2;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 56px 24px 60px;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+    }
+    .screen::-webkit-scrollbar { display: none; }
+    .screen.out  { opacity:0; transform:translateY(-20px); pointer-events:none; }
+    .screen.below{ opacity:0; transform:translateY(20px);  pointer-events:none; }
+
+    /* LOGO */
+    .logo-wrap {
+      display: flex; flex-direction: column; align-items: center;
+      gap: 10px; margin-bottom: 18px; margin-top: 4px;
+    }
+    .rings {
+      width: 58px; height: 58px;
+      position: relative; display: flex; align-items: center; justify-content: center;
+    }
+    .rings i {
+      position: absolute; border-radius: 50%; display: block;
+      border: 1.5px solid rgba(255,255,255,0.45);
+    }
+    .rings i:nth-child(1){ width:58px; height:58px; border-color:rgba(255,255,255,0.2); }
+    .rings i:nth-child(2){ width:40px; height:40px; border-color:rgba(255,255,255,0.38); }
+    .rings i:nth-child(3){ width:22px; height:22px; background:rgba(255,255,255,0.85); border:none; }
+    .logo-lbl {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.6rem; letter-spacing: 6px; text-transform: uppercase;
+      color: rgba(255,255,255,0.45); font-weight: 300;
+    }
+
+    .h-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 3.6rem; font-weight: 300; letter-spacing: 10px;
+      margin-bottom: 10px; text-align: center;
+    }
+    .h-sub {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.2rem; line-height: 1.85;
+      color: rgba(255,255,255,0.6); text-align: center; margin-bottom: 38px;
+      font-weight: 300;
+    }
+
+    .sec-lbl {
+      align-self: flex-start;
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
+      color: rgba(255,255,255,0.38); margin-bottom: 12px; font-weight: 300;
+    }
+
+    /* DURATION */
+    .dur-row { display:flex; gap:10px; width:100%; margin-bottom:28px; }
+    .dur-btn {
+      flex:1; padding:15px 0; border-radius:14px;
+      background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.14);
+      color:rgba(255,255,255,0.6); font-size:0.95rem; cursor:pointer;
+      transition:all 0.22s var(--ease); font-family:inherit;
+    }
+    .dur-btn.on {
+      background:rgba(255,255,255,0.2); border-color:rgba(255,255,255,0.6);
+      color:#fff; font-weight:600;
+    }
+
+    /* SCENE CARDS */
+    .scenes-row { display:flex; gap:8px; width:100%; margin-bottom:28px; }
+    .sc {
+      flex:1; border-radius:16px; cursor:pointer;
+      position:relative; overflow:hidden;
+      box-shadow:inset 0 0 0 2px transparent;
+      transition:box-shadow 0.25s, transform 0.18s;
+      min-height:110px;
+      -webkit-transform:translateZ(0); transform:translateZ(0);
+      -webkit-mask-image:-webkit-radial-gradient(white,black);
+    }
+    .sc.on { box-shadow:inset 0 0 0 2.5px rgba(255,255,255,0.92); }
+    .sc:active { transform:scale(0.95) translateZ(0); }
+    .sc img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
+    .sc-overlay {
+      position:absolute; inset:0; pointer-events:none;
+    }
+    .sc-dot {
+      position:absolute; top:7px; right:7px;
+      width:16px; height:16px; border-radius:50%;
+      background:transparent; border:1.5px solid rgba(255,255,255,0.5);
+      display:flex; align-items:center; justify-content:center;
+      font-size:8px; font-weight:700; color:transparent;
+      transition:all 0.2s;
+    }
+    .sc.on .sc-dot {
+      background:#fff; border-color:#fff; color:#333;
+    }
+    .sc-name {
+      position:absolute; bottom:0; left:0; right:0;
+      text-align:center; padding:18px 4px 8px;
+      font-size:0.65rem; font-weight:600; color:#fff;
+      text-shadow:0 1px 6px rgba(0,0,0,0.7);
+      letter-spacing:0.5px;
+      font-family:'Josefin Sans',sans-serif;
+      background:linear-gradient(transparent, rgba(0,0,0,0.45));
+    }
+
+    /* PATTERNS */
+    .pat-list { width:100%; margin-bottom:30px; }
+    .pat-wrap { width:100%; margin-bottom:8px; }
+    .pat-btn {
+      width:100%; padding:15px 18px; border-radius:14px;
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+      color:rgba(255,255,255,0.65); cursor:pointer;
+      display:flex; justify-content:space-between; align-items:center;
+      margin-bottom:0; font-family:inherit;
+      transition:all 0.2s var(--ease);
+    }
+    .pat-wrap.open .pat-btn { border-radius:14px 14px 0 0; }
+    .pat-btn .pn { font-size:0.9rem; text-align:left; }
+    .pat-btn .pt { font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.5px; }
+    .pat-btn.on {
+      background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.5);
+      color:#fff;
+    }
+    .pat-btn.on .pt { color:rgba(255,255,255,0.65); }
+    .pat-btn-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
+    .pat-info-btn {
+      background:none; border:1.5px solid rgba(255,255,255,0.25); border-radius:50%;
+      color:rgba(255,255,255,0.45); width:22px; height:22px;
+      font-size:0.65rem; font-weight:700; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; font-family:inherit; letter-spacing:0;
+      transition:all 0.15s;
+    }
+    .pat-info-btn:active, .pat-wrap.open .pat-info-btn {
+      background:rgba(255,255,255,0.2); border-color:rgba(255,255,255,0.7);
+      color:#fff;
+    }
+    .pat-info {
+      max-height:0; overflow:hidden;
+      transition:max-height 0.3s ease, padding 0.3s ease;
+      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
+      border-top:none; border-radius:0 0 14px 14px;
+      padding:0 18px;
+      font-family:'Josefin Sans',sans-serif; font-weight:300;
+      font-size:0.82rem; color:rgba(255,255,255,0.88); line-height:1.7;
+      letter-spacing:0.3px;
+    }
+    .pat-wrap.open .pat-info { max-height:100px; padding:11px 18px 15px; }
+
+    /* BEGIN */
+    .btn-begin {
+      width:100%; padding:20px; border-radius:50px;
+      background:rgba(255,255,255,0.15); border:1.5px solid rgba(255,255,255,0.38);
+      color:#fff; font-size:0.85rem; font-weight:400; letter-spacing:4px;
+      text-transform: uppercase;
+      cursor:pointer; font-family:'Josefin Sans',sans-serif;
+      transition:all 0.22s var(--ease);
+      -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+    }
+    .btn-begin:active { background:rgba(255,255,255,0.26); transform:scale(0.98); }
+
+    /* SESSION */
+    #sess { justify-content:center; padding-top:0; }
+
+    .sess-hdr {
+      position:fixed; top:0; left:0; right:0;
+      padding:52px 24px 0;
+      display:flex; justify-content:space-between; align-items:center;
+      z-index:10;
+    }
+    .btn-end {
+      background:rgba(255,255,255,0.1); border:1px solid rgba(255,255,255,0.25);
+      color:rgba(255,255,255,0.8); padding:9px 20px; border-radius:20px;
+      font-size:0.85rem; cursor:pointer; font-family:inherit;
+    }
+    .sess-clock {
+      font-size:0.95rem; font-weight:300; letter-spacing:2px;
+      color:rgba(255,255,255,0.55);
+    }
+
+    /* CIRCLE */
+    .stage {
+      position:relative; width:280px; height:280px;
+      display:flex; align-items:center; justify-content:center;
+      margin-bottom:48px;
+    }
+    .aura {
+      position:absolute; border-radius:50%;
+      background:radial-gradient(circle,rgba(255,255,255,0.07) 0%,transparent 70%);
+      animation:aura 4.5s ease-in-out infinite;
+    }
+    .aura:nth-child(1){ width:280px; height:280px; }
+    .aura:nth-child(2){ width:200px; height:200px; animation-delay:.7s; animation-duration:5.5s; }
+    @keyframes aura {
+      0%,100%{ opacity:.5; transform:scale(.94); }
+      50%{ opacity:1; transform:scale(1.04); }
+    }
+    .ring1 { position:absolute; width:210px; height:210px; border-radius:50%; border:1px solid rgba(255,255,255,0.14); }
+    .ring2 { position:absolute; width:162px; height:162px; border-radius:50%; border:1px solid rgba(255,255,255,0.09); }
+
+    .orb {
+      width:108px; height:108px; border-radius:50%; z-index:2;
+      background:radial-gradient(circle at 36% 32%,rgba(255,255,255,.95) 0%,rgba(255,255,255,.5) 55%,rgba(255,255,255,.2) 100%);
+      box-shadow:0 0 55px rgba(255,255,255,.22),0 0 110px rgba(255,255,255,.08);
+      transition:transform .4s ease;
+    }
+    .orb.inhale  { animation:cIn  var(--iDur,4s) ease-in  forwards; }
+    .orb.hold    { transform:scale(1.72); }
+    .orb.holdout { transform:scale(1.72); }
+    .orb.exhale  { animation:cOut var(--eDur,6s) ease-out forwards; }
+    @keyframes cIn  { from{transform:scale(1)}    to{transform:scale(1.72)} }
+    @keyframes cOut { from{transform:scale(1.72)} to{transform:scale(1)}    }
+
+    .s-phase {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 2rem; font-weight: 300; letter-spacing: 3px;
+      text-align: center; min-height: 44px; margin-bottom: 4px;
+      font-style: italic;
+    }
+    .s-count {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 5rem; font-weight: 300; letter-spacing: 4px;
+      min-height: 80px; text-align: center;
+    }
+    .s-cycle {
+      font-family: 'Josefin Sans', sans-serif;
+      font-size: 0.65rem; letter-spacing: 4px; text-transform: uppercase;
+      color: rgba(255,255,255,0.38); text-align: center; min-height: 20px;
+      font-weight: 300;
+    }
+    .s-msg {
+      font-family: 'Cormorant Garamond', serif;
+      font-style: italic; font-size: 1.05rem; font-weight: 300;
+      color: rgba(255,255,255,0.52); text-align: center;
+      min-height: 30px; letter-spacing: 0.5px;
+      margin-top: 14px; padding: 0 28px;
+      opacity: 0; transition: opacity 0.9s ease;
+    }
+    .s-msg.show { opacity: 1; }
+
+    .fab {
+      position:fixed; bottom:36px; right:24px;
+      width:46px; height:46px; border-radius:50%;
+      background:rgba(255,255,255,0.11); border:1px solid rgba(255,255,255,0.22);
+      color:#fff; font-size:1.1rem; cursor:pointer;
+      display:flex; align-items:center; justify-content:center;
+      z-index:10; font-family:inherit;
+    }
+    .fab.off { opacity:.4; }
+
+    /* LANG TOGGLE */
+    .lang-toggle {
+      position:absolute; top:18px; right:20px;
+      display:flex; background:rgba(255,255,255,0.08);
+      border:1px solid rgba(255,255,255,0.2); border-radius:20px;
+      overflow:hidden; z-index:10;
+    }
+    .lang-toggle button {
+      background:none; border:none; color:rgba(255,255,255,0.45);
+      font-family:'Josefin Sans',sans-serif; font-size:0.65rem;
+      letter-spacing:2px; padding:6px 11px; cursor:pointer;
+      transition:all 0.2s;
+    }
+    .lang-toggle button.on { background:rgba(255,255,255,0.18); color:#fff; }
+
+    /* ===== VIDEO BACKGROUNDS ===== */
+    #sceneBg { position:absolute; inset:0; z-index:0; overflow:hidden; }
+
+    /* ===== VIDEO BACKGROUNDS ===== */
+    .yt-wrap {
+      position:absolute; inset:0; z-index:2;
+      opacity:0; transition:opacity 2.5s ease;
+      overflow:hidden; pointer-events:none;
+    }
+    .yt-wrap.active { opacity:1; }
+    .yt-wrap video {
+      position:absolute; inset:0;
+      width:100%; height:100%;
+      object-fit:cover; pointer-events:none;
+    }
+    /* Dark overlay so text stays readable */
+    .yt-wrap::after {
+      content:''; position:absolute; inset:0;
+      background:rgba(0,0,0,0.32);
+      pointer-events:none;
+    }
+    /* Session UI above video */
+    #sess-ui {
+      position:relative; z-index:3;
+      display:flex; flex-direction:column; align-items:center;
+      width:100%;
+    }
+  </style>
+</head>
+<body>
+
+<div id="bg"></div>
+
+<!-- SETUP -->
+<div class="screen" id="setup">
+
+  <div class="lang-toggle">
+    <button id="btnEs" class="on" onclick="setLang('es')">ES</button>
+    <button id="btnEn" onclick="setLang('en')">EN</button>
+  </div>
+
+  <div class="logo-wrap">
+    <div class="rings"><i></i><i></i><i></i></div>
+    <span class="logo-lbl" id="txtLogo">Respirar</span>
+  </div>
+
+  <h1 class="h-title" id="txtTitle">CALMA</h1>
+  <p class="h-sub" id="txtSub">Suelta la ansiedad.<br>Inhala paz y claridad.</p>
+
+  <p class="sec-lbl" id="txtDurLbl">&iquest;Cu&aacute;nto tiempo?</p>
+  <div class="dur-row" id="durRow">
+    <button class="dur-btn on" data-m="3">3 min</button>
+    <button class="dur-btn"    data-m="5">5 min</button>
+    <button class="dur-btn"    data-m="10">10 min</button>
+  </div>
+
+  <p class="sec-lbl" id="txtSceneLbl">Ambiente visual</p>
+  <div class="scenes-row" id="scenesRow">
+
+    <!-- NOCHE -->
+    <div class="sc on" data-s="ocean">
+      <img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/198844-908857695_dqxlvu.jpg" alt="Noche"/>
+      <div class="sc-overlay">
+        <div class="sc-dot"></div>
+        <span class="sc-name" id="scName0">Noche</span>
+      </div>
+    </div>
+
+    <!-- OCÉANO -->
+    <div class="sc" data-s="forest">
+      <img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/186070-876973719_ukldpc.jpg" alt="Océano"/>
+      <div class="sc-overlay">
+        <div class="sc-dot"></div>
+        <span class="sc-name" id="scName1">Oc&eacute;ano</span>
+      </div>
+    </div>
+
+    <!-- BOSQUE -->
+    <div class="sc" data-s="sunset">
+      <img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/163326-827461488_j4wvkr.jpg" alt="Bosque"/>
+      <div class="sc-overlay">
+        <div class="sc-dot"></div>
+        <span class="sc-name" id="scName2">Bosque</span>
+      </div>
+    </div>
+
+
+  </div>
+
+  <p class="sec-lbl" id="txtPatLbl">T&eacute;cnica de respiraci&oacute;n</p>
+  <div class="pat-list" id="patList"></div>
+
+  <button class="btn-begin" id="btnBegin">Comenzar Sesi&oacute;n</button>
+
+</div>
+
+<!-- SESSION -->
+<div class="screen below" id="sess">
+  <div id="sceneBg">
+
+    <div class="yt-wrap" id="yt-ocean"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/198844-908857695_dqxlvu.mp4"></video></div>
+    <div class="yt-wrap" id="yt-forest"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/186070-876973719_ukldpc.mp4"></video></div>
+    <div class="yt-wrap" id="yt-sunset"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/163326-827461488_j4wvkr.mp4"></video></div>
+
+
+  </div>
+
+  <div id="sess-ui">
+
+  <div class="sess-hdr">
+    <button class="btn-end" id="btnEnd">Terminar</button>
+    <span class="sess-clock" id="clock"></span>
+  </div>
+
+  <div class="stage">
+    <div class="aura"></div>
+    <div class="aura"></div>
+    <div class="ring1"></div>
+    <div class="ring2"></div>
+    <div class="orb" id="orb"></div>
+  </div>
+
+  <div class="s-phase" id="sPhase"></div>
+  <div class="s-count" id="sCount"></div>
+  <div class="s-cycle" id="sCycle"></div>
+  <div class="s-msg" id="sMsg"></div>
+
+  </div><!-- /sess-ui -->
+
+  <button class="fab" id="fab">&#128276;</button>
+
+</div>
+
+<script>
+var LANG = 'es';
+
+var T = {
+  es: {
+    logo:'Respirar', title:'CALMA',
+    sub:'Suelta la ansiedad.<br>Inhala paz y claridad.',
+    durLbl:'\u00bfCu\u00e1nto tiempo?', sceneLbl:'Ambiente visual',
+    patLbl:'T\u00e9cnica de respiraci\u00f3n', begin:'Comenzar Sesi\u00f3n',
+    end:'Terminar', complete:'Sesi\u00f3n completa',
+    cycle:'Ciclo', cycles:'ciclos', cycle1:'ciclo',
+    scenes:['Noche','Oc\u00e9ano','Bosque'],
+    phases:{inhale:'Inhala', hold:'Sost\u00e9n', exhale:'Exhala', holdout:'Sost\u00e9n'},
+    msgs:{
+      inhale: ['Abre el pecho','Llena los pulmones','Recibe la calma','Bienvenida, paz','Espacio para ti'],
+      hold:   ['Qu\u00e9date aqu\u00ed','Siente el silencio','Todo est\u00e1 bien','En este momento'],
+      exhale: ['Suelta la tensi\u00f3n','Libera lo que pesa','D\u00e9jalo ir','Cuerpo, rel\u00e1jate','Que todo salga'],
+      holdout:['Descansa','Vac\u00edo y libre','En calma']
+    },
+    pats:[
+      { name:'Respiraci\u00f3n Cuadrada', info:'Equilibra el sistema nervioso. Ideal para reducir el estr\u00e9s y mejorar la concentraci\u00f3n en cualquier momento del d\u00eda.' },
+      { name:'T\u00e9cnica 4-7-8',        info:'Calma la ansiedad r\u00e1pidamente e induce el sue\u00f1o. Muy efectiva antes de dormir o en momentos de alta tensi\u00f3n.' },
+      { name:'Respiraci\u00f3n Calmante', info:'Activa el sistema parasimp\u00e1tico para una relajaci\u00f3n profunda. Perfecta para soltar tensiones f\u00edsicas y mentales.' },
+      { name:'Energizante',             info:'Aumenta la energ\u00eda y el enfoque mental. Ideal para empezar el d\u00eda o cuando el cansancio aparece.' }
+    ]
+  },
+  en: {
+    logo:'Breathe', title:'CALM',
+    sub:'Release anxiety.<br>Inhale peace and clarity.',
+    durLbl:'How long?', sceneLbl:'Visual scene',
+    patLbl:'Breathing technique', begin:'Start Session',
+    end:'End', complete:'Session complete',
+    cycle:'Cycle', cycles:'cycles', cycle1:'cycle',
+    scenes:['Night','Ocean','Forest'],
+    phases:{inhale:'Inhale', hold:'Hold', exhale:'Exhale', holdout:'Hold'},
+    msgs:{
+      inhale: ['Open your chest','Fill your lungs','Welcome the calm','Peace flows in','Space for you'],
+      hold:   ['Stay here','Feel the stillness','All is well','In this moment'],
+      exhale: ['Release the tension','Let it all go','Set it free','Relax your body','Let it out'],
+      holdout:['Rest now','Empty and free','In stillness']
+    },
+    pats:[
+      { name:'Box Breathing',     info:'Balances the nervous system. Great for reducing stress and improving focus at any point in the day.' },
+      { name:'4-7-8 Technique',   info:'Quickly calms anxiety and helps induce sleep. Very effective before bed or in high-tension moments.' },
+      { name:'Calming Breath',    info:'Activates the parasympathetic system for deep relaxation. Perfect for releasing physical and mental tension.' },
+      { name:'Energizing',        info:'Increases energy and mental focus. Ideal for starting the day or when fatigue sets in.' }
+    ]
+  }
+};
+
+var PATS_BASE = [
+  { timing:'4\u20134\u20134\u20134', phases:[{t:'inhale',d:4},{t:'hold',d:4},{t:'exhale',d:4},{t:'holdout',d:4}] },
+  { timing:'4\u20137\u20138',        phases:[{t:'inhale',d:4},{t:'hold',d:7},{t:'exhale',d:8}] },
+  { timing:'5\u20132\u20137',        phases:[{t:'inhale',d:5},{t:'hold',d:2},{t:'exhale',d:7}] },
+  { timing:'3\u20133',              phases:[{t:'inhale',d:3},{t:'exhale',d:3}] }
+];
+
+function buildPats(){
+  return PATS_BASE.map(function(p,i){
+    return {
+      name: T[LANG].pats[i].name,
+      timing: p.timing,
+      info: T[LANG].pats[i].info,
+      phases: p.phases.map(function(ph){
+        return {l:T[LANG].phases[ph.t], t:ph.t, d:ph.d};
+      })
+    };
+  });
+}
+
+var PATS = buildPats();
+
+var BG = { ocean:'night', forest:'', sunset:'forest' };
+var cfg = { dur:3, scene:'ocean', pat:PATS[0] };
+var SCENE_SND = { ocean:'wind', forest:'ocean', sunset:'birds' };
+var state = { on:false, pIdx:0, sec:0, cyc:0, sessLeft:0 };
+var tPhase=null, tSess=null, soundOn=true;
+var actx=null, audioBufs={};
+var ambiEl=null, ambiTimer=null;
+var msgIdxMap={inhale:0,hold:0,exhale:0,holdout:0};
+
+var SOUND_URLS = {
+  ocean: 'https://raw.githubusercontent.com/bradtraversy/ambient-sound-mixer/main/audio/ocean.mp3',
+  river: 'https://raw.githubusercontent.com/bradtraversy/ambient-sound-mixer/main/audio/rain.mp3',
+  wind:  'https://raw.githubusercontent.com/bradtraversy/ambient-sound-mixer/main/audio/wind.mp3',
+  birds: 'https://raw.githubusercontent.com/bradtraversy/ambient-sound-mixer/main/audio/birds.mp3'
+};
+
+/* Audio */
+function getCtx(){
+  if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended') actx.resume();
+  return actx;
+}
+
+
+function startAmbience(){
+  if(!soundOn) return;
+  var url=SOUND_URLS[SCENE_SND[cfg.scene]]; if(!url) return;
+  stopAmbience();
+  var a=new Audio(url);
+  a.loop=true; a.volume=0;
+  a.play().catch(function(){});
+  ambiEl=a;
+  var vol=0;
+  ambiTimer=setInterval(function(){
+    vol=Math.min(vol+0.035, 0.72);
+    if(ambiEl) ambiEl.volume=vol;
+    if(vol>=0.72){ clearInterval(ambiTimer); ambiTimer=null; }
+  },120);
+}
+
+function stopAmbience(){
+  clearInterval(ambiTimer); ambiTimer=null;
+  if(!ambiEl) return;
+  var a=ambiEl; ambiEl=null;
+  var vol=a.volume;
+  var t=setInterval(function(){
+    vol=Math.max(vol-0.05,0);
+    a.volume=vol;
+    if(vol<=0){ clearInterval(t); a.pause(); a.src=''; }
+  },80);
+}
+
+function chime(freq,dur){
+  if(!soundOn) return;
+  var c=getCtx(), o=c.createOscillator(), g=c.createGain();
+  o.type='sine'; o.frequency.value=freq;
+  g.gain.setValueAtTime(0,c.currentTime);
+  g.gain.linearRampToValueAtTime(0.15,c.currentTime+0.1);
+  g.gain.exponentialRampToValueAtTime(0.001,c.currentTime+dur);
+  o.connect(g); g.connect(c.destination); o.start(); o.stop(c.currentTime+dur);
+}
+
+function haptic(type) {
+  // Android
+  if(navigator.vibrate){
+    if(type==='inhale') navigator.vibrate([50,30,50]);
+    else if(type==='exhale') navigator.vibrate(90);
+    else navigator.vibrate(30);
+  }
+  // iOS: low-frequency audio pulse felt through speaker
+  try {
+    var c=getCtx(), o=c.createOscillator(), g=c.createGain();
+    o.type='sine';
+    o.frequency.value = (type==='inhale') ? 80 : (type==='exhale') ? 55 : 65;
+    g.gain.setValueAtTime(0, c.currentTime);
+    g.gain.linearRampToValueAtTime(1.0, c.currentTime+0.005);
+    g.gain.exponentialRampToValueAtTime(0.001, c.currentTime+0.08);
+    o.connect(g); g.connect(c.destination);
+    o.start(); o.stop(c.currentTime+0.09);
+  } catch(e){}
+}
+
+/* Build initial pattern buttons via setLang */
+setLang('es');
+
+/* Duration */
+document.getElementById('durRow').addEventListener('click',function(e){
+  var b=e.target.closest('.dur-btn'); if(!b) return;
+  cfg.dur=parseInt(b.dataset.m,10);
+  document.getElementById('durRow').querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');});
+  b.classList.add('on');
+});
+
+/* Scene */
+document.getElementById('scenesRow').addEventListener('click',function(e){
+  var card=e.target.closest('.sc'); if(!card) return;
+  cfg.scene=card.dataset.s;
+  document.querySelectorAll('.sc').forEach(function(x){ x.classList.remove('on'); });
+  card.classList.add('on');
+  var bg=document.getElementById('bg');
+  bg.className=BG[cfg.scene]||'';
+  bg.id='bg';
+});
+
+/* Sound */
+document.getElementById('fab').addEventListener('click',function(){
+  soundOn=!soundOn;
+  this.textContent=soundOn?'\uD83D\uDD14':'\uD83D\uDD15';
+  this.classList.toggle('off',!soundOn);
+  if(!soundOn) stopAmbience(); else if(state.on) startAmbience();
+});
+
+/* Begin */
+document.getElementById('btnBegin').addEventListener('click',function(){
+  getCtx();
+  document.getElementById('setup').classList.add('out');
+  document.getElementById('sess').classList.remove('below');
+  begin();
+});
+
+/* End */
+document.getElementById('btnEnd').addEventListener('click',finish);
+
+/* Helpers */
+function fmt(s){ var m=Math.floor(s/60),ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
+
+function setLang(l){
+  LANG=l;
+  var t=T[l];
+  document.getElementById('txtLogo').textContent=t.logo;
+  document.getElementById('txtTitle').textContent=t.title;
+  document.getElementById('txtSub').innerHTML=t.sub;
+  document.getElementById('txtDurLbl').textContent=t.durLbl;
+  document.getElementById('txtSceneLbl').textContent=t.sceneLbl;
+  document.getElementById('txtPatLbl').textContent=t.patLbl;
+  document.getElementById('btnBegin').textContent=t.begin;
+  document.getElementById('btnEnd').textContent=t.end;
+  document.getElementById('scName0').textContent=t.scenes[0];
+  document.getElementById('scName1').textContent=t.scenes[1];
+  document.getElementById('scName2').textContent=t.scenes[2];
+  document.getElementById('btnEs').className=(l==='es'?'on':'');
+  document.getElementById('btnEn').className=(l==='en'?'on':'');
+  PATS=buildPats();
+  cfg.pat=PATS[0];
+  var pl=document.getElementById('patList'); pl.innerHTML='';
+  PATS.forEach(function(p,i){
+    var wrap=document.createElement('div'); wrap.className='pat-wrap';
+    var b=document.createElement('button');
+    b.className='pat-btn'+(i===0?' on':'');
+    b.innerHTML='<span class="pn">'+p.name+'</span>'
+      +'<span class="pat-btn-right"><span class="pt">'+p.timing+'</span>'
+      +'<button class="pat-info-btn" aria-label="Info">i</button></span>';
+    var info=document.createElement('div'); info.className='pat-info'; info.textContent=p.info;
+    b.querySelector('.pat-info-btn').addEventListener('click',function(e){
+      e.stopPropagation(); wrap.classList.toggle('open');
+    });
+    b.addEventListener('click',function(e){
+      if(e.target.closest('.pat-info-btn')) return;
+      cfg.pat=p;
+      pl.querySelectorAll('.pat-btn').forEach(function(x){x.classList.remove('on');});
+      b.classList.add('on');
+    });
+    wrap.appendChild(b); wrap.appendChild(info); pl.appendChild(wrap);
+  });
+}
+
+function activateScene(s){
+  document.querySelectorAll('.yt-wrap').forEach(function(el){
+    el.classList.remove('active');
+    var v=el.querySelector('video'); if(v) v.pause();
+  });
+  var wrap=document.getElementById('yt-'+s);
+  if(wrap){
+    wrap.classList.add('active');
+    var v=wrap.querySelector('video');
+    if(v){ v.currentTime=0; v.play().catch(function(){}); }
+  }
+}
+
+function begin(){
+  var sess=document.getElementById('sess');
+  sess.style.display='';
+  state.on=true; state.pIdx=0; state.cyc=0;
+  state.sessLeft=cfg.dur*60;
+  msgIdxMap={inhale:0,hold:0,exhale:0,holdout:0};
+  document.getElementById('sMsg').textContent='';
+  document.getElementById('sMsg').classList.remove('show');
+  document.getElementById('sCycle').textContent='';
+  document.getElementById('clock').textContent=fmt(state.sessLeft);
+  activateScene(cfg.scene);
+  startAmbience();
+  tSess=setInterval(function(){
+    state.sessLeft--;
+    document.getElementById('clock').textContent=fmt(state.sessLeft);
+    if(state.sessLeft<=0) finish();
+  },1000);
+  runPhase();
+}
+
+function runPhase(){
+  if(!state.on) return;
+  var ph=cfg.pat.phases[state.pIdx];
+  state.sec=ph.d;
+  document.documentElement.style.setProperty('--iDur',ph.d+'s');
+  document.documentElement.style.setProperty('--eDur',ph.d+'s');
+  document.getElementById('orb').className='orb '+ph.t;
+  document.getElementById('sPhase').textContent=ph.l;
+  document.getElementById('sCount').textContent=state.sec;
+  var msgEl=document.getElementById('sMsg');
+  var msgs=(T[LANG].msgs||{})[ph.t]||[];
+  if(msgs.length){
+    msgEl.classList.remove('show');
+    msgEl.textContent=msgs[msgIdxMap[ph.t]%msgs.length];
+    msgIdxMap[ph.t]++;
+    setTimeout(function(){ msgEl.classList.add('show'); },120);
+  }
+  haptic(ph.t);
+  if(ph.t==='inhale') chime(528,1.1);
+  else if(ph.t==='exhale') chime(396,1.1);
+  else chime(432,0.7);
+  tPhase=setInterval(function(){
+    state.sec--;
+    document.getElementById('sCount').textContent=state.sec>0?state.sec:'';
+    if(state.sec<=0){
+      clearInterval(tPhase);
+      state.pIdx++;
+      if(state.pIdx>=cfg.pat.phases.length){ state.pIdx=0; state.cyc++; document.getElementById('sCycle').textContent=T[LANG].cycle+' '+state.cyc; }
+      runPhase();
+    }
+  },1000);
+}
+
+function finish(){
+  state.on=false;
+  clearInterval(tPhase); clearInterval(tSess);
+  stopAmbience();
+  document.querySelectorAll('.yt-wrap').forEach(function(el){
+    el.classList.remove('active');
+    var v=el.querySelector('video'); if(v){ v.pause(); v.currentTime=0; }
+  });
+  document.getElementById('orb').className='orb';
+  document.getElementById('sPhase').textContent=T[LANG].complete;
+  document.getElementById('sCount').textContent='';
+  document.getElementById('sMsg').classList.remove('show');
+  document.getElementById('sMsg').textContent='';
+  var t=T[LANG]; document.getElementById('sCycle').textContent=state.cyc+(state.cyc===1?' '+t.cycle1:' '+t.cycles);
+  var sess=document.getElementById('sess');
+  setTimeout(function(){
+    sess.classList.add('below');
+    document.getElementById('setup').classList.remove('out');
+    document.getElementById('sPhase').textContent='';
+    document.getElementById('sCycle').textContent='';
+    setTimeout(function(){ sess.style.display='none'; }, 600);
+  },2000);
+}
+</script>
+</body>
+</html>
