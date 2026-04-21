@@ -591,6 +591,15 @@ var SOUND_URLS = {
 };
 
 /* Audio */
+var _speakerUnlocked = false;
+function unlockSpeaker(){
+  if(_speakerUnlocked) return;
+  _speakerUnlocked = true;
+  /* Play silent audio to force iOS audio session → loudspeaker */
+  var a = new Audio('data:audio/wav;base64,UklGRiQAAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQAAAAA=');
+  a.play().catch(function(){});
+}
+
 function getCtx(){
   if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
   if(actx.state==='suspended') actx.resume();
@@ -767,6 +776,7 @@ function activateScene(s){
 }
 
 function begin(){
+  unlockSpeaker();
   var sess=document.getElementById('sess');
   sess.style.display='';
   state.on=true; state.pIdx=0; state.cyc=0;
