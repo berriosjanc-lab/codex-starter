@@ -219,7 +219,7 @@
     .stage {
       position:relative; width:280px; height:280px;
       display:flex; align-items:center; justify-content:center;
-      margin-bottom:48px;
+      margin-bottom:72px;
     }
     .aura {
       position:absolute; border-radius:50%;
@@ -266,12 +266,14 @@
       font-weight: 300;
     }
     .s-msg {
+      position: absolute;
+      bottom: -38px; left: -80px; right: -80px;
+      text-align: center;
       font-family: 'Cormorant Garamond', serif;
-      font-style: italic; font-size: 1.05rem; font-weight: 300;
-      color: rgba(255,255,255,0.52); text-align: center;
-      min-height: 30px; letter-spacing: 0.5px;
-      margin-top: 14px; padding: 0 28px;
+      font-style: italic; font-size: 1rem; font-weight: 300;
+      color: rgba(255,255,255,0.65); letter-spacing: 0.4px;
       opacity: 0; transition: opacity 0.9s ease;
+      pointer-events: none;
     }
     .s-msg.show { opacity: 1; }
 
@@ -420,12 +422,12 @@
     <div class="ring1"></div>
     <div class="ring2"></div>
     <div class="orb" id="orb"></div>
+    <div class="s-msg" id="sMsg"></div>
   </div>
 
   <div class="s-phase" id="sPhase"></div>
   <div class="s-count" id="sCount"></div>
   <div class="s-cycle" id="sCycle"></div>
-  <div class="s-msg" id="sMsg"></div>
 
   </div><!-- /sess-ui -->
 
