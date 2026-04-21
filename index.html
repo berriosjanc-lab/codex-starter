@@ -278,96 +278,74 @@
     }
     .s-msg.show { opacity: 1; }
 
-    /* HRV INPUT (setup screen) */
-    .hrv-input-row {
-      display:flex; align-items:center; gap:12px; width:100%;
-      margin-bottom:16px; background:rgba(255,255,255,0.06);
-      border:1px solid rgba(255,255,255,0.12); border-radius:14px;
-      padding:12px 18px; cursor:text;
-    }
-    .hrv-input-lbl {
-      font-family:'Josefin Sans',sans-serif; font-size:0.62rem;
-      letter-spacing:3px; text-transform:uppercase; font-weight:300;
-      color:rgba(255,255,255,0.45); flex-shrink:0;
-    }
-    .hrv-num-input {
-      flex:1; background:none; border:none; outline:none;
-      font-family:'Cormorant Garamond',serif;
-      font-size:2rem; font-weight:300; letter-spacing:2px;
-      color:#fff; text-align:center; min-width:0;
-      -moz-appearance:textfield;
-    }
-    .hrv-num-input::-webkit-inner-spin-button,
-    .hrv-num-input::-webkit-outer-spin-button { -webkit-appearance:none; }
-    .hrv-num-input::placeholder { color:rgba(255,255,255,0.2); }
-    .hrv-input-hint {
-      font-family:'Josefin Sans',sans-serif; font-size:0.52rem;
-      letter-spacing:1.5px; color:rgba(255,255,255,0.22); font-weight:300;
-      flex-shrink:0; text-align:right; line-height:1.5;
-    }
+    /* HRV quick-entry (setup screen) */
+    .hrv-input-row{display:flex;align-items:center;gap:12px;width:100%;margin-bottom:16px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:14px;padding:12px 18px;cursor:text}
+    .hrv-input-lbl{font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:3px;text-transform:uppercase;font-weight:300;color:rgba(255,255,255,0.45);flex-shrink:0}
+    .hrv-num-input{flex:1;background:none;border:none;outline:none;font-family:'Cormorant Garamond',serif;font-size:2rem;font-weight:300;letter-spacing:2px;color:#fff;text-align:center;min-width:0;-moz-appearance:textfield}
+    .hrv-num-input::-webkit-inner-spin-button,.hrv-num-input::-webkit-outer-spin-button{-webkit-appearance:none}
+    .hrv-num-input::placeholder{color:rgba(255,255,255,0.2)}
+    .hrv-input-hint{font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:1.5px;color:rgba(255,255,255,0.22);font-weight:300;flex-shrink:0;text-align:right;line-height:1.5}
 
-    /* HRV TREND SCREEN */
-    .btn-back {
-      align-self:flex-start;
-      background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.18);
-      color:rgba(255,255,255,0.7); padding:9px 18px; border-radius:20px;
-      font-size:0.75rem; cursor:pointer; font-family:inherit; letter-spacing:1px;
-      margin-bottom:4px;
-    }
-    .hrv-title {
-      font-family:'Cormorant Garamond',serif;
-      font-size:2.8rem; font-weight:300; letter-spacing:10px;
-      margin:10px 0 4px; text-align:center;
-    }
-    .hrv-sub {
-      font-family:'Cormorant Garamond',serif;
-      font-style:italic; font-size:0.95rem; font-weight:300;
-      color:rgba(255,255,255,0.45); text-align:center; margin-bottom:24px;
-    }
-    .hrv-stats-row {
-      display:flex; gap:0; width:100%; margin-bottom:22px;
-      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
-      border-radius:16px; overflow:hidden;
-    }
-    .hrv-stat {
-      flex:1; display:flex; flex-direction:column; align-items:center;
-      padding:16px 8px; gap:4px;
-      border-right:1px solid rgba(255,255,255,0.08);
-    }
-    .hrv-stat:last-child { border-right:none; }
-    .hrv-stat-val {
-      font-family:'Cormorant Garamond',serif;
-      font-size:2rem; font-weight:300; letter-spacing:2px; color:#fff; line-height:1;
-    }
-    .hrv-stat-lbl {
-      font-family:'Josefin Sans',sans-serif; font-size:0.55rem;
-      letter-spacing:2.5px; text-transform:uppercase;
-      color:rgba(255,255,255,0.35); font-weight:300;
-    }
-    .hrv-chart-wrap {
-      width:100%; background:rgba(255,255,255,0.04);
-      border:1px solid rgba(255,255,255,0.1); border-radius:16px;
-      padding:16px 8px 10px; margin-bottom:18px; min-height:100px;
-      display:flex; align-items:center; justify-content:center;
-    }
-    #hrvChart { width:100%; overflow:visible; }
-    .hrv-chart-empty {
-      font-family:'Cormorant Garamond',serif; font-style:italic;
-      font-size:0.9rem; color:rgba(255,255,255,0.3); text-align:center;
-      line-height:1.6; padding:12px 8px;
-    }
-    .hrv-legend {
-      display:flex; gap:16px; margin-bottom:16px;
-      font-family:'Josefin Sans',sans-serif; font-size:0.55rem;
-      letter-spacing:2px; text-transform:uppercase; font-weight:300;
-      color:rgba(255,255,255,0.35);
-    }
-    .hrv-legend span { display:flex; align-items:center; gap:5px; }
-    .hrv-insight {
-      font-family:'Cormorant Garamond',serif; font-style:italic;
-      font-size:1rem; font-weight:300; color:rgba(255,255,255,0.65);
-      text-align:center; line-height:1.6; padding:0 4px;
-    }
+    /* HRV TRACKER SCREEN */
+    .btn-back{align-self:flex-start;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.18);color:rgba(255,255,255,0.7);padding:9px 18px;border-radius:20px;font-size:0.75rem;cursor:pointer;font-family:inherit;letter-spacing:1px;margin-bottom:4px}
+    .hrv-hdr{display:flex;flex-direction:column;align-items:center;margin:8px 0 14px}
+    .hrv-hdr-sub{font-family:'Josefin Sans',sans-serif;font-size:0.55rem;letter-spacing:5px;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:300}
+    .hrv-hdr-title{font-family:'Josefin Sans',sans-serif;font-size:1.7rem;font-weight:300;letter-spacing:2px;color:#fff;margin:4px 0 0}
+    .hrv-hdr-title em{color:#4dd9e8;font-style:normal}
+    .hrv-hdr-line{width:32px;height:2px;background:#4dd9e8;border-radius:1px;margin-top:6px}
+    /* Tabs */
+    .hrv-tabs{display:flex;width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:4px;gap:3px;margin-bottom:14px}
+    .hrv-tab{flex:1;padding:10px 2px;border-radius:10px;background:none;border:1px solid transparent;color:rgba(255,255,255,0.38);font-family:'Josefin Sans',sans-serif;font-size:0.63rem;letter-spacing:0.2px;cursor:pointer;transition:all 0.2s}
+    .hrv-tab.on{background:rgba(77,217,232,0.12);border-color:rgba(77,217,232,0.38);color:#4dd9e8}
+    /* Stat cards */
+    .hrv-stats-grid{display:flex;gap:8px;width:100%;margin-bottom:12px}
+    .hrv-scard{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 9px;display:flex;flex-direction:column;gap:3px}
+    .hrv-scard-lbl{font-family:'Josefin Sans',sans-serif;font-size:0.49rem;letter-spacing:2px;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:300}
+    .hrv-scard-num{display:flex;align-items:baseline;gap:2px;margin:1px 0}
+    .hrv-scard-big{font-family:'Josefin Sans',sans-serif;font-size:2rem;font-weight:300;color:#4dd9e8;letter-spacing:-1px;line-height:1}
+    .hrv-scard-unit{font-family:'Josefin Sans',sans-serif;font-size:0.6rem;color:rgba(77,217,232,0.6);font-weight:300;letter-spacing:1px}
+    .hrv-scard-sub{font-family:'Josefin Sans',sans-serif;font-size:0.49rem;color:rgba(255,255,255,0.27);font-weight:300}
+    /* Chart + info cards */
+    .hrv-tcard{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 12px;margin-bottom:12px}
+    .hrv-card-lbl{font-family:'Josefin Sans',sans-serif;font-size:0.49rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:300;display:block;margin-bottom:12px}
+    #hrvChartSvg{width:100%;overflow:visible;display:block}
+    .hrv-chart-none{font-family:'Josefin Sans',sans-serif;font-size:0.68rem;color:rgba(255,255,255,0.22);text-align:center;padding:20px 0;letter-spacing:0.5px}
+    /* Last session card */
+    .hrv-lstcard{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 14px;margin-bottom:12px}
+    .hrv-lst-body{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .hrv-lst-hrv{display:flex;align-items:baseline;gap:3px}
+    .hrv-lst-big{font-family:'Josefin Sans',sans-serif;font-size:2rem;font-weight:300;color:#4dd9e8;letter-spacing:-1px;line-height:1}
+    .hrv-lst-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+    .hrv-lst-tech{font-family:'Josefin Sans',sans-serif;font-size:0.68rem;color:rgba(255,255,255,0.5);letter-spacing:0.5px}
+    .hrv-lst-date{font-family:'Josefin Sans',sans-serif;font-size:0.6rem;color:rgba(255,255,255,0.3)}
+    /* Registrar form */
+    .hrv-rblock{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:14px;padding:14px 14px;margin-bottom:12px}
+    .hrv-rlbl{font-family:'Josefin Sans',sans-serif;font-size:0.49rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);font-weight:300;display:block;margin-bottom:10px}
+    .hrv-big-in{width:100%;background:rgba(0,0,0,0.2);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:14px;outline:none;color:#fff;font-family:'Josefin Sans',sans-serif;font-size:1.8rem;font-weight:300;letter-spacing:3px;text-align:center;box-sizing:border-box;-moz-appearance:textfield}
+    .hrv-big-in::-webkit-inner-spin-button,.hrv-big-in::-webkit-outer-spin-button{-webkit-appearance:none}
+    .hrv-big-in::placeholder{color:rgba(255,255,255,0.18)}
+    .hrv-in-hint{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;color:rgba(255,255,255,0.28);margin-top:7px;letter-spacing:0.2px;display:block}
+    .hrv-chips{display:flex;flex-wrap:wrap;gap:7px}
+    .hrv-chip{padding:8px 13px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.45);font-family:'Josefin Sans',sans-serif;font-size:0.65rem;cursor:pointer;letter-spacing:0.3px;transition:all 0.18s}
+    .hrv-chip.on{background:rgba(77,217,232,0.1);border-color:rgba(77,217,232,0.45);color:#4dd9e8}
+    .hrv-moods{display:flex;gap:7px;width:100%}
+    .hrv-mood{flex:1;padding:9px 2px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);font-size:1.25rem;cursor:pointer;transition:all 0.18s;text-align:center}
+    .hrv-mood.on{background:rgba(77,217,232,0.1);border-color:rgba(77,217,232,0.4)}
+    .hrv-save-btn{width:100%;padding:17px;border-radius:14px;background:rgba(77,217,232,0.1);border:1px solid rgba(77,217,232,0.32);color:rgba(77,217,232,0.88);font-family:'Josefin Sans',sans-serif;font-size:0.75rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;font-weight:300;transition:all 0.22s}
+    .hrv-save-btn:active{background:rgba(77,217,232,0.22)}
+    /* Historial */
+    .hrv-hist-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .hrv-hist-cnt{font-family:'Josefin Sans',sans-serif;font-size:0.65rem;color:rgba(255,255,255,0.38);letter-spacing:1px}
+    .hrv-clear-btn{background:none;border:none;color:rgba(255,80,80,0.65);font-family:'Josefin Sans',sans-serif;font-size:0.65rem;cursor:pointer}
+    .hrv-hitem{width:100%;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+    .hrv-hi-hrv{display:flex;align-items:baseline;gap:2px;min-width:48px}
+    .hrv-hi-num{font-family:'Josefin Sans',sans-serif;font-size:1.5rem;font-weight:300;color:#4dd9e8;letter-spacing:-0.5px;line-height:1}
+    .hrv-hi-ms{font-family:'Josefin Sans',sans-serif;font-size:0.56rem;color:rgba(77,217,232,0.6);letter-spacing:1px;font-weight:300}
+    .hrv-hi-info{flex:1;display:flex;flex-direction:column;gap:2px}
+    .hrv-hi-tech{font-family:'Josefin Sans',sans-serif;font-size:0.67rem;color:rgba(255,255,255,0.52);letter-spacing:0.3px}
+    .hrv-hi-date{font-family:'Josefin Sans',sans-serif;font-size:0.57rem;color:rgba(255,255,255,0.28)}
+    .hrv-hi-mood{font-size:1rem}
+    .hrv-hi-del{background:none;border:none;color:rgba(255,255,255,0.22);font-size:0.8rem;cursor:pointer;padding:4px;line-height:1}
 
     .fab {
       position:fixed; bottom:36px; right:24px;
@@ -543,47 +521,115 @@
 
 </div>
 
-<!-- HRV TENDENCIA -->
+<!-- HRV TRACKER -->
 <div class="screen below" id="hrv" style="display:none">
 
   <button class="btn-back" id="btnHrvBack">&#8592; Volver</button>
 
-  <div class="logo-wrap" style="margin-top:6px;margin-bottom:0">
-    <div class="rings"><i></i><i></i><i></i></div>
-    <span class="logo-lbl">HRV</span>
+  <div class="hrv-hdr">
+    <span class="hrv-hdr-sub">CALMA</span>
+    <h2 class="hrv-hdr-title">HRV <em>Tracker</em></h2>
+    <div class="hrv-hdr-line"></div>
   </div>
 
-  <h2 class="hrv-title">TENDENCIA</h2>
-  <p class="hrv-sub">HRV y constancia de respiraci&oacute;n</p>
+  <div class="hrv-tabs">
+    <button class="hrv-tab on" data-panel="dashboard">Dashboard</button>
+    <button class="hrv-tab" data-panel="registrar">+ Registrar</button>
+    <button class="hrv-tab" data-panel="historial">Historial</button>
+  </div>
 
-  <div class="hrv-stats-row">
-    <div class="hrv-stat">
-      <span class="hrv-stat-val" id="hrvStatToday">&mdash;</span>
-      <span class="hrv-stat-lbl">hoy</span>
+  <!-- DASHBOARD -->
+  <div id="panel-dashboard" style="width:100%">
+    <div class="hrv-stats-grid">
+      <div class="hrv-scard">
+        <span class="hrv-scard-lbl">PROMEDIO</span>
+        <div class="hrv-scard-num"><span class="hrv-scard-big" id="statProm">&mdash;</span><span class="hrv-scard-unit">ms</span></div>
+        <span class="hrv-scard-sub">Total</span>
+      </div>
+      <div class="hrv-scard">
+        <span class="hrv-scard-lbl">7 D&Iacute;AS</span>
+        <div class="hrv-scard-num"><span class="hrv-scard-big" id="stat7d">&mdash;</span><span class="hrv-scard-unit">ms</span></div>
+      </div>
+      <div class="hrv-scard">
+        <span class="hrv-scard-lbl">RACHA</span>
+        <div class="hrv-scard-num"><span class="hrv-scard-big" id="statRacha">&mdash;</span><span class="hrv-scard-unit">d</span></div>
+        <span class="hrv-scard-sub">Consecutivos</span>
+      </div>
     </div>
-    <div class="hrv-stat">
-      <span class="hrv-stat-val" id="hrvStat7d">&mdash;</span>
-      <span class="hrv-stat-lbl">prom 7d</span>
+
+    <div class="hrv-tcard">
+      <span class="hrv-card-lbl">TENDENCIA HRV</span>
+      <svg id="hrvChartSvg" viewBox="0 0 300 110" preserveAspectRatio="none" style="display:none"></svg>
+      <p class="hrv-chart-none" id="hrvChartNone">Sin registros a&uacute;n</p>
     </div>
-    <div class="hrv-stat">
-      <span class="hrv-stat-val" id="hrvStatSess">&mdash;</span>
-      <span class="hrv-stat-lbl">sesiones</span>
+
+    <div class="hrv-lstcard" id="lastSessCard" style="display:none">
+      <span class="hrv-card-lbl">&Uacute;LTIMA SESI&Oacute;N</span>
+      <div class="hrv-lst-body">
+        <div class="hrv-lst-hrv">
+          <span class="hrv-lst-big" id="lastHrvVal">&mdash;</span>
+          <span class="hrv-scard-unit">ms</span>
+        </div>
+        <div class="hrv-lst-right">
+          <span class="hrv-lst-tech" id="lastTech"></span>
+          <span class="hrv-lst-date" id="lastDate"></span>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class="hrv-chart-wrap">
-    <svg id="hrvChart" viewBox="0 0 300 100" preserveAspectRatio="none" style="display:none"></svg>
-    <p class="hrv-chart-empty" id="hrvChartEmpty">
-      Ingresa tu HRV antes de cada sesi&oacute;n<br>para ver la tendencia aqu&iacute;
-    </p>
+  <!-- REGISTRAR -->
+  <div id="panel-registrar" style="display:none;width:100%">
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">TU HRV (MS)</span>
+      <input type="number" id="regHrv" class="hrv-big-in" placeholder="Ej: 42" min="10" max="250" inputmode="numeric"/>
+      <span class="hrv-in-hint">Encu&eacute;ntralo en Oura &rarr; Readiness &nbsp;o&nbsp; Salud &rarr; HRV</span>
+    </div>
+
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">T&Eacute;CNICA</span>
+      <div class="hrv-chips" id="techChips">
+        <button class="hrv-chip on" data-v="4-7-8">4-7-8</button>
+        <button class="hrv-chip" data-v="Box Breathing">Box Breathing</button>
+        <button class="hrv-chip" data-v="Coherente">Coherente</button>
+        <button class="hrv-chip" data-v="Wim Hof">Wim Hof</button>
+        <button class="hrv-chip" data-v="Otra">Otra</button>
+      </div>
+    </div>
+
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">DURACI&Oacute;N</span>
+      <div class="hrv-chips" id="durChips">
+        <button class="hrv-chip" data-v="3">3&prime;</button>
+        <button class="hrv-chip on" data-v="5">5&prime;</button>
+        <button class="hrv-chip" data-v="10">10&prime;</button>
+        <button class="hrv-chip" data-v="15">15&prime;</button>
+        <button class="hrv-chip" data-v="20">20&prime;</button>
+      </div>
+    </div>
+
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">&iquest;C&Oacute;MO TE SIENTES?</span>
+      <div class="hrv-moods" id="moodChips">
+        <button class="hrv-mood" data-v="1">&#128560;</button>
+        <button class="hrv-mood" data-v="2">&#128532;</button>
+        <button class="hrv-mood on" data-v="3">&#128528;</button>
+        <button class="hrv-mood" data-v="4">&#128578;</button>
+        <button class="hrv-mood" data-v="5">&#128524;</button>
+      </div>
+    </div>
+
+    <button class="hrv-save-btn" id="btnHrvSave">Guardar Registro</button>
   </div>
 
-  <div class="hrv-legend" id="hrvLegend" style="display:none">
-    <span><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/><circle cx="10" cy="4" r="2.5" fill="#fff"/></svg> HRV</span>
-    <span><circle-dot style="display:inline-block;width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.45);margin-right:4px"></circle-dot> sesi&oacute;n</span>
+  <!-- HISTORIAL -->
+  <div id="panel-historial" style="display:none;width:100%">
+    <div class="hrv-hist-hdr">
+      <span class="hrv-hist-cnt" id="histCnt">0 registros</span>
+      <button class="hrv-clear-btn" id="btnClearAll">Borrar todo</button>
+    </div>
+    <div id="histList"></div>
   </div>
-
-  <p class="hrv-insight" id="hrvInsight"></p>
 
 </div>
 
@@ -893,7 +939,8 @@ function runPhase(){
 
 function finish(){
   state.on=false;
-  upsertDay(null, true);
+  var _hrv=parseInt(document.getElementById('hrvInput').value,10);
+  addRecord({id:Date.now(),date:todayStr(),hrv:(_hrv>=10&&_hrv<=250)?_hrv:null,technique:cfg.pat?cfg.pat.name:null,duration:cfg.dur||null,mood:null});
   clearInterval(tPhase); clearInterval(tSess);
   stopAmbience();
   document.querySelectorAll('.yt-wrap').forEach(function(el){
@@ -916,41 +963,39 @@ function finish(){
   },2000);
 }
 
-/* ===== HRV / TENDENCIA ===== */
+/* ===== HRV TRACKER ===== */
+var MOODS = {1:'😰',2:'😔',3:'😐',4:'🙂',5:'😌'};
 
-function todayStr(){
-  return new Date().toISOString().slice(0,10);
+function getRecords(){ return JSON.parse(localStorage.getItem('calma_records')||'[]'); }
+function saveRecords(r){ localStorage.setItem('calma_records',JSON.stringify(r)); }
+function addRecord(rec){
+  var r=getRecords(); r.push(rec);
+  r.sort(function(a,b){return a.id-b.id;});
+  saveRecords(r);
 }
-function getData(){
-  return JSON.parse(localStorage.getItem('calma_log')||'[]');
+function todayStr(){ return new Date().toISOString().slice(0,10); }
+function fmtDate(ds){
+  var d=new Date(ds+'T12:00:00');
+  var M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return d.getDate()+' '+M[d.getMonth()]+' '+d.getFullYear();
 }
-function saveData(d){
-  localStorage.setItem('calma_log', JSON.stringify(d));
-}
-function upsertDay(hrv, addSession){
-  var d=getData(), today=todayStr();
-  var rec=d.filter(function(r){return r.date===today;})[0];
-  if(!rec){ rec={date:today,hrv:null,sess:0}; d.push(rec); }
-  if(hrv!==null) rec.hrv=hrv;
-  if(addSession) rec.sess=(rec.sess||0)+1;
-  d.sort(function(a,b){return a.date<b.date?-1:1;});
-  saveData(d);
-}
-
-function logHRVInput(){
-  var v=parseInt(document.getElementById('hrvInput').value,10);
-  if(v>=10&&v<=250) upsertDay(v,false);
+function fmtDateShort(ds){
+  var d=new Date(ds+'T12:00:00');
+  var M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return d.getDate()+' '+M[d.getMonth()];
 }
 
 function showHRV(){
   var v=parseInt(document.getElementById('hrvInput').value,10);
-  if(v>=10&&v<=250) upsertDay(v,false);
+  if(v>=10&&v<=250){
+    var el=document.getElementById('regHrv'); if(el) el.value=v;
+  }
   document.getElementById('setup').classList.add('out');
   var h=document.getElementById('hrv');
   h.style.display=''; h.classList.remove('below');
-  renderHRV();
+  switchTab('dashboard');
+  renderDashboard();
 }
-
 function hideHRV(){
   var h=document.getElementById('hrv');
   h.classList.add('below');
@@ -958,106 +1003,178 @@ function hideHRV(){
   setTimeout(function(){ h.style.display='none'; },600);
 }
 
-function renderHRV(){
-  var data=getData();
-  var today=todayStr();
-  var todayRec=data.filter(function(r){return r.date===today;})[0];
-  document.getElementById('hrvStatToday').textContent=
-    (todayRec&&todayRec.hrv)?todayRec.hrv:'—';
-  var last7=data.slice(-7).filter(function(r){return r.hrv;});
-  var avg7=last7.length?Math.round(last7.reduce(function(s,r){return s+r.hrv;},0)/last7.length):'—';
-  document.getElementById('hrvStat7d').textContent=avg7;
-  var totalSess=data.reduce(function(s,r){return s+(r.sess||0);},0);
-  document.getElementById('hrvStatSess').textContent=totalSess||'—';
-
-  var withHRV=data.filter(function(r){return r.hrv;});
-  var empty=document.getElementById('hrvChartEmpty');
-  var svg=document.getElementById('hrvChart');
-  var legend=document.getElementById('hrvLegend');
-  if(withHRV.length<2){
-    svg.style.display='none'; empty.style.display=''; legend.style.display='none';
-  } else {
-    svg.style.display=''; empty.style.display='none'; legend.style.display='flex';
-    drawChart(data.slice(-30));
-  }
-
-  var insight='';
-  if(withHRV.length<3){
-    insight='Registra más días para ver correlaciones.';
-  } else {
-    var after=[], noAfter=[];
-    for(var i=1;i<data.length;i++){
-      if(!data[i].hrv) continue;
-      if((data[i-1].sess||0)>0) after.push(data[i].hrv);
-      else noAfter.push(data[i].hrv);
-    }
-    var h1=withHRV.slice(0,Math.floor(withHRV.length/2));
-    var h2=withHRV.slice(Math.floor(withHRV.length/2));
-    var a1=h1.reduce(function(s,r){return s+r.hrv;},0)/h1.length;
-    var a2=h2.reduce(function(s,r){return s+r.hrv;},0)/h2.length;
-    var diff=Math.round(a2-a1);
-    if(after.length>=2&&noAfter.length>=2){
-      var avgAfter=Math.round(after.reduce(function(s,v){return s+v;},0)/after.length);
-      var avgNo=Math.round(noAfter.reduce(function(s,v){return s+v;},0)/noAfter.length);
-      var delta=avgAfter-avgNo;
-      if(delta>=3) insight='Tu HRV sube '+delta+' ms después de respirar ✶';
-      else if(delta<=-3) insight='La constancia tarda semanas. Sé paciente.';
-      else if(diff>3) insight='Tendencia positiva ↗ — sigue así.';
-      else if(diff<-3) insight='Tendencia a la baja — prioriza el descanso.';
-      else insight='HRV estable. La respiración mantiene el equilibrio.';
-    } else {
-      if(diff>3) insight='Tendencia positiva ↗ — sigue así.';
-      else if(diff<-3) insight='Tendencia a la baja — prioriza el descanso.';
-      else insight='HRV estable. Sigue registrando para ver más.';
-    }
-  }
-  document.getElementById('hrvInsight').textContent=insight;
+function switchTab(name){
+  document.querySelectorAll('.hrv-tab').forEach(function(t){
+    t.classList.toggle('on', t.dataset.panel===name);
+  });
+  ['dashboard','registrar','historial'].forEach(function(p){
+    var el=document.getElementById('panel-'+p);
+    if(el) el.style.display=(p===name)?'':'none';
+  });
+  if(name==='dashboard') renderDashboard();
+  if(name==='historial') renderHistorial();
 }
 
-function drawChart(data){
-  var svg=document.getElementById('hrvChart');
-  var W=300,H=100,PL=28,PR=8,PT=10,PB=18;
+document.querySelectorAll('.hrv-tab').forEach(function(t){
+  t.addEventListener('click',function(){ switchTab(t.dataset.panel); });
+});
+
+/* Chips */
+function initChips(groupId){
+  document.getElementById(groupId).addEventListener('click',function(e){
+    var c=e.target.closest('.hrv-chip,.hrv-mood'); if(!c) return;
+    document.getElementById(groupId).querySelectorAll('.hrv-chip,.hrv-mood')
+      .forEach(function(x){x.classList.remove('on');});
+    c.classList.add('on');
+  });
+}
+initChips('techChips'); initChips('durChips'); initChips('moodChips');
+
+/* Save record */
+document.getElementById('btnHrvSave').addEventListener('click',function(){
+  var hrv=parseInt(document.getElementById('regHrv').value,10);
+  var tech=document.querySelector('#techChips .hrv-chip.on');
+  var dur=document.querySelector('#durChips .hrv-chip.on');
+  var mood=document.querySelector('#moodChips .hrv-mood.on');
+  var rec={
+    id:Date.now(), date:todayStr(),
+    hrv:(hrv>=10&&hrv<=250)?hrv:null,
+    technique:tech?tech.dataset.v:null,
+    duration:dur?parseInt(dur.dataset.v):null,
+    mood:mood?parseInt(mood.dataset.v):null
+  };
+  addRecord(rec);
+  document.getElementById('regHrv').value='';
+  switchTab('dashboard');
+});
+
+/* Delete all */
+document.getElementById('btnClearAll').addEventListener('click',function(){
+  if(confirm('¿Borrar todos los registros?')){ saveRecords([]); renderHistorial(); renderDashboard(); }
+});
+
+/* Back */
+
+
+/* Dashboard */
+function renderDashboard(){
+  var recs=getRecords();
+  var withHrv=recs.filter(function(r){return r.hrv;});
+  var sevenAgo=new Date(Date.now()-7*24*60*60*1000).toISOString().slice(0,10);
+
+  // Stats
+  var prom=withHrv.length?Math.round(withHrv.reduce(function(s,r){return s+r.hrv;},0)/withHrv.length):'—';
+  var last7=withHrv.filter(function(r){return r.date>=sevenAgo;});
+  var avg7=last7.length?Math.round(last7.reduce(function(s,r){return s+r.hrv;},0)/last7.length):'—';
+  // Streak
+  var dates=[...new Set(recs.map(function(r){return r.date;}))].sort();
+  var streak=0, check=todayStr();
+  for(var i=dates.length-1;i>=0;i--){
+    if(dates[i]===check){ streak++; check=new Date(new Date(check).getTime()-86400000).toISOString().slice(0,10); }
+    else break;
+  }
+  document.getElementById('statProm').textContent=prom;
+  document.getElementById('stat7d').textContent=avg7;
+  document.getElementById('statRacha').textContent=streak||'—';
+
+  // Chart
+  var byDate={};
+  withHrv.forEach(function(r){
+    if(!byDate[r.date]) byDate[r.date]=[];
+    byDate[r.date].push(r.hrv);
+  });
+  var chartDates=Object.keys(byDate).sort().slice(-30);
+  var chartData=chartDates.map(function(d){
+    var vals=byDate[d];
+    return{date:d,hrv:Math.round(vals.reduce(function(s,v){return s+v;},0)/vals.length)};
+  });
+  var svg=document.getElementById('hrvChartSvg');
+  var none=document.getElementById('hrvChartNone');
+  if(chartData.length<1){ svg.style.display='none'; none.style.display=''; }
+  else { svg.style.display=''; none.style.display='none'; drawHRVChart(chartData); }
+
+  // Last session
+  var last=recs.length?recs[recs.length-1]:null;
+  var lcard=document.getElementById('lastSessCard');
+  if(last){ lcard.style.display='';
+    document.getElementById('lastHrvVal').textContent=last.hrv||'—';
+    var techStr=(last.technique||'')+(last.duration?' · '+last.duration+'\''+'':'');
+    document.getElementById('lastTech').textContent=techStr||'—';
+    document.getElementById('lastDate').textContent=fmtDate(last.date);
+  } else { lcard.style.display='none'; }
+}
+
+function drawHRVChart(data){
+  var svg=document.getElementById('hrvChartSvg');
+  var W=300,H=110,PL=30,PR=10,PT=8,PB=22;
   var cW=W-PL-PR, cH=H-PT-PB;
-  var withHRV=data.filter(function(r){return r.hrv;});
-  if(withHRV.length<2){svg.innerHTML='';return;}
-  var vals=withHRV.map(function(r){return r.hrv;});
+  var vals=data.map(function(d){return d.hrv;});
   var minV=Math.min.apply(null,vals), maxV=Math.max.apply(null,vals);
   if(maxV===minV){minV-=10;maxV+=10;}
-  var pad=Math.round((maxV-minV)*0.15)||5;
+  var pad=Math.max(Math.round((maxV-minV)*0.2),4);
   minV-=pad; maxV+=pad;
   var n=data.length;
-  function xf(i){return PL+i/(n-1)*cW;}
+  function xf(i){return n>1?PL+i/(n-1)*cW:PL+cW/2;}
   function yf(v){return PT+cH-(v-minV)/(maxV-minV)*cH;}
+
   var html='';
-  html+='<line x1="'+PL+'" y1="'+PT+'" x2="'+PL+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
-  html+='<line x1="'+PL+'" y1="'+(H-PB)+'" x2="'+(W-PR)+'" y2="'+(H-PB)+'" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
-  html+='<text x="'+(PL-4)+'" y="'+(PT+5)+'" fill="rgba(255,255,255,0.28)" font-size="7" text-anchor="end">'+Math.round(maxV)+'</text>';
-  html+='<text x="'+(PL-4)+'" y="'+(H-PB+1)+'" fill="rgba(255,255,255,0.28)" font-size="7" text-anchor="end">'+Math.round(minV)+'</text>';
-  var pathParts=[];
-  data.forEach(function(r,i){
-    if(!r.hrv) return;
-    pathParts.push((pathParts.length===0?'M':'L')+xf(i).toFixed(1)+','+yf(r.hrv).toFixed(1));
+  // Horizontal grid lines (4 levels)
+  for(var g=0;g<4;g++){
+    var gv=minV+(maxV-minV)*g/3;
+    var gy=yf(gv);
+    html+='<line x1="'+PL+'" y1="'+gy.toFixed(1)+'" x2="'+(W-PR)+'" y2="'+gy.toFixed(1)+'" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>';
+    html+='<text x="'+(PL-4)+'" y="'+(gy+3).toFixed(1)+'" fill="rgba(255,255,255,0.3)" font-size="7.5" text-anchor="end" font-family="Josefin Sans,sans-serif">'+Math.round(gv)+'</text>';
+  }
+  // Line
+  var path=data.map(function(d,i){return(i===0?'M':'L')+xf(i).toFixed(1)+','+yf(d.hrv).toFixed(1);}).join(' ');
+  // Area fill
+  var area=path+' L'+xf(n-1).toFixed(1)+','+(H-PB)+' L'+xf(0).toFixed(1)+','+(H-PB)+' Z';
+  html+='<path d="'+area+'" fill="rgba(77,217,232,0.07)"/>';
+  html+='<path d="'+path+'" fill="none" stroke="#4dd9e8" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>';
+  // Dots (open circles matching screenshot)
+  data.forEach(function(d,i){
+    html+='<circle cx="'+xf(i).toFixed(1)+'" cy="'+yf(d.hrv).toFixed(1)+'" r="3" fill="#1a1a2e" stroke="#4dd9e8" stroke-width="1.5" opacity="0.9"/>';
   });
-  html+='<path d="'+pathParts.join(' ')+'" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>';
-  var lastI=data.reduce(function(li,r,i){return r.hrv?i:li;},-1);
-  var firstI=data.findIndex(function(r){return r.hrv;});
-  var areaPath=pathParts.join(' ')+' L'+xf(lastI).toFixed(1)+','+(H-PB)+' L'+xf(firstI).toFixed(1)+','+(H-PB)+' Z';
-  html+='<path d="'+areaPath+'" fill="rgba(255,255,255,0.04)"/>';
-  data.forEach(function(r,i){
-    if(r.hrv){
-      var hasSess=(r.sess||0)>0;
-      html+='<circle cx="'+xf(i).toFixed(1)+'" cy="'+yf(r.hrv).toFixed(1)+'" r="2.8" fill="'+(hasSess?'#fff':'rgba(255,255,255,0.45)')+'"/>';
-    }
-    if((r.sess||0)>0){
-      html+='<circle cx="'+xf(i).toFixed(1)+'" cy="'+(H-PB+8)+'" r="2" fill="rgba(255,255,255,0.45)"/>';
-    }
+  // Date labels (first, last, middle if many)
+  var labelIdx=[0];
+  if(n>4) labelIdx.push(Math.floor(n/2));
+  if(n>1) labelIdx.push(n-1);
+  labelIdx=labelIdx.filter(function(v,i,a){return a.indexOf(v)===i;});
+  labelIdx.forEach(function(i){
+    html+='<text x="'+xf(i).toFixed(1)+'" y="'+(H-4)+'" fill="rgba(255,255,255,0.3)" font-size="7.5" text-anchor="middle" font-family="Josefin Sans,sans-serif">'+fmtDateShort(data[i].date)+'</text>';
   });
   svg.innerHTML=html;
 }
 
-document.getElementById('btnHrvBack').addEventListener('click', hideHRV);
-document.getElementById('hrvInput').addEventListener('change', logHRVInput);
-document.getElementById('hrvInput').addEventListener('blur', logHRVInput);
+/* Historial */
+function renderHistorial(){
+  var recs=getRecords().slice().reverse();
+  var el=document.getElementById('histList');
+  var cnt=document.getElementById('histCnt');
+  cnt.textContent=recs.length+' registro'+(recs.length===1?'':'s');
+  el.innerHTML='';
+  if(!recs.length){
+    el.innerHTML='<p style="font-family:Josefin Sans,sans-serif;font-size:0.68rem;color:rgba(255,255,255,0.22);text-align:center;padding:24px 0;letter-spacing:0.5px">Sin registros aún</p>';
+    return;
+  }
+  recs.forEach(function(r){
+    var item=document.createElement('div'); item.className='hrv-hitem';
+    var techStr=(r.technique||'')+(r.duration?' · '+r.duration+"'":'');
+    item.innerHTML=
+      '<div class="hrv-hi-hrv"><span class="hrv-hi-num">'+(r.hrv||'—')+'</span>'
+      +'<span class="hrv-hi-ms">ms</span></div>'
+      +'<div class="hrv-hi-info"><span class="hrv-hi-tech">'+techStr+'</span>'
+      +'<span class="hrv-hi-date">'+fmtDate(r.date)+'</span></div>'
+      +(r.mood?'<span class="hrv-hi-mood">'+MOODS[r.mood]+'</span>':'')
+      +'<button class="hrv-hi-del" data-id="'+r.id+'">&#10005;</button>';
+    item.querySelector('.hrv-hi-del').addEventListener('click',function(){
+      var id=parseInt(this.dataset.id);
+      saveRecords(getRecords().filter(function(x){return x.id!==id;}));
+      renderHistorial(); renderDashboard();
+    });
+    el.appendChild(item);
+  });
+}
 </script>
 </body>
 </html>
