@@ -404,6 +404,7 @@
 <body>
 
 <div id="bg"></div>
+<div id="nightOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,12,0.28);z-index:1000;pointer-events:none;transition:opacity 1.2s ease"></div>
 
 <!-- SETUP -->
 <div class="screen" id="setup">
@@ -789,6 +790,25 @@ function haptic(type) {
 
 /* Build initial pattern buttons via setLang */
 setLang('es');
+
+/* Night mode: auto-select Noche + dim if 20:00–6:00 */
+function applyNightMode(){
+  var h=new Date().getHours();
+  var isNight=(h>=20||h<6);
+  if(!isNight) return;
+  // Select Noche scene
+  cfg.scene='ocean';
+  document.querySelectorAll('.sc').forEach(function(c){
+    c.classList.toggle('on', c.dataset.s==='ocean');
+  });
+  var bg=document.getElementById('bg');
+  bg.className='night'; bg.id='bg';
+  // Dim overlay
+  var ov=document.getElementById('nightOverlay');
+  ov.style.display=''; ov.style.opacity='0';
+  setTimeout(function(){ ov.style.opacity='1'; },100);
+}
+applyNightMode();
 
 /* Duration */
 document.getElementById('durRow').addEventListener('click',function(e){
