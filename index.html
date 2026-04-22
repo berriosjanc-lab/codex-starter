@@ -347,6 +347,48 @@
     .hrv-hi-mood{font-size:1rem}
     .hrv-hi-del{background:none;border:none;color:rgba(255,255,255,0.22);font-size:0.8rem;cursor:pointer;padding:4px;line-height:1}
 
+    /* FRECUENCIAS & MEDITAR */
+    #freqmed { padding: 0; }
+    .fm-back { position:absolute; top:18px; left:16px; }
+    .fm-header { padding: 28px 24px 0; text-align: center; }
+    .fm-header-sub { font-family:'Josefin Sans',sans-serif; font-size:0.6rem; letter-spacing:4px; text-transform:uppercase; color:rgba(255,255,255,0.4); }
+    .fm-header-title { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; margin:4px 0 0; }
+    .fm-header-title em { font-style:italic; color:rgba(255,255,255,0.75); }
+    .fm-tabs {
+      display:flex; margin:18px 16px 0; border-radius:12px;
+      background:rgba(255,255,255,0.05); padding:4px; gap:4px;
+    }
+    .fm-tab {
+      flex:1; padding:10px 8px; border:none; border-radius:9px;
+      background:transparent; color:rgba(255,255,255,0.45);
+      font-family:'Josefin Sans',sans-serif; font-size:0.72rem;
+      letter-spacing:1px; cursor:pointer; transition:all 0.25s;
+    }
+    .fm-tab.active { background:rgba(255,255,255,0.12); color:#fff; box-shadow:0 1px 8px rgba(0,0,0,0.3); }
+    .fm-panel { display:none; padding:14px 14px 100px; overflow-y:auto; max-height:calc(100vh - 168px); }
+    .fm-panel.active { display:block; }
+    .fm-section { margin-bottom:26px; }
+    .fm-section-hdr { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:0 4px; }
+    .fm-section-icon { font-size:1.3rem; }
+    .fm-section-info { flex:1; }
+    .fm-section-title { font-family:'Cormorant Garamond',serif; font-size:1.12rem; font-weight:400; }
+    .fm-section-sub { font-family:'Josefin Sans',sans-serif; font-size:0.57rem; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,0.35); margin-top:2px; }
+    .fm-hz-badge { font-family:'Josefin Sans',sans-serif; font-size:0.58rem; letter-spacing:2px; padding:3px 9px; border-radius:20px; border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.45); white-space:nowrap; }
+    .fm-warning { display:flex; align-items:center; gap:8px; background:rgba(255,220,80,0.07); border:1px solid rgba(255,220,80,0.18); border-radius:10px; padding:9px 12px; margin-bottom:10px; font-family:'Josefin Sans',sans-serif; font-size:0.62rem; color:rgba(255,220,80,0.8); letter-spacing:0.5px; }
+    .fm-playlist { display:flex; align-items:center; gap:12px; background:rgba(255,255,255,0.055); border:1px solid rgba(255,255,255,0.09); border-radius:12px; padding:11px 13px; margin-bottom:8px; text-decoration:none; color:#fff; transition:background 0.2s,transform 0.15s; -webkit-tap-highlight-color:transparent; }
+    .fm-playlist:active { background:rgba(255,255,255,0.1); transform:scale(0.98); }
+    .fm-pl-art { width:44px; height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+    .fm-pl-art.hz432  { background:linear-gradient(135deg,rgba(120,200,120,0.28),rgba(80,160,80,0.08)); }
+    .fm-pl-art.hz528  { background:linear-gradient(135deg,rgba(255,180,100,0.28),rgba(220,120,60,0.08)); }
+    .fm-pl-art.binaural { background:linear-gradient(135deg,rgba(140,100,255,0.28),rgba(100,60,220,0.08)); }
+    .fm-pl-art.guiada { background:linear-gradient(135deg,rgba(255,150,150,0.28),rgba(200,80,80,0.08)); }
+    .fm-pl-info { flex:1; min-width:0; }
+    .fm-pl-name { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400; line-height:1.2; }
+    .fm-pl-meta { font-family:'Josefin Sans',sans-serif; font-size:0.57rem; color:rgba(255,255,255,0.38); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+    .fm-pl-saves { font-family:'Josefin Sans',sans-serif; font-size:0.6rem; color:rgba(77,217,232,0.75); letter-spacing:1px; margin-top:2px; }
+    .fm-pl-arrow { color:rgba(255,255,255,0.22); font-size:0.8rem; flex-shrink:0; }
+    .fm-coming { text-align:center; padding:60px 20px; color:rgba(255,255,255,0.32); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; }
+
     .fab {
       position:fixed; bottom:36px; right:24px;
       width:46px; height:46px; border-radius:50%;
@@ -482,6 +524,15 @@
     font-family:'Josefin Sans',sans-serif; font-size:0.62rem;
     letter-spacing:3px; text-transform:uppercase; font-weight:300;
   ">&#128202; Tendencia HRV</button>
+
+  <button onclick="showFreqMed()" style="
+    display:inline-flex; align-items:center; gap:7px;
+    margin-top:10px; padding:10px 22px; border-radius:20px;
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.13);
+    color:rgba(255,255,255,0.45); cursor:pointer;
+    font-family:'Josefin Sans',sans-serif; font-size:0.62rem;
+    letter-spacing:3px; text-transform:uppercase; font-weight:300;
+  ">&#127911; Frecuencias &amp; Meditar</button>
 
 </div>
 
@@ -630,6 +681,173 @@
       <button class="hrv-clear-btn" id="btnClearAll">Borrar todo</button>
     </div>
     <div id="histList"></div>
+  </div>
+
+</div>
+
+
+<!-- FRECUENCIAS & MEDITAR -->
+<div class="screen below" id="freqmed" style="display:none;opacity:0;transition:opacity 0.3s ease">
+
+  <button class="btn-back" id="btnFmBack">&#8592; Volver</button>
+
+  <div class="fm-header">
+    <div class="fm-header-sub">CALMA</div>
+    <h2 class="fm-header-title">Bienestar <em>Sonoro</em></h2>
+  </div>
+
+  <div class="fm-tabs">
+    <button class="fm-tab active" id="fmTab0" onclick="switchFmTab(0)">&#127911; Frecuencias</button>
+    <button class="fm-tab" id="fmTab1" onclick="switchFmTab(1)">&#129496; Meditar</button>
+  </div>
+
+  <!-- TAB 0: FRECUENCIAS -->
+  <div class="fm-panel active" id="fmPanel0">
+
+    <!-- 432 Hz -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#127807;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">432 Hz &mdash; Armon&iacute;a Natural</div>
+          <div class="fm-section-sub">Sue&ntilde;o &bull; Relajaci&oacute;n &bull; Equilibrio</div>
+        </div>
+        <div class="fm-hz-badge">432 HZ</div>
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/playlist/37i9dQZF1DXa2PvUpywmrr" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz432">&#127807;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">432Hz: Feel Good</div>
+          <div class="fm-pl-meta">Spotify &bull; Oficial</div>
+          <div class="fm-pl-saves">&#128081; 217K guardados</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/432%20hz%20sleep%20relax" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz432">&#127769;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">432 Hz Sleep Music</div>
+          <div class="fm-pl-meta">Relajaci&oacute;n profunda &bull; Noche</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/432%20hz%20deep%20healing%20meditation" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz432">&#10024;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">432 Hz Deep Healing</div>
+          <div class="fm-pl-meta">Alivio del estr&eacute;s &bull; Restauraci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+    <!-- 528 Hz -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#10084;&#65039;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">528 Hz &mdash; Frecuencia del Amor</div>
+          <div class="fm-section-sub">Sanaci&oacute;n &bull; ADN &bull; Solfeggio</div>
+        </div>
+        <div class="fm-hz-badge">528 HZ</div>
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/search/528%20hz%20love%20frequency%20healing" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz528">&#10084;&#65039;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">528 Hz Love Frequency</div>
+          <div class="fm-pl-meta">Sanaci&oacute;n &bull; Transformaci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/solfeggio%20528%20hz%20meditation%20healing" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz528">&#127774;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Solfeggio 528 Hz</div>
+          <div class="fm-pl-meta">Frecuencias sagradas &bull; Meditaci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+    <!-- Binaural Beats -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#127911;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">Binaural Beats</div>
+          <div class="fm-section-sub">Ondas cerebrales &bull; Focus &bull; Theta</div>
+        </div>
+        <div class="fm-hz-badge">BINAURAL</div>
+      </div>
+      <div class="fm-warning">
+        &#127911;&nbsp; Requieren aud&iacute;fonos est&eacute;reo para funcionar correctamente
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/search/binaural%20beats%20alpha%20focus%20concentration" target="_blank" rel="noopener">
+        <div class="fm-pl-art binaural">&#128301;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Alpha Waves &mdash; Focus</div>
+          <div class="fm-pl-meta">8&ndash;14 Hz &bull; Concentraci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/binaural%20beats%20theta%20sleep%20meditation" target="_blank" rel="noopener">
+        <div class="fm-pl-art binaural">&#127769;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Theta Waves &mdash; Sue&ntilde;o</div>
+          <div class="fm-pl-meta">4&ndash;8 Hz &bull; Estado hipn&oacute;gico</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/binaural%20beats%20delta%20deep%20sleep" target="_blank" rel="noopener">
+        <div class="fm-pl-art binaural">&#128171;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Delta Waves &mdash; Descanso</div>
+          <div class="fm-pl-meta">0.5&ndash;4 Hz &bull; Sue&ntilde;o profundo</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+    <!-- Meditacion Guiada -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#129504;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">Meditaci&oacute;n Guiada</div>
+          <div class="fm-section-sub">Espa&ntilde;ol &bull; Ingl&eacute;s &bull; Podcast</div>
+        </div>
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/search/Andr%C3%A9s%20Salgado%20psic%C3%B3logo%20meditaci%C3%B3n" target="_blank" rel="noopener">
+        <div class="fm-pl-art guiada">&#127908;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Andr&eacute;s Salgado</div>
+          <div class="fm-pl-meta">Psic&oacute;logo &bull; Podcast &bull; Espa&ntilde;ol</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/meditaci%C3%B3n%20guiada%20en%20espa%C3%B1ol%20ansiedad%20mindfulness" target="_blank" rel="noopener">
+        <div class="fm-pl-art guiada">&#127466;&#127480;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Meditaci&oacute;n Guiada ES</div>
+          <div class="fm-pl-meta">Ansiedad &bull; Mindfulness &bull; Espa&ntilde;ol</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/guided%20meditation%20english%20anxiety%20mindfulness" target="_blank" rel="noopener">
+        <div class="fm-pl-art guiada">&#127468;&#127463;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Guided Meditation EN</div>
+          <div class="fm-pl-meta">Anxiety &bull; Mindfulness &bull; English</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+  </div><!-- /fmPanel0 -->
+
+  <!-- TAB 1: MEDITAR (next phase) -->
+  <div class="fm-panel" id="fmPanel1">
+    <div class="fm-coming">Pr&oacute;ximamente&hellip;</div>
   </div>
 
 </div>
@@ -1197,6 +1415,29 @@ function renderHistorial(){
 }
 
 document.getElementById('btnHrvBack').addEventListener('click', hideHRV);
+
+/* ── FRECUENCIAS & MEDITAR ── */
+function showFreqMed(){
+  document.getElementById('setup').style.display='none';
+  var s=document.getElementById('freqmed');
+  s.style.display='';
+  requestAnimationFrame(function(){ s.style.opacity='1'; });
+}
+function hideFreqMed(){
+  var s=document.getElementById('freqmed');
+  s.style.opacity='0';
+  setTimeout(function(){
+    s.style.display='none';
+    document.getElementById('setup').style.display='';
+  },300);
+}
+function switchFmTab(idx){
+  [0,1].forEach(function(i){
+    document.getElementById('fmTab'+i).classList.toggle('active',i===idx);
+    document.getElementById('fmPanel'+i).classList.toggle('active',i===idx);
+  });
+}
+document.getElementById('btnFmBack').addEventListener('click', hideFreqMed);
 </script>
 </body>
 </html>
