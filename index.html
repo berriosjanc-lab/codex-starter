@@ -1538,13 +1538,14 @@ function switchFmTab(idx){
     document.getElementById('fmTab'+i).classList.toggle('active',i===idx);
     document.getElementById('fmPanel'+i).classList.toggle('active',i===idx);
   });
+  if(idx===1) medPrerender(); // pre-render sounds before user starts session
 }
 document.getElementById('btnFmBack').addEventListener('click', hideFreqMed);
 
 /* ── MEDITAR ── */
 var medCfg={mode:0,dur:10,snd:0};
 var medState={on:false,paused:false,elapsed:0,total:0,interval:null,guideIdx:0};
-var medActx=null, medMaster=null, medNodes=[];
+var medAudioEl=null, medSndUrls={};
 
 var MED_MODES=[
   {name:'Silencio',       icon:'🧘'},
@@ -1598,17 +1599,109 @@ var MED_GUIDES=[
   ]
 ];
 
-function medNoiseBuffer(ctx){
-  var len=ctx.sampleRate*3, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
-  for(var i=0;i<len;i++) d[i]=Math.random()*2-1;
-  return buf;
+/* Convert AudioBuffer to loopable WAV blob */
+function medBufToWav(buf){
+  var nCh=buf.numberOfChannels, len=buf.length, sr=buf.sampleRate;
+  var ab=new ArrayBuffer(44+len*nCh*2), v=new DataView(ab);
+  function ws(o,s){for(var i=0;i<s.length;i++)v.setUint8(o+i,s.charCodeAt(i));}
+  ws(0,'RIFF'); v.setUint32(4,36+len*nCh*2,true); ws(8,'WAVE');
+  ws(12,'fmt '); v.setUint32(16,16,true); v.setUint16(20,1,true);
+  v.setUint16(22,nCh,true); v.setUint32(24,sr,true);
+  v.setUint32(28,sr*nCh*2,true); v.setUint16(32,nCh*2,true); v.setUint16(34,16,true);
+  ws(36,'data'); v.setUint32(40,len*nCh*2,true);
+  var off=44;
+  for(var i=0;i<len;i++){
+    for(var c=0;c<nCh;c++){
+      var s=Math.max(-1,Math.min(1,buf.getChannelData(c)[i]));
+      v.setInt16(off,s<0?s*0x8000:s*0x7FFF,true); off+=2;
+    }
+  }
+  return ab;
+}
+
+/* Build sound graph in an OfflineAudioContext */
+function medBuildGraph(oc, sndIdx, dur){
+  var sr=oc.sampleRate, dest=oc.destination;
+  var nBuf=oc.createBuffer(1,sr*dur,sr);
+  var nd=nBuf.getChannelData(0);
+  // Pink-ish noise: apply simple first-order IIR to white noise
+  var b0=0;
+  for(var i=0;i<nd.length;i++){
+    var w=Math.random()*2-1;
+    b0=0.99*b0+w*0.01; nd[i]=w-b0*8; // warm, lowered highs
+  }
+  var src,f,lfo,lg,ag,f2;
+  if(sndIdx===0){ // Lluvia
+    src=oc.createBufferSource(); src.buffer=nBuf; src.loop=true;
+    f=oc.createBiquadFilter(); f.type='lowpass'; f.frequency.value=1200; f.Q.value=0.5;
+    var f3=oc.createBiquadFilter(); f3.type='highpass'; f3.frequency.value=200;
+    ag=oc.createGain(); ag.gain.value=0.55;
+    src.connect(f); f.connect(f3); f3.connect(ag); ag.connect(dest); src.start();
+  } else if(sndIdx===1){ // Olas — LFO 0.5Hz = 2s period matches buffer
+    src=oc.createBufferSource(); src.buffer=nBuf; src.loop=true;
+    f=oc.createBiquadFilter(); f.type='bandpass'; f.frequency.value=380; f.Q.value=0.35;
+    lfo=oc.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.5;
+    lg=oc.createGain(); lg.gain.value=0.26;
+    ag=oc.createGain(); ag.gain.value=0.28;
+    lfo.connect(lg); lg.connect(ag.gain);
+    src.connect(f); f.connect(ag); ag.connect(dest); src.start(); lfo.start();
+  } else if(sndIdx===2){ // Fuego — LFO 1Hz = 2 cycles in 2s
+    src=oc.createBufferSource(); src.buffer=nBuf; src.loop=true;
+    f=oc.createBiquadFilter(); f.type='bandpass'; f.frequency.value=680; f.Q.value=1.2;
+    f2=oc.createBiquadFilter(); f2.type='lowpass'; f2.frequency.value=460;
+    lfo=oc.createOscillator(); lfo.type='sine'; lfo.frequency.value=1.0;
+    lg=oc.createGain(); lg.gain.value=0.14; ag=oc.createGain(); ag.gain.value=0.36;
+    lfo.connect(lg); lg.connect(ag.gain);
+    src.connect(f); f.connect(f2); f2.connect(ag); ag.connect(dest); src.start(); lfo.start();
+  } else if(sndIdx===3){ // Viento — LFO 0.5Hz = 2s period
+    src=oc.createBufferSource(); src.buffer=nBuf; src.loop=true;
+    f=oc.createBiquadFilter(); f.type='bandpass'; f.frequency.value=620; f.Q.value=0.22;
+    lfo=oc.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.5;
+    lg=oc.createGain(); lg.gain.value=220; ag=oc.createGain(); ag.gain.value=0.24;
+    lfo.connect(lg); lg.connect(f.frequency);
+    src.connect(f); f.connect(ag); ag.connect(dest); src.start(); lfo.start();
+  } else if(sndIdx===4){ // Cuencos tibetanos
+    var freqs=[432,528,396,639];
+    freqs.forEach(function(freq,fi){
+      var osc=oc.createOscillator(); osc.type='sine'; osc.frequency.value=freq;
+      var g=oc.createGain(); g.gain.value=0;
+      osc.connect(g); g.connect(dest);
+      var t=fi*1.5;
+      g.gain.setValueAtTime(0.0001,t);
+      g.gain.linearRampToValueAtTime(0.09,t+0.13);
+      g.gain.exponentialRampToValueAtTime(0.0001,Math.min(t+7,dur-0.05));
+      osc.start(t); osc.stop(dur);
+    });
+  }
+}
+
+/* Pre-render a sound and store its blob URL (no user gesture needed) */
+function medRenderSound(sndIdx, cb){
+  try{
+    var sr=22050, dur=(sndIdx===4)?8:2;
+    var oc=new OfflineAudioContext(1,sr*dur,sr);
+    medBuildGraph(oc,sndIdx,dur);
+    oc.startRendering().then(function(rendered){
+      var wav=medBufToWav(rendered);
+      var url=URL.createObjectURL(new Blob([wav],{type:'audio/wav'}));
+      if(cb) cb(url);
+    }).catch(function(e){console.warn('render:',e);});
+  }catch(e){console.warn('OAC:',e);}
+}
+
+/* Pre-render all sounds when user opens Meditar tab */
+function medPrerender(){
+  for(var i=0;i<5;i++){
+    if(medSndUrls[i]) continue;
+    (function(idx){ medRenderSound(idx,function(u){ medSndUrls[idx]=u; }); })(i);
+  }
 }
 
 function medStopAudio(){
-  medNodes.forEach(function(n){try{if(n.stop)n.stop();else n.disconnect();}catch(e){}});
-  medNodes=[];
-  if(medMaster) try{medMaster.disconnect();}catch(e){}
-  if(medActx){try{medActx.close();}catch(e){} medActx=null; medMaster=null;}
+  if(medAudioEl){
+    try{ medAudioEl.pause(); if(medAudioEl._blobUrl) URL.revokeObjectURL(medAudioEl._blobUrl); }catch(e){}
+    medAudioEl=null;
+  }
 }
 
 function medBell(freq,dur){
@@ -1625,68 +1718,21 @@ function medBell(freq,dur){
   }catch(e){}
 }
 
+/* Play pre-rendered ambient sound — call during user gesture */
 function medStartAudio(sndIdx){
-  if(sndIdx<0||!medActx) return;
-  try{
-    var ctx=medActx;
-    if(ctx.state==='suspended') ctx.resume();
-    medMaster.gain.cancelScheduledValues(ctx.currentTime);
-    medMaster.gain.setValueAtTime(0,ctx.currentTime);
-    medMaster.gain.linearRampToValueAtTime(1, ctx.currentTime+2.8);
-    var g=medMaster, nBuf=medNoiseBuffer(ctx);
-    var src,filt,lfo,lg,ag,f2;
-    if(sndIdx===0){ // Lluvia
-      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
-      filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=1100; filt.Q.value=0.8;
-      ag=ctx.createGain(); ag.gain.value=0.48;
-      src.connect(filt); filt.connect(ag); ag.connect(g); src.start();
-      medNodes=[src,filt,ag];
-    } else if(sndIdx===1){ // Olas
-      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
-      filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.frequency.value=360; filt.Q.value=0.4;
-      lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.07;
-      lg=ctx.createGain(); lg.gain.value=0.30;
-      ag=ctx.createGain(); ag.gain.value=0.30;
-      lfo.connect(lg); lg.connect(ag.gain);
-      src.connect(filt); filt.connect(ag); ag.connect(g);
-      src.start(); lfo.start(); medNodes=[src,filt,lfo,lg,ag];
-    } else if(sndIdx===2){ // Fuego
-      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
-      filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.frequency.value=720; filt.Q.value=1.5;
-      f2=ctx.createBiquadFilter(); f2.type='lowpass'; f2.frequency.value=480;
-      lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.28;
-      lg=ctx.createGain(); lg.gain.value=0.18;
-      ag=ctx.createGain(); ag.gain.value=0.32;
-      lfo.connect(lg); lg.connect(ag.gain);
-      src.connect(filt); filt.connect(f2); f2.connect(ag); ag.connect(g);
-      src.start(); lfo.start(); medNodes=[src,filt,f2,lfo,lg,ag];
-    } else if(sndIdx===3){ // Viento
-      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
-      filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.frequency.value=650; filt.Q.value=0.25;
-      lfo=ctx.createOscillator(); lfo.frequency.value=0.04; lfo.type='sine';
-      lg=ctx.createGain(); lg.gain.value=280;
-      ag=ctx.createGain(); ag.gain.value=0.22;
-      lfo.connect(lg); lg.connect(filt.frequency);
-      src.connect(filt); filt.connect(ag); ag.connect(g);
-      src.start(); lfo.start(); medNodes=[src,filt,lfo,lg,ag];
-    } else if(sndIdx===4){ // Cuencos tibetanos
-      var freqs=[432,528,396,639]; medNodes=[];
-      var totSec=medState.total||600;
-      freqs.forEach(function(f,fi){
-        var osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=f;
-        var og=ctx.createGain(); og.gain.value=0;
-        osc.connect(og); og.connect(g); osc.start();
-        var interval=16+fi*4, t=ctx.currentTime+fi*1.4;
-        while(t<ctx.currentTime+totSec+4){
-          og.gain.setValueAtTime(0.0001,t);
-          og.gain.linearRampToValueAtTime(0.09,t+0.14);
-          og.gain.exponentialRampToValueAtTime(0.0001,t+7);
-          t+=interval;
-        }
-        medNodes.push(osc,og);
-      });
-    }
-  }catch(e){console.warn('MedAudio:',e);}
+  medStopAudio();
+  if(sndIdx<0) return;
+  var url=medSndUrls[sndIdx];
+  if(!url) return; // not ready (shouldn't happen if prerender ran)
+  var a=new Audio(url); a._blobUrl=url;
+  a.loop=true; a.volume=0;
+  medAudioEl=a;
+  a.play().catch(function(e){console.warn('audio:',e);});
+  var fadeInt=setInterval(function(){
+    if(!medAudioEl||medAudioEl!==a){clearInterval(fadeInt);return;}
+    if(a.volume<0.65) a.volume=Math.min(0.65,a.volume+0.045);
+    else clearInterval(fadeInt);
+  },120);
 }
 
 function medFmt(s){var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
@@ -1736,8 +1782,12 @@ function medTick(){
 
 function medComplete(){
   clearInterval(medState.interval); medState.on=false;
-  if(medMaster&&medActx){
-    medMaster.gain.setTargetAtTime(0,medActx.currentTime,1.5);
+  if(medAudioEl){
+    var _a=medAudioEl;
+    var fo=setInterval(function(){
+      if(_a.volume>0.03) _a.volume=Math.max(0,_a.volume-0.04);
+      else{clearInterval(fo);try{_a.pause();}catch(e){}};
+    },120);
     setTimeout(medStopAudio,4500);
   }
   setTimeout(function(){medBell(396,5);},900);
@@ -1756,29 +1806,15 @@ function medComplete(){
 }
 
 function medStart(){
-  // Create AudioContext NOW (iOS requires user gesture)
-  medStopAudio();
-  if(medCfg.snd>=0){
-    try{
-      medActx=new(window.AudioContext||window.webkitAudioContext)();
-      medMaster=medActx.createGain(); medMaster.gain.value=0;
-      medMaster.connect(medActx.destination);
-      // resume() is async on iOS — start audio only after it resolves
-      var _snd=medCfg.snd;
-      var doStart=function(){ setTimeout(function(){medStartAudio(_snd);},1200); };
-      if(medActx.state==='suspended'){
-        medActx.resume().then(doStart).catch(doStart);
-      } else { doStart(); }
-    }catch(e){}
-  }
-  // Unlock speech synthesis on iOS (must happen during user gesture)
+  // Play ambient sound via HTMLAudioElement (most reliable on iOS)
+  medStartAudio(medCfg.snd);
+  // Opening bell uses its own AudioContext (user gesture)
+  medBell(528,4);
+  // Unlock speech synthesis on iOS
   if(window.speechSynthesis){
     var su=new SpeechSynthesisUtterance(''); su.volume=0;
-    speechSynthesis.speak(su);
-    // Pre-load voices
-    speechSynthesis.getVoices();
+    speechSynthesis.speak(su); speechSynthesis.getVoices();
   }
-  medBell(528,4);
   medState.elapsed=0; medState.total=medCfg.dur*60;
   medState.paused=false; medState.on=true; medState.guideIdx=0;
   document.getElementById('medSetup').style.display='none';
@@ -1801,10 +1837,19 @@ function medPause(){
   medState.paused=!medState.paused;
   var btn=document.getElementById('btnMedPause');
   if(btn) btn.innerHTML=medState.paused?'&#9654; Reanudar':'&#9646;&#9646; Pausa';
-  if(medMaster&&medActx){
-    var g=medMaster.gain;
-    g.cancelScheduledValues(medActx.currentTime);
-    g.setTargetAtTime(medState.paused?0:1,medActx.currentTime,0.6);
+  if(medAudioEl){
+    if(medState.paused){
+      var fo2=setInterval(function(){
+        if(!medAudioEl||medAudioEl.volume<=0.01){clearInterval(fo2); if(medAudioEl) medAudioEl.pause(); return;}
+        medAudioEl.volume=Math.max(0,medAudioEl.volume-0.06);
+      },80);
+    } else {
+      medAudioEl.volume=0; medAudioEl.play().catch(function(){});
+      var fi2=setInterval(function(){
+        if(!medAudioEl||medAudioEl.volume>=0.65){clearInterval(fi2); return;}
+        medAudioEl.volume=Math.min(0.65,medAudioEl.volume+0.06);
+      },80);
+    }
   }
 }
 
