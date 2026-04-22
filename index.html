@@ -730,7 +730,7 @@
 
 
 <!-- FRECUENCIAS & MEDITAR -->
-<div class="screen below" id="freqmed" style="display:none;opacity:0;transition:opacity 0.3s ease">
+<div class="screen below" id="freqmed" style="display:none">
 
   <button class="btn-back" id="btnFmBack">&#8592; Volver</button>
 
@@ -1523,18 +1523,15 @@ document.getElementById('btnHrvBack').addEventListener('click', hideHRV);
 
 /* ── FRECUENCIAS & MEDITAR ── */
 function showFreqMed(){
-  document.getElementById('setup').style.display='none';
+  document.getElementById('setup').classList.add('out');
   var s=document.getElementById('freqmed');
-  s.style.display='';
-  requestAnimationFrame(function(){ s.style.opacity='1'; });
+  s.style.display=''; s.classList.remove('below');
 }
 function hideFreqMed(){
   var s=document.getElementById('freqmed');
-  s.style.opacity='0';
-  setTimeout(function(){
-    s.style.display='none';
-    document.getElementById('setup').style.display='';
-  },300);
+  s.classList.add('below');
+  document.getElementById('setup').classList.remove('out');
+  setTimeout(function(){ s.style.display='none'; },600);
 }
 function switchFmTab(idx){
   [0,1].forEach(function(i){
