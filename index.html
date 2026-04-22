@@ -895,10 +895,10 @@
     <div id="medSetup">
       <div class="med-section-lbl">Modo</div>
       <div class="med-modes">
-        <button class="med-mode on" data-m="0"><span class="med-mode-icon">&#129504;</span><span class="med-mode-name">Silencio</span></button>
-        <button class="med-mode" data-m="1"><span class="med-mode-icon">&#129463;</span><span class="med-mode-name">Body Scan</span></button>
-        <button class="med-mode" data-m="2"><span class="med-mode-icon">&#127774;</span><span class="med-mode-name">Gratitud</span></button>
-        <button class="med-mode" data-m="3"><span class="med-mode-icon">&#127956;</span><span class="med-mode-name">Visualizaci&oacute;n</span></button>
+        <button class="med-mode on" data-m="0"><span class="med-mode-icon">&#9775;&#65039;</span><span class="med-mode-name">Silencio</span></button>
+        <button class="med-mode" data-m="1"><span class="med-mode-icon">&#128134;</span><span class="med-mode-name">Body Scan</span></button>
+        <button class="med-mode" data-m="2"><span class="med-mode-icon">&#9728;&#65039;</span><span class="med-mode-name">Gratitud</span></button>
+        <button class="med-mode" data-m="3"><span class="med-mode-icon">&#127956;&#65039;</span><span class="med-mode-name">Visualizaci&oacute;n</span></button>
       </div>
       <div class="med-section-lbl">Duraci&oacute;n</div>
       <div class="med-durs">
@@ -1702,7 +1702,13 @@ function medSpeak(text){
     if(!window.speechSynthesis) return;
     speechSynthesis.cancel();
     var u=new SpeechSynthesisUtterance(text);
-    u.lang='es-ES'; u.rate=0.82; u.pitch=1.0; u.volume=0.85;
+    u.lang='es-ES'; u.rate=0.76; u.pitch=1.12; u.volume=0.88;
+    // Prefer a high-quality female voice (Monica es-ES, Paulina es-MX)
+    var voices=speechSynthesis.getVoices();
+    var best=voices.find(function(v){return /Monica|Paulina/i.test(v.name);})
+      ||voices.find(function(v){return v.lang.startsWith('es')&&v.localService;})
+      ||voices.find(function(v){return v.lang.startsWith('es');});
+    if(best) u.voice=best;
     speechSynthesis.speak(u);
   }catch(e){}
 }
@@ -1757,18 +1763,24 @@ function medStart(){
       medActx=new(window.AudioContext||window.webkitAudioContext)();
       medMaster=medActx.createGain(); medMaster.gain.value=0;
       medMaster.connect(medActx.destination);
-      if(medActx.state==='suspended') medActx.resume();
+      // resume() is async on iOS — start audio only after it resolves
+      var _snd=medCfg.snd;
+      var doStart=function(){ setTimeout(function(){medStartAudio(_snd);},1200); };
+      if(medActx.state==='suspended'){
+        medActx.resume().then(doStart).catch(doStart);
+      } else { doStart(); }
     }catch(e){}
   }
-  // Unlock speech synthesis on iOS
+  // Unlock speech synthesis on iOS (must happen during user gesture)
   if(window.speechSynthesis){
-    var u=new SpeechSynthesisUtterance(''); u.volume=0;
-    speechSynthesis.speak(u);
+    var su=new SpeechSynthesisUtterance(''); su.volume=0;
+    speechSynthesis.speak(su);
+    // Pre-load voices
+    speechSynthesis.getVoices();
   }
   medBell(528,4);
   medState.elapsed=0; medState.total=medCfg.dur*60;
   medState.paused=false; medState.on=true; medState.guideIdx=0;
-  setTimeout(function(){medStartAudio(medCfg.snd);},1300);
   document.getElementById('medSetup').style.display='none';
   document.getElementById('medDone').style.display='none';
   var act=document.getElementById('medActive');
