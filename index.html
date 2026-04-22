@@ -914,7 +914,7 @@
         <button class="med-snd" data-s="1">&#127754; Olas</button>
         <button class="med-snd" data-s="2">&#128293; Fuego</button>
         <button class="med-snd" data-s="3">&#127810; Viento</button>
-        <button class="med-snd" data-s="4">&#127773; Cuencos</button>
+        <button class="med-snd" data-s="4">&#128276; Cuencos</button>
         <button class="med-snd" data-s="-1">&#128263; Sin sonido</button>
       </div>
       <button class="med-start-btn" id="btnMedStart">&#9654; Comenzar</button>
@@ -1626,12 +1626,12 @@ function medBell(freq,dur){
 }
 
 function medStartAudio(sndIdx){
-  if(sndIdx<0) return;
+  if(sndIdx<0||!medActx) return;
   try{
-    medActx=new(window.AudioContext||window.webkitAudioContext)();
     var ctx=medActx;
-    medMaster=ctx.createGain(); medMaster.gain.value=0;
-    medMaster.connect(ctx.destination);
+    if(ctx.state==='suspended') ctx.resume();
+    medMaster.gain.cancelScheduledValues(ctx.currentTime);
+    medMaster.gain.setValueAtTime(0,ctx.currentTime);
     medMaster.gain.linearRampToValueAtTime(1, ctx.currentTime+2.8);
     var g=medMaster, nBuf=medNoiseBuffer(ctx);
     var src,filt,lfo,lg,ag,f2;
@@ -1697,11 +1697,20 @@ function medUpdateRing(elapsed,total){
   if(el) el.style.strokeDashoffset=(515.22*(1-frac));
 }
 
+function medSpeak(text){
+  try{
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang='es-ES'; u.rate=0.82; u.pitch=1.0; u.volume=0.85;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
 function medShowGuide(text){
   var el=document.getElementById('medGuideText');
   if(!el) return;
   el.classList.remove('show');
-  setTimeout(function(){el.textContent=text; el.classList.add('show');},420);
+  setTimeout(function(){el.textContent=text; el.classList.add('show'); medSpeak(text);},420);
 }
 
 function medTick(){
@@ -1741,6 +1750,21 @@ function medComplete(){
 }
 
 function medStart(){
+  // Create AudioContext NOW (iOS requires user gesture)
+  medStopAudio();
+  if(medCfg.snd>=0){
+    try{
+      medActx=new(window.AudioContext||window.webkitAudioContext)();
+      medMaster=medActx.createGain(); medMaster.gain.value=0;
+      medMaster.connect(medActx.destination);
+      if(medActx.state==='suspended') medActx.resume();
+    }catch(e){}
+  }
+  // Unlock speech synthesis on iOS
+  if(window.speechSynthesis){
+    var u=new SpeechSynthesisUtterance(''); u.volume=0;
+    speechSynthesis.speak(u);
+  }
   medBell(528,4);
   medState.elapsed=0; medState.total=medCfg.dur*60;
   medState.paused=false; medState.on=true; medState.guideIdx=0;
