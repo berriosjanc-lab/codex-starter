@@ -387,6 +387,47 @@
     .fm-pl-meta { font-family:'Josefin Sans',sans-serif; font-size:0.57rem; color:rgba(255,255,255,0.38); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
     .fm-pl-saves { font-family:'Josefin Sans',sans-serif; font-size:0.6rem; color:rgba(77,217,232,0.75); letter-spacing:1px; margin-top:2px; }
     .fm-pl-arrow { color:rgba(255,255,255,0.22); font-size:0.8rem; flex-shrink:0; }
+    /* MEDITAR TIMER */
+    .med-section-lbl{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.35);margin:20px 0 8px 4px}
+    .med-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+    .med-mode{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:12px;padding:12px 8px;cursor:pointer;transition:all 0.2s;color:#fff;display:flex;flex-direction:column;align-items:center;gap:5px}
+    .med-mode.on{background:rgba(77,217,232,0.12);border-color:rgba(77,217,232,0.4)}
+    .med-mode-icon{font-size:1.5rem}
+    .med-mode-name{font-family:'Josefin Sans',sans-serif;font-size:0.6rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,0.55)}
+    .med-mode.on .med-mode-name{color:rgba(77,217,232,0.9)}
+    .med-durs{display:flex;gap:7px;flex-wrap:wrap}
+    .med-dur-btn{padding:8px 14px;border-radius:20px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);font-family:'Josefin Sans',sans-serif;font-size:0.65rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s}
+    .med-dur-btn.on{background:rgba(77,217,232,0.12);border-color:rgba(77,217,232,0.4);color:rgba(77,217,232,0.9)}
+    .med-sounds-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+    .med-snd{padding:9px 6px;border-radius:10px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);color:rgba(255,255,255,0.5);font-family:'Josefin Sans',sans-serif;font-size:0.6rem;letter-spacing:0.5px;cursor:pointer;transition:all 0.2s}
+    .med-snd.on{background:rgba(77,217,232,0.12);border-color:rgba(77,217,232,0.4);color:rgba(77,217,232,0.9)}
+    .med-start-btn{display:block;width:100%;margin-top:24px;padding:15px;border-radius:14px;background:rgba(77,217,232,0.14);border:1px solid rgba(77,217,232,0.32);color:rgba(255,255,255,0.88);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+    .med-start-btn:active{background:rgba(77,217,232,0.26);transform:scale(0.98)}
+    #medActive,#medDone{transition:opacity 0.35s ease}
+    .med-mode-lbl-active{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);text-align:center;margin-bottom:14px}
+    .med-ring-wrap{position:relative;width:188px;height:188px;margin:0 auto 16px}
+    .med-ring-svg{width:188px;height:188px;transform:rotate(-90deg)}
+    .med-ring-bg{fill:none;stroke:rgba(255,255,255,0.07);stroke-width:7}
+    .med-ring-fg{fill:none;stroke:rgba(77,217,232,0.6);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+    .med-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .med-time-disp{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;letter-spacing:2px;line-height:1}
+    .med-time-sub{font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.3);margin-top:5px}
+    .med-guide-box{min-height:52px;margin:0 2px 16px;padding:12px 14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.07)}
+    .med-guide-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;font-weight:300;color:rgba(255,255,255,0.8);text-align:center;line-height:1.5;opacity:0;transition:opacity 0.9s ease}
+    .med-guide-text.show{opacity:1}
+    .med-controls{display:flex;gap:10px}
+    .med-ctrl{flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:2px;cursor:pointer;transition:all 0.2s}
+    .med-ctrl-stop{background:rgba(255,80,80,0.07);border-color:rgba(255,80,80,0.2);color:rgba(255,130,130,0.7)}
+    .med-done-icon{font-size:2.6rem;text-align:center;margin:20px 0 10px}
+    .med-done-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;font-weight:300;color:rgba(255,255,255,0.85);text-align:center;padding:0 10px;line-height:1.5;margin-bottom:8px}
+    .med-done-stats{font-family:'Josefin Sans',sans-serif;font-size:0.6rem;letter-spacing:2px;color:rgba(255,255,255,0.32);text-align:center;margin-bottom:4px}
+    .med-hist-hdr{font-family:'Josefin Sans',sans-serif;font-size:0.57rem;letter-spacing:3px;text-transform:uppercase;color:rgba(255,255,255,0.28);margin:22px 0 8px 2px}
+    .med-hist-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(255,255,255,0.04);border-radius:10px;margin-bottom:6px}
+    .med-hist-icon{font-size:1.1rem}
+    .med-hist-info{flex:1}
+    .med-hist-mode{font-family:'Josefin Sans',sans-serif;font-size:0.63rem;letter-spacing:1px;color:rgba(255,255,255,0.68)}
+    .med-hist-date{font-family:'Josefin Sans',sans-serif;font-size:0.53rem;letter-spacing:1px;color:rgba(255,255,255,0.28);margin-top:2px}
+    .med-hist-dur{font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:rgba(77,217,232,0.65)}
     .fm-coming { text-align:center; padding:60px 20px; color:rgba(255,255,255,0.32); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; }
 
     .fab {
@@ -845,9 +886,71 @@
 
   </div><!-- /fmPanel0 -->
 
-  <!-- TAB 1: MEDITAR (next phase) -->
+  <!-- TAB 1: MEDITAR -->
   <div class="fm-panel" id="fmPanel1">
-    <div class="fm-coming">Pr&oacute;ximamente&hellip;</div>
+
+    <!-- SETUP -->
+    <div id="medSetup">
+      <div class="med-section-lbl">Modo</div>
+      <div class="med-modes">
+        <button class="med-mode on" data-m="0"><span class="med-mode-icon">&#129504;</span><span class="med-mode-name">Silencio</span></button>
+        <button class="med-mode" data-m="1"><span class="med-mode-icon">&#129463;</span><span class="med-mode-name">Body Scan</span></button>
+        <button class="med-mode" data-m="2"><span class="med-mode-icon">&#127774;</span><span class="med-mode-name">Gratitud</span></button>
+        <button class="med-mode" data-m="3"><span class="med-mode-icon">&#127956;</span><span class="med-mode-name">Visualizaci&oacute;n</span></button>
+      </div>
+      <div class="med-section-lbl">Duraci&oacute;n</div>
+      <div class="med-durs">
+        <button class="med-dur-btn" data-d="3">3 min</button>
+        <button class="med-dur-btn" data-d="5">5 min</button>
+        <button class="med-dur-btn on" data-d="10">10 min</button>
+        <button class="med-dur-btn" data-d="15">15 min</button>
+        <button class="med-dur-btn" data-d="20">20 min</button>
+      </div>
+      <div class="med-section-lbl">Sonido ambiente</div>
+      <div class="med-sounds-grid">
+        <button class="med-snd on" data-s="0">&#127783; Lluvia</button>
+        <button class="med-snd" data-s="1">&#127754; Olas</button>
+        <button class="med-snd" data-s="2">&#128293; Fuego</button>
+        <button class="med-snd" data-s="3">&#127810; Viento</button>
+        <button class="med-snd" data-s="4">&#127773; Cuencos</button>
+        <button class="med-snd" data-s="-1">&#128263; Sin sonido</button>
+      </div>
+      <button class="med-start-btn" id="btnMedStart">&#9654; Comenzar</button>
+    </div>
+
+    <!-- ACTIVE TIMER -->
+    <div id="medActive" style="display:none;opacity:0">
+      <div class="med-mode-lbl-active" id="medModeLabel"></div>
+      <div class="med-ring-wrap">
+        <svg class="med-ring-svg" viewBox="0 0 188 188">
+          <circle class="med-ring-bg" cx="94" cy="94" r="82"/>
+          <circle class="med-ring-fg" id="medRingFg" cx="94" cy="94" r="82"
+            stroke-dasharray="515.22" stroke-dashoffset="0"/>
+        </svg>
+        <div class="med-ring-inner">
+          <div class="med-time-disp" id="medTimeDisp">10:00</div>
+          <div class="med-time-sub">restante</div>
+        </div>
+      </div>
+      <div class="med-guide-box">
+        <div class="med-guide-text" id="medGuideText"></div>
+      </div>
+      <div class="med-controls">
+        <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
+        <button class="med-ctrl med-ctrl-stop" id="btnMedStop">&#9632; Terminar</button>
+      </div>
+    </div>
+
+    <!-- DONE -->
+    <div id="medDone" style="display:none;opacity:0">
+      <div class="med-done-icon">&#10024;</div>
+      <div class="med-done-phrase" id="medDonePhrase"></div>
+      <div class="med-done-stats" id="medDoneStats"></div>
+      <button class="med-start-btn" id="btnMedAgain">Meditar de nuevo</button>
+      <div class="med-hist-hdr">Sesiones recientes</div>
+      <div id="medHistList"></div>
+    </div>
+
   </div>
 
 </div>
@@ -1438,6 +1541,285 @@ function switchFmTab(idx){
   });
 }
 document.getElementById('btnFmBack').addEventListener('click', hideFreqMed);
+
+/* ── MEDITAR ── */
+var medCfg={mode:0,dur:10,snd:0};
+var medState={on:false,paused:false,elapsed:0,total:0,interval:null,guideIdx:0};
+var medActx=null, medMaster=null, medNodes=[];
+
+var MED_MODES=[
+  {name:'Silencio',       icon:'🧘'},
+  {name:'Body Scan',      icon:'🧘'},
+  {name:'Gratitud',       icon:'☀️'},
+  {name:'Visualización',  icon:'⛺'}
+];
+
+var MED_PHRASES=[
+  'Cada momento de quietud te acerca más a ti mismo.',
+  'La paz que encontraste aquí siempre estará contigo.',
+  'Has dedicado tiempo a lo más importante: tú.',
+  'La mente descansada ve con claridad lo que el ruido oculta.',
+  'Has plantado una semilla de calma que seguirá creciendo.',
+  'El silencio interior es el mayor regalo que puedes darte.'
+];
+
+// Guidance: f = fraction of session duration when text appears
+var MED_GUIDES=[
+  [ // Silencio
+    {f:0.04,t:'Cierra los ojos. Siente tu respiración.'},
+    {f:0.22,t:'Deja pasar los pensamientos sin seguirlos.'},
+    {f:0.45,t:'Vuelve siempre al ritmo suave de tu aliento.'},
+    {f:0.66,t:'Estás en paz. Solo existe este momento.'},
+    {f:0.86,t:'Permite que todo sea exactamente como es.'}
+  ],
+  [ // Body Scan
+    {f:0.05,t:'Lleva tu atención a los pies y los dedos…'},
+    {f:0.18,t:'Sube lentamente por tobillos y pantorrillas…'},
+    {f:0.32,t:'Rodillas y muslos. Siente el peso del cuerpo…'},
+    {f:0.46,t:'Abdomen y espalda baja. Respira aquí…'},
+    {f:0.60,t:'Pecho y corazón. Nota cada latido…'},
+    {f:0.73,t:'Hombros, brazos, manos. Suelta toda tensión…'},
+    {f:0.86,t:'Cuello, mandíbula, frente. Todo se relaja.'}
+  ],
+  [ // Gratitud
+    {f:0.05,t:'Piensa en tres cosas que agradeces hoy.'},
+    {f:0.22,t:'Alguien que te ha dado amor o apoyo.'},
+    {f:0.38,t:'Una fortaleza o habilidad que valoras en ti.'},
+    {f:0.54,t:'Un momento de belleza que viviste.'},
+    {f:0.70,t:'Siente la gratitud expandirse en tu pecho.'},
+    {f:0.86,t:'Mereces todo el amor que das a los demás.'}
+  ],
+  [ // Visualización
+    {f:0.05,t:'Imagina un lugar que te traiga calma y paz…'},
+    {f:0.20,t:'Siente la textura del suelo bajo tus pies…'},
+    {f:0.36,t:'Escucha los sonidos de ese lugar…'},
+    {f:0.52,t:'Siente el aire en tu piel, la temperatura…'},
+    {f:0.68,t:'Eres libre aquí. Nada puede hacerte daño.'},
+    {f:0.85,t:'Lleva esta paz contigo al abrir los ojos.'}
+  ]
+];
+
+function medNoiseBuffer(ctx){
+  var len=ctx.sampleRate*3, buf=ctx.createBuffer(1,len,ctx.sampleRate), d=buf.getChannelData(0);
+  for(var i=0;i<len;i++) d[i]=Math.random()*2-1;
+  return buf;
+}
+
+function medStopAudio(){
+  medNodes.forEach(function(n){try{if(n.stop)n.stop();else n.disconnect();}catch(e){}});
+  medNodes=[];
+  if(medMaster) try{medMaster.disconnect();}catch(e){}
+  if(medActx){try{medActx.close();}catch(e){} medActx=null; medMaster=null;}
+}
+
+function medBell(freq,dur){
+  try{
+    var ctx=new(window.AudioContext||window.webkitAudioContext)();
+    var osc=ctx.createOscillator(), g=ctx.createGain();
+    osc.type='sine'; osc.frequency.value=freq;
+    g.gain.setValueAtTime(0.0001,ctx.currentTime);
+    g.gain.linearRampToValueAtTime(0.38,ctx.currentTime+0.05);
+    g.gain.exponentialRampToValueAtTime(0.0001,ctx.currentTime+dur);
+    osc.connect(g); g.connect(ctx.destination);
+    osc.start(); osc.stop(ctx.currentTime+dur+0.1);
+    setTimeout(function(){try{ctx.close();}catch(e){}}, (dur+0.5)*1000);
+  }catch(e){}
+}
+
+function medStartAudio(sndIdx){
+  if(sndIdx<0) return;
+  try{
+    medActx=new(window.AudioContext||window.webkitAudioContext)();
+    var ctx=medActx;
+    medMaster=ctx.createGain(); medMaster.gain.value=0;
+    medMaster.connect(ctx.destination);
+    medMaster.gain.linearRampToValueAtTime(1, ctx.currentTime+2.8);
+    var g=medMaster, nBuf=medNoiseBuffer(ctx);
+    var src,filt,lfo,lg,ag,f2;
+    if(sndIdx===0){ // Lluvia
+      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
+      filt=ctx.createBiquadFilter(); filt.type='lowpass'; filt.frequency.value=1100; filt.Q.value=0.8;
+      ag=ctx.createGain(); ag.gain.value=0.48;
+      src.connect(filt); filt.connect(ag); ag.connect(g); src.start();
+      medNodes=[src,filt,ag];
+    } else if(sndIdx===1){ // Olas
+      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
+      filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.frequency.value=360; filt.Q.value=0.4;
+      lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.07;
+      lg=ctx.createGain(); lg.gain.value=0.30;
+      ag=ctx.createGain(); ag.gain.value=0.30;
+      lfo.connect(lg); lg.connect(ag.gain);
+      src.connect(filt); filt.connect(ag); ag.connect(g);
+      src.start(); lfo.start(); medNodes=[src,filt,lfo,lg,ag];
+    } else if(sndIdx===2){ // Fuego
+      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
+      filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.frequency.value=720; filt.Q.value=1.5;
+      f2=ctx.createBiquadFilter(); f2.type='lowpass'; f2.frequency.value=480;
+      lfo=ctx.createOscillator(); lfo.type='sine'; lfo.frequency.value=0.28;
+      lg=ctx.createGain(); lg.gain.value=0.18;
+      ag=ctx.createGain(); ag.gain.value=0.32;
+      lfo.connect(lg); lg.connect(ag.gain);
+      src.connect(filt); filt.connect(f2); f2.connect(ag); ag.connect(g);
+      src.start(); lfo.start(); medNodes=[src,filt,f2,lfo,lg,ag];
+    } else if(sndIdx===3){ // Viento
+      src=ctx.createBufferSource(); src.buffer=nBuf; src.loop=true;
+      filt=ctx.createBiquadFilter(); filt.type='bandpass'; filt.frequency.value=650; filt.Q.value=0.25;
+      lfo=ctx.createOscillator(); lfo.frequency.value=0.04; lfo.type='sine';
+      lg=ctx.createGain(); lg.gain.value=280;
+      ag=ctx.createGain(); ag.gain.value=0.22;
+      lfo.connect(lg); lg.connect(filt.frequency);
+      src.connect(filt); filt.connect(ag); ag.connect(g);
+      src.start(); lfo.start(); medNodes=[src,filt,lfo,lg,ag];
+    } else if(sndIdx===4){ // Cuencos tibetanos
+      var freqs=[432,528,396,639]; medNodes=[];
+      var totSec=medState.total||600;
+      freqs.forEach(function(f,fi){
+        var osc=ctx.createOscillator(); osc.type='sine'; osc.frequency.value=f;
+        var og=ctx.createGain(); og.gain.value=0;
+        osc.connect(og); og.connect(g); osc.start();
+        var interval=16+fi*4, t=ctx.currentTime+fi*1.4;
+        while(t<ctx.currentTime+totSec+4){
+          og.gain.setValueAtTime(0.0001,t);
+          og.gain.linearRampToValueAtTime(0.09,t+0.14);
+          og.gain.exponentialRampToValueAtTime(0.0001,t+7);
+          t+=interval;
+        }
+        medNodes.push(osc,og);
+      });
+    }
+  }catch(e){console.warn('MedAudio:',e);}
+}
+
+function medFmt(s){var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
+
+function medUpdateRing(elapsed,total){
+  var frac=total>0?Math.max(0,1-elapsed/total):0;
+  var el=document.getElementById('medRingFg');
+  if(el) el.style.strokeDashoffset=(515.22*(1-frac));
+}
+
+function medShowGuide(text){
+  var el=document.getElementById('medGuideText');
+  if(!el) return;
+  el.classList.remove('show');
+  setTimeout(function(){el.textContent=text; el.classList.add('show');},420);
+}
+
+function medTick(){
+  if(medState.paused) return;
+  medState.elapsed++;
+  var rem=Math.max(0, medState.total-medState.elapsed);
+  var td=document.getElementById('medTimeDisp');
+  if(td) td.textContent=medFmt(rem);
+  medUpdateRing(medState.elapsed,medState.total);
+  var guides=MED_GUIDES[medCfg.mode];
+  if(medState.guideIdx<guides.length){
+    var trig=Math.floor(guides[medState.guideIdx].f*medState.total);
+    if(medState.elapsed>=trig){medShowGuide(guides[medState.guideIdx].t); medState.guideIdx++;}
+  }
+  if(medState.elapsed>=medState.total) medComplete();
+}
+
+function medComplete(){
+  clearInterval(medState.interval); medState.on=false;
+  if(medMaster&&medActx){
+    medMaster.gain.setTargetAtTime(0,medActx.currentTime,1.5);
+    setTimeout(medStopAudio,4500);
+  }
+  setTimeout(function(){medBell(396,5);},900);
+  addRecord({id:Date.now(),date:todayStr(),med_mode:MED_MODES[medCfg.mode].name,med_dur:medCfg.dur,med_snd:medCfg.snd});
+  var act=document.getElementById('medActive');
+  act.style.opacity='0';
+  setTimeout(function(){
+    act.style.display='none';
+    var done=document.getElementById('medDone');
+    done.style.display='';
+    requestAnimationFrame(function(){done.style.opacity='1';});
+    document.getElementById('medDonePhrase').textContent=MED_PHRASES[Math.floor(Math.random()*MED_PHRASES.length)];
+    document.getElementById('medDoneStats').textContent=MED_MODES[medCfg.mode].name+' — '+medCfg.dur+' minutos';
+    renderMedHist();
+  },380);
+}
+
+function medStart(){
+  medBell(528,4);
+  medState.elapsed=0; medState.total=medCfg.dur*60;
+  medState.paused=false; medState.on=true; medState.guideIdx=0;
+  setTimeout(function(){medStartAudio(medCfg.snd);},1300);
+  document.getElementById('medSetup').style.display='none';
+  document.getElementById('medDone').style.display='none';
+  var act=document.getElementById('medActive');
+  act.style.display=''; act.style.opacity='0';
+  requestAnimationFrame(function(){act.style.opacity='1';});
+  document.getElementById('medModeLabel').textContent=MED_MODES[medCfg.mode].name.toUpperCase();
+  document.getElementById('medTimeDisp').textContent=medFmt(medState.total);
+  medUpdateRing(0,medState.total);
+  var gt=document.getElementById('medGuideText');
+  if(gt){gt.textContent=''; gt.classList.remove('show');}
+  var pb=document.getElementById('btnMedPause');
+  if(pb) pb.innerHTML='&#9646;&#9646; Pausa';
+  clearInterval(medState.interval);
+  medState.interval=setInterval(medTick,1000);
+}
+
+function medPause(){
+  medState.paused=!medState.paused;
+  var btn=document.getElementById('btnMedPause');
+  if(btn) btn.innerHTML=medState.paused?'&#9654; Reanudar':'&#9646;&#9646; Pausa';
+  if(medMaster&&medActx){
+    var g=medMaster.gain;
+    g.cancelScheduledValues(medActx.currentTime);
+    g.setTargetAtTime(medState.paused?0:1,medActx.currentTime,0.6);
+  }
+}
+
+function medStop(){
+  clearInterval(medState.interval); medState.on=false;
+  medStopAudio();
+  document.getElementById('medActive').style.display='none';
+  document.getElementById('medDone').style.display='none';
+  document.getElementById('medSetup').style.display='';
+}
+
+function renderMedHist(){
+  var recs=getRecords().filter(function(r){return r.med_mode;});
+  recs.sort(function(a,b){return b.id-a.id;}); recs=recs.slice(0,5);
+  var el=document.getElementById('medHistList'); if(!el) return;
+  if(!recs.length){
+    el.innerHTML='<div style="color:rgba(255,255,255,0.22);font-family:\'Josefin Sans\',sans-serif;font-size:0.6rem;letter-spacing:2px;padding:8px 4px">Sin sesiones aún</div>';
+    return;
+  }
+  el.innerHTML=recs.map(function(r){
+    return '<div class="med-hist-item"><div class="med-hist-icon">&#129496;</div><div class="med-hist-info"><div class="med-hist-mode">'+r.med_mode+'</div><div class="med-hist-date">'+r.date+'</div></div><div class="med-hist-dur">'+r.med_dur+' min</div></div>';
+  }).join('');
+}
+
+// Wire selectors
+document.querySelectorAll('.med-mode').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.med-mode').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on'); medCfg.mode=parseInt(this.dataset.m);
+  });
+});
+document.querySelectorAll('.med-dur-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.med-dur-btn').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on'); medCfg.dur=parseInt(this.dataset.d);
+  });
+});
+document.querySelectorAll('.med-snd').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.med-snd').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on'); medCfg.snd=parseInt(this.dataset.s);
+  });
+});
+document.getElementById('btnMedStart').addEventListener('click',medStart);
+document.getElementById('btnMedPause').addEventListener('click',medPause);
+document.getElementById('btnMedStop').addEventListener('click',medStop);
+document.getElementById('btnMedAgain').addEventListener('click',function(){
+  document.getElementById('medDone').style.display='none';
+  document.getElementById('medSetup').style.display='';
+});
 </script>
 </body>
 </html>
