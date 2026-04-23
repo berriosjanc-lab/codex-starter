@@ -417,9 +417,11 @@
     .med-guide-box{min-height:52px;margin:0 2px 16px;padding:12px 14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.07)}
     .med-guide-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;font-weight:300;color:rgba(255,255,255,0.8);text-align:center;line-height:1.5;opacity:0;transition:opacity 0.9s ease}
     .med-guide-text.show{opacity:1}
-    .med-controls{display:flex;gap:10px}
+    .med-elapsed{text-align:center;font-family:'Josefin Sans',sans-serif;font-size:0.68rem;letter-spacing:2px;color:rgba(255,255,255,0.38);margin:-4px 0 14px}
+    .med-controls{display:flex;gap:10px;margin-bottom:10px}
     .med-ctrl{flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:2px;cursor:pointer;transition:all 0.2s}
-    .med-ctrl-stop{background:rgba(255,80,80,0.07);border-color:rgba(255,80,80,0.2);color:rgba(255,130,130,0.7)}
+    .med-stop-btn{display:block;width:100%;padding:14px;border-radius:14px;background:rgba(255,60,60,0.1);border:1px solid rgba(255,80,80,0.28);color:rgba(255,150,150,0.85);font-family:'Josefin Sans',sans-serif;font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+    .med-stop-btn:active{background:rgba(255,60,60,0.24);transform:scale(0.98)}
     .med-done-icon{font-size:2.6rem;text-align:center;margin:20px 0 10px}
     .med-done-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;font-weight:300;color:rgba(255,255,255,0.85);text-align:center;padding:0 10px;line-height:1.5;margin-bottom:8px}
     .med-done-stats{font-family:'Josefin Sans',sans-serif;font-size:0.6rem;letter-spacing:2px;color:rgba(255,255,255,0.32);text-align:center;margin-bottom:4px}
@@ -930,8 +932,9 @@
             stroke-dasharray="515.22" stroke-dashoffset="0"/>
         </svg>
         <div class="med-ring-inner">
-          <div class="med-time-disp" id="medTimeDisp">10:00</div>
-          <div class="med-time-sub">restante</div>
+          <div class="med-time-disp" id="medElapsedDisp">0:00</div>
+          <div class="med-time-sub">&#9203; transcurrido</div>
+          <div style="font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-top:6px" id="medTimeDisp">10:00 rest.</div>
         </div>
       </div>
       <div class="med-guide-box">
@@ -939,8 +942,8 @@
       </div>
       <div class="med-controls">
         <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
-        <button class="med-ctrl med-ctrl-stop" id="btnMedStop">&#9632; Terminar</button>
       </div>
+      <button class="med-stop-btn" id="btnMedStop">&#9632; Detener meditaci&oacute;n</button>
     </div>
 
     <!-- DONE -->
@@ -1545,7 +1548,7 @@ document.getElementById('btnFmBack').addEventListener('click', hideFreqMed);
 var medCfg={mode:0,dur:10,snd:0};
 var medState={on:false,paused:false,elapsed:0,total:0,interval:null,guideIdx:0};
 var medAudioEl=null;
-var MED_SND=['lluvia.mp3.mp3','olas.mp3.mp3','fuego.mp3.mp3','viento.mp3.mp3','cuencos.mp3.mp3'];
+var MED_SND=['lluvia.mp3','olas.mp3','fuego.mp3','viento.mp3','cuencos.mp3'];
 
 var MED_MODES=[
   {name:'Silencio',       icon:'🧘'},
@@ -1620,7 +1623,7 @@ function medStartAudio(sndIdx){
 function medFmt(s){var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
 
 function medUpdateRing(elapsed,total){
-  var frac=total>0?Math.max(0,1-elapsed/total):0;
+  var frac=total>0?Math.min(1,elapsed/total):0;
   var el=document.getElementById('medRingFg');
   if(el) el.style.strokeDashoffset=(515.22*(1-frac));
 }
@@ -1651,8 +1654,10 @@ function medTick(){
   if(medState.paused) return;
   medState.elapsed++;
   var rem=Math.max(0, medState.total-medState.elapsed);
+  var ed=document.getElementById('medElapsedDisp');
+  if(ed) ed.textContent=medFmt(medState.elapsed);
   var td=document.getElementById('medTimeDisp');
-  if(td) td.textContent=medFmt(rem);
+  if(td) td.textContent=medFmt(rem)+' rest.';
   medUpdateRing(medState.elapsed,medState.total);
   var guides=MED_GUIDES[medCfg.mode];
   if(medState.guideIdx<guides.length){
@@ -1705,7 +1710,10 @@ function medStart(){
   act.style.display=''; act.style.opacity='0';
   requestAnimationFrame(function(){act.style.opacity='1';});
   document.getElementById('medModeLabel').textContent=MED_MODES[medCfg.mode].name.toUpperCase();
-  document.getElementById('medTimeDisp').textContent=medFmt(medState.total);
+  var ed2=document.getElementById('medElapsedDisp');
+  if(ed2) ed2.textContent='0:00';
+  var td2=document.getElementById('medTimeDisp');
+  if(td2) td2.textContent=medFmt(medState.total)+' rest.';
   medUpdateRing(0,medState.total);
   var gt=document.getElementById('medGuideText');
   if(gt){gt.textContent=''; gt.classList.remove('show');}
