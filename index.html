@@ -420,7 +420,7 @@
     .med-elapsed{text-align:center;font-family:'Josefin Sans',sans-serif;font-size:0.68rem;letter-spacing:2px;color:rgba(255,255,255,0.38);margin:-4px 0 14px}
     .med-controls{display:flex;gap:10px;margin-bottom:10px}
     .med-ctrl{flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:2px;cursor:pointer;transition:all 0.2s}
-    .med-stop-btn{display:block;width:100%;padding:14px;border-radius:14px;background:rgba(255,60,60,0.1);border:1px solid rgba(255,80,80,0.28);color:rgba(255,150,150,0.85);font-family:'Josefin Sans',sans-serif;font-size:0.72rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+    .med-stop-btn{padding:11px 14px;border-radius:12px;background:rgba(255,60,60,0.1);border:1px solid rgba(255,80,80,0.28);color:rgba(255,150,150,0.85);font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
     .med-stop-btn:active{background:rgba(255,60,60,0.24);transform:scale(0.98)}
     .med-done-icon{font-size:2.6rem;text-align:center;margin:20px 0 10px}
     .med-done-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;font-weight:300;color:rgba(255,255,255,0.85);text-align:center;padding:0 10px;line-height:1.5;margin-bottom:8px}
@@ -929,7 +929,7 @@
         <svg class="med-ring-svg" viewBox="0 0 188 188">
           <circle class="med-ring-bg" cx="94" cy="94" r="82"/>
           <circle class="med-ring-fg" id="medRingFg" cx="94" cy="94" r="82"
-            stroke-dasharray="515.22" stroke-dashoffset="0"/>
+            stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
         </svg>
         <div class="med-ring-inner">
           <div class="med-time-disp" id="medElapsedDisp">0:00</div>
@@ -937,13 +937,13 @@
           <div style="font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-top:6px" id="medTimeDisp">10:00 rest.</div>
         </div>
       </div>
+      <div class="med-controls" style="margin-bottom:10px">
+        <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
+        <button class="med-stop-btn" id="btnMedStop" style="flex:1;margin:0">&#9632; Detener</button>
+      </div>
       <div class="med-guide-box">
         <div class="med-guide-text" id="medGuideText"></div>
       </div>
-      <div class="med-controls">
-        <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
-      </div>
-      <button class="med-stop-btn" id="btnMedStop">&#9632; Detener meditaci&oacute;n</button>
     </div>
 
     <!-- DONE -->
