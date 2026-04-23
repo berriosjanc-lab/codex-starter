@@ -1722,8 +1722,8 @@ function medComplete(){
 function medStart(){
   // Play ambient sound via HTMLAudioElement (most reliable on iOS)
   medStartAudio(medCfg.snd);
-  medStartGuideAudio(medCfg.mode);
   medBell(528,4);
+  setTimeout(function(){ medStartGuideAudio(medCfg.mode); }, 3000);
   medState.elapsed=0; medState.total=medCfg.dur*60;
   medState.paused=false; medState.on=true; medState.guideIdx=0;
   document.getElementById('medSetup').style.display='none';
