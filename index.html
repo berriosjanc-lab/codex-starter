@@ -417,11 +417,9 @@
     .med-guide-box{min-height:52px;margin:0 2px 16px;padding:12px 14px;background:rgba(255,255,255,0.04);border-radius:12px;border:1px solid rgba(255,255,255,0.07)}
     .med-guide-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;font-weight:300;color:rgba(255,255,255,0.8);text-align:center;line-height:1.5;opacity:0;transition:opacity 0.9s ease}
     .med-guide-text.show{opacity:1}
-    .med-elapsed{text-align:center;font-family:'Josefin Sans',sans-serif;font-size:0.68rem;letter-spacing:2px;color:rgba(255,255,255,0.38);margin:-4px 0 14px}
-    .med-controls{display:flex;gap:10px;margin-bottom:10px}
+    .med-controls{display:flex;gap:10px}
     .med-ctrl{flex:1;padding:11px;border-radius:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.55);font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:2px;cursor:pointer;transition:all 0.2s}
-    .med-stop-btn{padding:11px 14px;border-radius:12px;background:rgba(255,60,60,0.1);border:1px solid rgba(255,80,80,0.28);color:rgba(255,150,150,0.85);font-family:'Josefin Sans',sans-serif;font-size:0.62rem;letter-spacing:2px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
-    .med-stop-btn:active{background:rgba(255,60,60,0.24);transform:scale(0.98)}
+    .med-ctrl-stop{background:rgba(255,80,80,0.07);border-color:rgba(255,80,80,0.2);color:rgba(255,130,130,0.7)}
     .med-done-icon{font-size:2.6rem;text-align:center;margin:20px 0 10px}
     .med-done-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;font-weight:300;color:rgba(255,255,255,0.85);text-align:center;padding:0 10px;line-height:1.5;margin-bottom:8px}
     .med-done-stats{font-family:'Josefin Sans',sans-serif;font-size:0.6rem;letter-spacing:2px;color:rgba(255,255,255,0.32);text-align:center;margin-bottom:4px}
@@ -934,15 +932,15 @@
         <div class="med-ring-inner">
           <div class="med-time-disp" id="medElapsedDisp">0:00</div>
           <div class="med-time-sub">&#9203; transcurrido</div>
-          <div style="font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-top:6px" id="medTimeDisp">10:00 rest.</div>
+          <div style="font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-top:6px" id="medTimeDisp">-- rest.</div>
         </div>
-      </div>
-      <div class="med-controls" style="margin-bottom:10px">
-        <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
-        <button class="med-stop-btn" id="btnMedStop" style="flex:1;margin:0">&#9632; Detener</button>
       </div>
       <div class="med-guide-box">
         <div class="med-guide-text" id="medGuideText"></div>
+      </div>
+      <div class="med-controls">
+        <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
+        <button class="med-ctrl med-ctrl-stop" id="btnMedStop">&#9632; Detener</button>
       </div>
     </div>
 
