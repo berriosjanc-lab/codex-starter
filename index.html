@@ -1545,7 +1545,7 @@ document.getElementById('btnFmBack').addEventListener('click', hideFreqMed);
 var medCfg={mode:0,dur:10,snd:0};
 var medState={on:false,paused:false,elapsed:0,total:0,interval:null,guideIdx:0};
 var medAudioEl=null;
-var MED_SND=['lluvia.wav','olas.wav','fuego.wav','viento.wav','cuencos.wav'];
+var MED_SND=['lluvia.mp3.mp3','olas.mp3.mp3','fuego.mp3.mp3','viento.mp3.mp3','cuencos.mp3.mp3'];
 
 var MED_MODES=[
   {name:'Silencio',       icon:'🧘'},
@@ -1606,7 +1606,7 @@ function medStopAudio(){
 function medStartAudio(sndIdx){
   medStopAudio();
   if(sndIdx<0) return;
-  var a=new Audio('audio/'+MED_SND[sndIdx]);
+  var a=new Audio(MED_SND[sndIdx]);
   a.loop=true; a.volume=0;
   medAudioEl=a;
   a.play().catch(function(e){console.warn('audio:',e);});
