@@ -1627,6 +1627,13 @@ function medStartGuideAudio(modeIdx){
   medStopGuideAudio();
   var a=new Audio(MED_GUIDE_AUDIO[modeIdx]);
   a.volume=1; medGuideAudioEl=a;
+  a.addEventListener('ended',function(){
+    // Voice finished — fade ambient down to near-silence
+    var fd=setInterval(function(){
+      if(!medAudioEl||medAudioEl.volume<=0.06){clearInterval(fd); return;}
+      medAudioEl.volume=Math.max(0.06,medAudioEl.volume-0.005);
+    },200);
+  });
   a.play().catch(function(e){console.warn('guide audio:',e);});
 }
 function medStopAudio(){
@@ -1642,7 +1649,7 @@ function medStartAudio(sndIdx){
   a.play().catch(function(e){console.warn('audio:',e);});
   var fi=setInterval(function(){
     if(!medAudioEl||medAudioEl!==a){clearInterval(fi);return;}
-    if(a.volume<0.28) a.volume=Math.min(0.28,a.volume+0.03);
+    if(a.volume<0.15) a.volume=Math.min(0.15,a.volume+0.02);
     else clearInterval(fi);
   },120);
 }
@@ -1764,8 +1771,8 @@ function medPause(){
     } else {
       medAudioEl.volume=0; medAudioEl.play().catch(function(){});
       var fi2=setInterval(function(){
-        if(!medAudioEl||medAudioEl.volume>=0.28){clearInterval(fi2); return;}
-        medAudioEl.volume=Math.min(0.28,medAudioEl.volume+0.04);
+        if(!medAudioEl||medAudioEl.volume>=0.15){clearInterval(fi2); return;}
+        medAudioEl.volume=Math.min(0.15,medAudioEl.volume+0.03);
       },80);
     }
   }
