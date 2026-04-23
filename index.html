@@ -923,7 +923,7 @@
     <div class="med-mode-lbl-active" id="medModeLabel" style="display:none;margin-top:10px"></div>
 
     <!-- RELOJ — siempre visible -->
-    <div class="med-ring-wrap" style="margin-top:18px">
+    <div class="med-ring-wrap" id="medRingWrap" style="display:none;margin-top:18px">
       <svg class="med-ring-svg" viewBox="0 0 188 188">
         <circle class="med-ring-bg" cx="94" cy="94" r="82"/>
         <circle class="med-ring-fg" id="medRingFg" cx="94" cy="94" r="82"
@@ -1724,6 +1724,7 @@ function medStart(){
   document.getElementById('medDone').style.display='none';
   document.getElementById('medModeLabel').textContent=MED_MODES[medCfg.mode].name.toUpperCase();
   document.getElementById('medModeLabel').style.display='';
+  document.getElementById('medRingWrap').style.display='';
   document.getElementById('medGuideBox').style.display='';
   document.getElementById('medCtrl').style.display='';
   var ed2=document.getElementById('medElapsedDisp');
@@ -1765,14 +1766,10 @@ function medStop(){
   document.getElementById('medCtrl').style.display='none';
   document.getElementById('medGuideBox').style.display='none';
   document.getElementById('medModeLabel').style.display='none';
+  document.getElementById('medRingWrap').style.display='none';
   document.getElementById('medDone').style.display='none';
   document.getElementById('medSetup').style.display='';
   document.getElementById('btnMedStart').style.display='';
-  var ed=document.getElementById('medElapsedDisp');
-  if(ed) ed.textContent='0:00';
-  var td=document.getElementById('medTimeDisp');
-  if(td) td.textContent='';
-  medUpdateRing(0,1);
 }
 
 function renderMedHist(){
@@ -1813,13 +1810,9 @@ document.getElementById('btnMedStop').addEventListener('click',medStop);
 document.getElementById('btnMedAgain').addEventListener('click',function(){
   document.getElementById('medDone').style.display='none';
   document.getElementById('medModeLabel').style.display='none';
+  document.getElementById('medRingWrap').style.display='none';
   document.getElementById('medSetup').style.display='';
   document.getElementById('btnMedStart').style.display='';
-  var ed=document.getElementById('medElapsedDisp');
-  if(ed) ed.textContent='0:00';
-  var td=document.getElementById('medTimeDisp');
-  if(td) td.textContent='';
-  medUpdateRing(0,1);
 });
 </script>
 </body>
