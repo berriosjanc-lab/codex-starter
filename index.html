@@ -1552,7 +1552,9 @@ document.getElementById('btnFmBack').addEventListener('click', hideFreqMed);
 var medCfg={mode:0,dur:10,snd:0};
 var medState={on:false,paused:false,elapsed:0,total:0,interval:null,guideIdx:0};
 var medAudioEl=null;
+var medGuideAudioEl=null;
 var MED_SND=['lluvia.mp3','olas.mp3','fuego.mp3','viento.mp3','cuencos.mp3'];
+var MED_GUIDE_AUDIO=['silencio.mp3','bodyscan.mp3','gratitud.mp3','visualizacion.mp3'];
 
 var MED_MODES=[
   {name:'Silencio',       icon:'🧘'},
@@ -1618,6 +1620,15 @@ function medBell(freq,dur){
   }catch(e){}
 }
 
+function medStopGuideAudio(){
+  if(medGuideAudioEl){try{medGuideAudioEl.pause(); medGuideAudioEl.src='';}catch(e){} medGuideAudioEl=null;}
+}
+function medStartGuideAudio(modeIdx){
+  medStopGuideAudio();
+  var a=new Audio(MED_GUIDE_AUDIO[modeIdx]);
+  a.volume=1; medGuideAudioEl=a;
+  a.play().catch(function(e){console.warn('guide audio:',e);});
+}
 function medStopAudio(){
   if(medAudioEl){try{medAudioEl.pause(); medAudioEl.src='';}catch(e){} medAudioEl=null;}
 }
@@ -1663,7 +1674,7 @@ function medShowGuide(text){
   var el=document.getElementById('medGuideText');
   if(!el) return;
   el.classList.remove('show');
-  setTimeout(function(){el.textContent=text; el.classList.add('show'); medSpeak(text);},420);
+  setTimeout(function(){el.textContent=text; el.classList.add('show');},420);
 }
 
 function medTick(){
@@ -1697,6 +1708,7 @@ function medComplete(){
   addRecord({id:Date.now(),date:todayStr(),med_mode:MED_MODES[medCfg.mode].name,med_dur:medCfg.dur,med_snd:medCfg.snd});
   document.getElementById('medCtrl').style.display='none';
   document.getElementById('medGuideBox').style.display='none';
+  medStopGuideAudio();
   setTimeout(function(){
     var done=document.getElementById('medDone');
     done.style.display='';
@@ -1710,13 +1722,8 @@ function medComplete(){
 function medStart(){
   // Play ambient sound via HTMLAudioElement (most reliable on iOS)
   medStartAudio(medCfg.snd);
-  // Opening bell uses its own AudioContext (user gesture)
+  medStartGuideAudio(medCfg.mode);
   medBell(528,4);
-  // Unlock speech synthesis on iOS
-  if(window.speechSynthesis){
-    var su=new SpeechSynthesisUtterance(''); su.volume=0;
-    speechSynthesis.speak(su); speechSynthesis.getVoices();
-  }
   medState.elapsed=0; medState.total=medCfg.dur*60;
   medState.paused=false; medState.on=true; medState.guideIdx=0;
   document.getElementById('medSetup').style.display='none';
@@ -1744,6 +1751,10 @@ function medPause(){
   medState.paused=!medState.paused;
   var btn=document.getElementById('btnMedPause');
   if(btn) btn.innerHTML=medState.paused?'&#9654; Reanudar':'&#9646;&#9646; Pausa';
+  if(medGuideAudioEl){
+    if(medState.paused) medGuideAudioEl.pause();
+    else medGuideAudioEl.play().catch(function(){});
+  }
   if(medAudioEl){
     if(medState.paused){
       var fo2=setInterval(function(){
@@ -1762,7 +1773,7 @@ function medPause(){
 
 function medStop(){
   clearInterval(medState.interval); medState.on=false;
-  medStopAudio();
+  medStopAudio(); medStopGuideAudio();
   document.getElementById('medCtrl').style.display='none';
   document.getElementById('medGuideBox').style.display='none';
   document.getElementById('medModeLabel').style.display='none';
