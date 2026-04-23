@@ -405,7 +405,7 @@
     .med-snd.on{background:rgba(77,217,232,0.12);border-color:rgba(77,217,232,0.4);color:rgba(77,217,232,0.9)}
     .med-start-btn{display:block;width:100%;margin-top:24px;padding:15px;border-radius:14px;background:rgba(77,217,232,0.14);border:1px solid rgba(77,217,232,0.32);color:rgba(255,255,255,0.88);font-family:'Josefin Sans',sans-serif;font-size:0.78rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
     .med-start-btn:active{background:rgba(77,217,232,0.26);transform:scale(0.98)}
-    #medActive,#medDone{transition:opacity 0.35s ease}
+    #medDone{transition:opacity 0.35s ease}
     .med-mode-lbl-active{font-family:'Josefin Sans',sans-serif;font-size:0.58rem;letter-spacing:4px;text-transform:uppercase;color:rgba(255,255,255,0.32);text-align:center;margin-bottom:14px}
     .med-ring-wrap{position:relative;width:188px;height:188px;margin:0 auto 16px}
     .med-ring-svg{width:188px;height:188px;transform:rotate(-90deg)}
@@ -891,7 +891,7 @@
   <!-- TAB 1: MEDITAR -->
   <div class="fm-panel" id="fmPanel1">
 
-    <!-- SETUP -->
+    <!-- CONFIG (se oculta al iniciar) -->
     <div id="medSetup">
       <div class="med-section-lbl">Modo</div>
       <div class="med-modes">
@@ -917,35 +917,41 @@
         <button class="med-snd" data-s="4">&#128276; Cuencos</button>
         <button class="med-snd" data-s="-1">&#128263; Sin sonido</button>
       </div>
-      <button class="med-start-btn" id="btnMedStart">&#9654; Comenzar</button>
     </div>
 
-    <!-- ACTIVE TIMER -->
-    <div id="medActive" style="display:none;opacity:0">
-      <div class="med-mode-lbl-active" id="medModeLabel"></div>
-      <div class="med-ring-wrap">
-        <svg class="med-ring-svg" viewBox="0 0 188 188">
-          <circle class="med-ring-bg" cx="94" cy="94" r="82"/>
-          <circle class="med-ring-fg" id="medRingFg" cx="94" cy="94" r="82"
-            stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
-        </svg>
-        <div class="med-ring-inner">
-          <div class="med-time-disp" id="medElapsedDisp">0:00</div>
-          <div class="med-time-sub">&#9203; transcurrido</div>
-          <div style="font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-top:6px" id="medTimeDisp">-- rest.</div>
-        </div>
+    <!-- MODO ACTIVO: etiqueta -->
+    <div class="med-mode-lbl-active" id="medModeLabel" style="display:none;margin-top:10px"></div>
+
+    <!-- RELOJ — siempre visible -->
+    <div class="med-ring-wrap" style="margin-top:18px">
+      <svg class="med-ring-svg" viewBox="0 0 188 188">
+        <circle class="med-ring-bg" cx="94" cy="94" r="82"/>
+        <circle class="med-ring-fg" id="medRingFg" cx="94" cy="94" r="82"
+          stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
+      </svg>
+      <div class="med-ring-inner">
+        <div class="med-time-disp" id="medElapsedDisp">0:00</div>
+        <div class="med-time-sub">&#9203; transcurrido</div>
+        <div style="font-family:'Josefin Sans',sans-serif;font-size:0.52rem;letter-spacing:2px;color:rgba(255,255,255,0.22);margin-top:6px" id="medTimeDisp"></div>
       </div>
-      <div class="med-guide-box">
-        <div class="med-guide-text" id="medGuideText"></div>
-      </div>
-      <div class="med-controls">
-        <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
-        <button class="med-ctrl med-ctrl-stop" id="btnMedStop">&#9632; Detener</button>
-      </div>
+    </div>
+
+    <!-- TEXTO GUÍA (oculto hasta iniciar) -->
+    <div class="med-guide-box" id="medGuideBox" style="display:none;margin-top:14px">
+      <div class="med-guide-text" id="medGuideText"></div>
+    </div>
+
+    <!-- COMENZAR (se oculta al iniciar) -->
+    <button class="med-start-btn" id="btnMedStart" style="margin-top:18px">&#9654; Comenzar</button>
+
+    <!-- CONTROLES ACTIVOS: Pausa + Detener (ocultos hasta iniciar) -->
+    <div class="med-controls" id="medCtrl" style="display:none;margin-top:14px">
+      <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
+      <button class="med-ctrl med-ctrl-stop" id="btnMedStop">&#9632; Detener</button>
     </div>
 
     <!-- DONE -->
-    <div id="medDone" style="display:none;opacity:0">
+    <div id="medDone" style="display:none;opacity:0;margin-top:10px">
       <div class="med-done-icon">&#10024;</div>
       <div class="med-done-phrase" id="medDonePhrase"></div>
       <div class="med-done-stats" id="medDoneStats"></div>
@@ -1677,10 +1683,9 @@ function medComplete(){
   }
   setTimeout(function(){medBell(396,5);},900);
   addRecord({id:Date.now(),date:todayStr(),med_mode:MED_MODES[medCfg.mode].name,med_dur:medCfg.dur,med_snd:medCfg.snd});
-  var act=document.getElementById('medActive');
-  act.style.opacity='0';
+  document.getElementById('medCtrl').style.display='none';
+  document.getElementById('medGuideBox').style.display='none';
   setTimeout(function(){
-    act.style.display='none';
     var done=document.getElementById('medDone');
     done.style.display='';
     requestAnimationFrame(function(){done.style.opacity='1';});
@@ -1703,11 +1708,12 @@ function medStart(){
   medState.elapsed=0; medState.total=medCfg.dur*60;
   medState.paused=false; medState.on=true; medState.guideIdx=0;
   document.getElementById('medSetup').style.display='none';
+  document.getElementById('btnMedStart').style.display='none';
   document.getElementById('medDone').style.display='none';
-  var act=document.getElementById('medActive');
-  act.style.display=''; act.style.opacity='0';
-  requestAnimationFrame(function(){act.style.opacity='1';});
   document.getElementById('medModeLabel').textContent=MED_MODES[medCfg.mode].name.toUpperCase();
+  document.getElementById('medModeLabel').style.display='';
+  document.getElementById('medGuideBox').style.display='';
+  document.getElementById('medCtrl').style.display='';
   var ed2=document.getElementById('medElapsedDisp');
   if(ed2) ed2.textContent='0:00';
   var td2=document.getElementById('medTimeDisp');
@@ -1744,9 +1750,17 @@ function medPause(){
 function medStop(){
   clearInterval(medState.interval); medState.on=false;
   medStopAudio();
-  document.getElementById('medActive').style.display='none';
+  document.getElementById('medCtrl').style.display='none';
+  document.getElementById('medGuideBox').style.display='none';
+  document.getElementById('medModeLabel').style.display='none';
   document.getElementById('medDone').style.display='none';
   document.getElementById('medSetup').style.display='';
+  document.getElementById('btnMedStart').style.display='';
+  var ed=document.getElementById('medElapsedDisp');
+  if(ed) ed.textContent='0:00';
+  var td=document.getElementById('medTimeDisp');
+  if(td) td.textContent='';
+  medUpdateRing(0,1);
 }
 
 function renderMedHist(){
@@ -1786,7 +1800,14 @@ document.getElementById('btnMedPause').addEventListener('click',medPause);
 document.getElementById('btnMedStop').addEventListener('click',medStop);
 document.getElementById('btnMedAgain').addEventListener('click',function(){
   document.getElementById('medDone').style.display='none';
+  document.getElementById('medModeLabel').style.display='none';
   document.getElementById('medSetup').style.display='';
+  document.getElementById('btnMedStart').style.display='';
+  var ed=document.getElementById('medElapsedDisp');
+  if(ed) ed.textContent='0:00';
+  var td=document.getElementById('medTimeDisp');
+  if(td) td.textContent='';
+  medUpdateRing(0,1);
 });
 </script>
 </body>
