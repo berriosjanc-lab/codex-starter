@@ -1627,17 +1627,14 @@ function medStartGuideAudio(modeIdx){
   medStopGuideAudio();
   var a=new Audio(MED_GUIDE_AUDIO[modeIdx]);
   a.volume=1; medGuideAudioEl=a;
-  // Fade ambient down to 3% so voice is always clear
-  var fd=setInterval(function(){
-    if(!medAudioEl||medAudioEl.volume<=0.03){clearInterval(fd); return;}
-    medAudioEl.volume=Math.max(0.03,medAudioEl.volume-0.008);
-  },80);
+  // Mute ambient immediately while voice plays
+  if(medAudioEl) medAudioEl.volume=0;
   a.addEventListener('ended',function(){
-    // Voice finished — raise ambient back to comfortable level
+    // Voice done — fade ambient up to full presence
     var fu=setInterval(function(){
       if(!medAudioEl||medAudioEl.volume>=0.22){clearInterval(fu); return;}
       medAudioEl.volume=Math.min(0.22,medAudioEl.volume+0.004);
-    },200);
+    },150);
   });
   a.play().catch(function(e){console.warn('guide audio:',e);});
 }
@@ -1775,10 +1772,13 @@ function medPause(){
       },80);
     } else {
       medAudioEl.volume=0; medAudioEl.play().catch(function(){});
-      var fi2=setInterval(function(){
-        if(!medAudioEl||medAudioEl.volume>=0.22){clearInterval(fi2); return;}
-        medAudioEl.volume=Math.min(0.22,medAudioEl.volume+0.02);
-      },80);
+      // Only raise ambient if the guided voice has already finished
+      if(!medGuideAudioEl||medGuideAudioEl.ended||medGuideAudioEl.paused){
+        var fi2=setInterval(function(){
+          if(!medAudioEl||medAudioEl.volume>=0.22){clearInterval(fi2); return;}
+          medAudioEl.volume=Math.min(0.22,medAudioEl.volume+0.02);
+        },80);
+      }
     }
   }
 }
