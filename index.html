@@ -1626,14 +1626,9 @@ function medStopGuideAudio(){
 function medStartGuideAudio(modeIdx){
   medStopGuideAudio();
   var a=new Audio(MED_GUIDE_AUDIO[modeIdx]);
-  a.volume=1; medGuideAudioEl=a;
-  // Lower ambient to 6% while voice plays — audible but not competing
-  var fd=setInterval(function(){
-    if(!medAudioEl||medAudioEl.volume<=0.06){clearInterval(fd); return;}
-    medAudioEl.volume=Math.max(0.06,medAudioEl.volume-0.006);
-  },80);
+  a.volume=0.5; medGuideAudioEl=a;
+  if(medAudioEl) medAudioEl.volume=0.05;
   a.addEventListener('ended',function(){
-    // Voice done — fade ambient up to full presence
     var fu=setInterval(function(){
       if(!medAudioEl||medAudioEl.volume>=0.22){clearInterval(fu); return;}
       medAudioEl.volume=Math.min(0.22,medAudioEl.volume+0.004);
@@ -1654,7 +1649,7 @@ function medStartAudio(sndIdx){
   a.play().catch(function(e){console.warn('audio:',e);});
   var fi=setInterval(function(){
     if(!medAudioEl||medAudioEl!==a){clearInterval(fi);return;}
-    if(a.volume<0.22) a.volume=Math.min(0.22,a.volume+0.02);
+    if(a.volume<0.22) a.volume=Math.min(0.22,a.volume+0.015);
     else clearInterval(fi);
   },120);
 }
