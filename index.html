@@ -1628,10 +1628,10 @@ function medStartGuideAudio(modeIdx){
   var a=new Audio(MED_GUIDE_AUDIO[modeIdx]);
   a.volume=1; medGuideAudioEl=a;
   a.addEventListener('ended',function(){
-    // Voice finished — fade ambient down to near-silence
-    var fd=setInterval(function(){
-      if(!medAudioEl||medAudioEl.volume<=0.06){clearInterval(fd); return;}
-      medAudioEl.volume=Math.max(0.06,medAudioEl.volume-0.005);
+    // Voice finished — gently raise ambient to a comfortable level
+    var fu=setInterval(function(){
+      if(!medAudioEl||medAudioEl.volume>=0.28){clearInterval(fu); return;}
+      medAudioEl.volume=Math.min(0.28,medAudioEl.volume+0.004);
     },200);
   });
   a.play().catch(function(e){console.warn('guide audio:',e);});
