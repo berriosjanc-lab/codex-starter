@@ -1627,8 +1627,11 @@ function medStartGuideAudio(modeIdx){
   medStopGuideAudio();
   var a=new Audio(MED_GUIDE_AUDIO[modeIdx]);
   a.volume=1; medGuideAudioEl=a;
-  // Mute ambient immediately while voice plays
-  if(medAudioEl) medAudioEl.volume=0;
+  // Lower ambient to 6% while voice plays — audible but not competing
+  var fd=setInterval(function(){
+    if(!medAudioEl||medAudioEl.volume<=0.06){clearInterval(fd); return;}
+    medAudioEl.volume=Math.max(0.06,medAudioEl.volume-0.006);
+  },80);
   a.addEventListener('ended',function(){
     // Voice done — fade ambient up to full presence
     var fu=setInterval(function(){
