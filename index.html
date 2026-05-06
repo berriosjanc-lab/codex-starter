@@ -145,47 +145,24 @@
 
     /* PATTERNS */
     .pat-list { width:100%; margin-bottom:30px; }
-    .pat-wrap { width:100%; margin-bottom:8px; }
+    .pat-wrap { width:100%; margin-bottom:10px; }
     .pat-btn {
-      width:100%; padding:15px 18px; border-radius:14px;
-      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
-      color:rgba(255,255,255,0.65); cursor:pointer;
-      display:flex; justify-content:space-between; align-items:center;
-      margin-bottom:0; font-family:inherit;
-      transition:all 0.2s var(--ease);
+      width:100%; padding:18px 20px; border-radius:20px;
+      background:rgba(255,255,255,0.05); border:1px solid rgba(255,255,255,0.1);
+      color:rgba(255,255,255,0.75); cursor:pointer;
+      display:flex; flex-direction:column; align-items:flex-start;
+      font-family:inherit; text-align:left;
+      transition:all 0.25s var(--ease);
+      -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
     }
-    .pat-wrap.open .pat-btn { border-radius:14px 14px 0 0; }
-    .pat-btn .pn { font-size:0.9rem; text-align:left; }
-    .pat-btn .pt { font-size:0.72rem; color:rgba(255,255,255,0.35); letter-spacing:0.5px; }
+    .pat-btn:active { transform:scale(1.02); }
+    .pat-btn .pn { font-size:1rem; font-weight:400; margin-bottom:4px; }
+    .pat-btn .pt { font-size:0.72rem; color:rgba(255,255,255,0.45); letter-spacing:0.3px; }
     .pat-btn.on {
-      background:rgba(255,255,255,0.16); border-color:rgba(255,255,255,0.5);
+      background:rgba(255,255,255,0.12); border-color:rgba(255,255,255,0.4);
       color:#fff;
     }
-    .pat-btn.on .pt { color:rgba(255,255,255,0.65); }
-    .pat-btn-right { display:flex; align-items:center; gap:10px; flex-shrink:0; }
-    .pat-info-btn {
-      background:none; border:1.5px solid rgba(255,255,255,0.25); border-radius:50%;
-      color:rgba(255,255,255,0.45); width:22px; height:22px;
-      font-size:0.65rem; font-weight:700; cursor:pointer;
-      display:flex; align-items:center; justify-content:center;
-      flex-shrink:0; font-family:inherit; letter-spacing:0;
-      transition:all 0.15s;
-    }
-    .pat-info-btn:active, .pat-wrap.open .pat-info-btn {
-      background:rgba(255,255,255,0.2); border-color:rgba(255,255,255,0.7);
-      color:#fff;
-    }
-    .pat-info {
-      max-height:0; overflow:hidden;
-      transition:max-height 0.3s ease, padding 0.3s ease;
-      background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.12);
-      border-top:none; border-radius:0 0 14px 14px;
-      padding:0 18px;
-      font-family:'Josefin Sans',sans-serif; font-weight:300;
-      font-size:0.82rem; color:rgba(255,255,255,0.88); line-height:1.7;
-      letter-spacing:0.3px;
-    }
-    .pat-wrap.open .pat-info { max-height:100px; padding:11px 18px 15px; }
+    .pat-btn.on .pt { color:rgba(255,255,255,0.6); }
 
     /* BEGIN */
     .btn-begin {
@@ -1016,7 +993,7 @@ var T = {
     logo:'Respirar', title:'CALMA',
     sub:'Suelta la ansiedad.<br>Inhala paz y claridad.',
     durLbl:'\u00bfCu\u00e1nto tiempo?', sceneLbl:'Ambiente visual',
-    patLbl:'T\u00e9cnica de respiraci\u00f3n', begin:'Comenzar Sesi\u00f3n',
+    patLbl:'\u00bfC\u00f3mo quieres sentirte?', begin:'Comenzar Sesi\u00f3n',
     end:'Terminar', complete:'Sesi\u00f3n completa',
     cycle:'Ciclo', cycles:'ciclos', cycle1:'ciclo',
     scenes:['Noche','Oc\u00e9ano','Bosque'],
@@ -1028,17 +1005,17 @@ var T = {
       holdout:['Descansa','Vac\u00edo y libre','En calma']
     },
     pats:[
-      { name:'Respiraci\u00f3n Cuadrada', info:'Equilibra el sistema nervioso. Ideal para reducir el estr\u00e9s y mejorar la concentraci\u00f3n en cualquier momento del d\u00eda.' },
-      { name:'T\u00e9cnica 4-7-8',        info:'Calma la ansiedad r\u00e1pidamente e induce el sue\u00f1o. Muy efectiva antes de dormir o en momentos de alta tensi\u00f3n.' },
-      { name:'Respiraci\u00f3n Calmante', info:'Activa el sistema parasimp\u00e1tico para una relajaci\u00f3n profunda. Perfecta para soltar tensiones f\u00edsicas y mentales.' },
-      { name:'Energizante',             info:'Aumenta la energ\u00eda y el enfoque mental. Ideal para empezar el d\u00eda o cuando el cansancio aparece.' }
+      { name:'\ud83c\udf0a Calmar la mente',  sub:'Equilibrio total \u00b7 4-4-4-4',     info:'Equilibra el sistema nervioso. Ideal para reducir el estr\u00e9s y mejorar la concentraci\u00f3n.' },
+      { name:'\ud83c\udf19 Dormir profundo',   sub:'Relajaci\u00f3n profunda \u00b7 4-7-8', info:'Calma la ansiedad r\u00e1pidamente e induce el sue\u00f1o. Muy efectiva antes de dormir.' },
+      { name:'\ud83c\udf3f Soltar tensi\u00f3n', sub:'Exhala largo \u00b7 5-2-7',           info:'Activa el sistema parasimp\u00e1tico para relajaci\u00f3n profunda. Perfecta para soltar tensiones.' },
+      { name:'\u26a1 Activar energ\u00eda',     sub:'Ritmo activo \u00b7 3-3',             info:'Aumenta la energ\u00eda y el enfoque mental. Ideal para empezar el d\u00eda.' }
     ]
   },
   en: {
     logo:'Breathe', title:'CALM',
     sub:'Release anxiety.<br>Inhale peace and clarity.',
     durLbl:'How long?', sceneLbl:'Visual scene',
-    patLbl:'Breathing technique', begin:'Start Session',
+    patLbl:'How do you want to feel?', begin:'Start Session',
     end:'End', complete:'Session complete',
     cycle:'Cycle', cycles:'cycles', cycle1:'cycle',
     scenes:['Night','Ocean','Forest'],
@@ -1050,10 +1027,10 @@ var T = {
       holdout:['Rest now','Empty and free','In stillness']
     },
     pats:[
-      { name:'Box Breathing',     info:'Balances the nervous system. Great for reducing stress and improving focus at any point in the day.' },
-      { name:'4-7-8 Technique',   info:'Quickly calms anxiety and helps induce sleep. Very effective before bed or in high-tension moments.' },
-      { name:'Calming Breath',    info:'Activates the parasympathetic system for deep relaxation. Perfect for releasing physical and mental tension.' },
-      { name:'Energizing',        info:'Increases energy and mental focus. Ideal for starting the day or when fatigue sets in.' }
+      { name:'🌊 Calm the mind',    sub:'Total balance · 4-4-4-4',      info:'Balances the nervous system. Great for reducing stress and improving focus.' },
+      { name:'🌙 Deep sleep',        sub:'Deep relaxation · 4-7-8',   info:'Quickly calms anxiety and helps induce sleep. Very effective before bed.' },
+      { name:'🌿 Release tension', sub:'Long exhale · 5-2-7',           info:'Activates the parasympathetic system for deep relaxation. Perfect for releasing tension.' },
+      { name:'⚡ Boost energy',       sub:'Active rhythm · 3-3',           info:'Increases energy and mental focus. Ideal for starting the day or when fatigue sets in.' }
     ]
   }
 };
@@ -1069,6 +1046,7 @@ function buildPats(){
   return PATS_BASE.map(function(p,i){
     return {
       name: T[LANG].pats[i].name,
+      sub:  T[LANG].pats[i].sub,
       timing: p.timing,
       info: T[LANG].pats[i].info,
       phases: p.phases.map(function(ph){
@@ -1249,19 +1227,13 @@ function setLang(l){
     var b=document.createElement('button');
     b.className='pat-btn'+(i===0?' on':'');
     b.innerHTML='<span class="pn">'+p.name+'</span>'
-      +'<span class="pat-btn-right"><span class="pt">'+p.timing+'</span>'
-      +'<button class="pat-info-btn" aria-label="Info">i</button></span>';
-    var info=document.createElement('div'); info.className='pat-info'; info.textContent=p.info;
-    b.querySelector('.pat-info-btn').addEventListener('click',function(e){
-      e.stopPropagation(); wrap.classList.toggle('open');
-    });
-    b.addEventListener('click',function(e){
-      if(e.target.closest('.pat-info-btn')) return;
+      +'<span class="pt">'+p.sub+'</span>';
+    b.addEventListener('click',function(){
       cfg.pat=p;
       pl.querySelectorAll('.pat-btn').forEach(function(x){x.classList.remove('on');});
       b.classList.add('on');
     });
-    wrap.appendChild(b); wrap.appendChild(info); pl.appendChild(wrap);
+    wrap.appendChild(b); pl.appendChild(wrap);
   });
 }
 
