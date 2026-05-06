@@ -595,18 +595,22 @@
   </div>
 
   <div class="stage">
-    <svg width="280" height="280" viewBox="0 0 512 512">
+    <svg viewBox="0 0 512 512" width="280" height="280">
       <defs>
-        <radialGradient id="breathCore">
+        <radialGradient id="sessCore">
           <stop offset="0%" stop-color="#ffffff"/>
           <stop offset="100%" stop-color="#00d9ff" stop-opacity="0.2"/>
         </radialGradient>
-        <filter id="breathBlur">
-          <feGaussianBlur stdDeviation="10"/>
+        <filter id="sessBlur">
+          <feGaussianBlur stdDeviation="12"/>
         </filter>
       </defs>
-      <circle id="svgHalo" cx="256" cy="256" r="80" stroke="#00d9ff" stroke-opacity="0.2" stroke-width="2" fill="none"/>
-      <circle id="svgCore" cx="256" cy="256" r="60" fill="url(#breathCore)" filter="url(#breathBlur)"/>
+      <circle cx="256" cy="256" r="90" stroke="#00d9ff" stroke-opacity="0.15" stroke-width="2" fill="none">
+        <animate attributeName="r" values="80;120;120;80" dur="14s" repeatCount="indefinite" keyTimes="0;0.285;0.571;1"/>
+      </circle>
+      <circle cx="256" cy="256" r="70" fill="url(#sessCore)" filter="url(#sessBlur)">
+        <animate attributeName="r" values="60;95;95;60" dur="14s" repeatCount="indefinite" keyTimes="0;0.285;0.571;1"/>
+      </circle>
     </svg>
     <div class="s-msg" id="sMsg"></div>
   </div>
@@ -1258,14 +1262,6 @@ function runPhase(){
   if(!state.on) return;
   var ph=cfg.pat.phases[state.pIdx];
   state.sec=ph.d;
-  var isExpand=(ph.t==='inhale');
-  var isShrink=(ph.t==='exhale');
-  var dur=(isExpand||isShrink)?ph.d+'s':'0.4s';
-  var coreR=isShrink?60:95;
-  var haloR=isShrink?80:120;
-  document.documentElement.style.setProperty('--breathDur',dur);
-  document.getElementById('svgCore').setAttribute('r',coreR);
-  document.getElementById('svgHalo').setAttribute('r',haloR);
   document.getElementById('sPhase').textContent=ph.l;
   document.getElementById('sCount').textContent=state.sec;
   var msgEl=document.getElementById('sMsg');
@@ -1302,9 +1298,6 @@ function finish(){
     el.classList.remove('active');
     var v=el.querySelector('video'); if(v){ v.pause(); v.currentTime=0; }
   });
-  document.documentElement.style.setProperty('--breathDur','0.5s');
-  document.getElementById('svgCore').setAttribute('r','60');
-  document.getElementById('svgHalo').setAttribute('r','80');
   document.getElementById('sPhase').textContent=T[LANG].complete;
   document.getElementById('sCount').textContent='';
   document.getElementById('sMsg').classList.remove('show');
