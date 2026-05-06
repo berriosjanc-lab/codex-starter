@@ -201,32 +201,8 @@
       display:flex; align-items:center; justify-content:center;
       margin-bottom:72px;
     }
-    .aura {
-      position:absolute; border-radius:50%;
-      background:radial-gradient(circle,rgba(255,255,255,0.07) 0%,transparent 70%);
-      animation:aura 4.5s ease-in-out infinite;
-    }
-    .aura:nth-child(1){ width:280px; height:280px; }
-    .aura:nth-child(2){ width:200px; height:200px; animation-delay:.7s; animation-duration:5.5s; }
-    @keyframes aura {
-      0%,100%{ opacity:.5; transform:scale(.94); }
-      50%{ opacity:1; transform:scale(1.04); }
-    }
-    .ring1 { position:absolute; width:210px; height:210px; border-radius:50%; border:1px solid rgba(255,255,255,0.14); }
-    .ring2 { position:absolute; width:162px; height:162px; border-radius:50%; border:1px solid rgba(255,255,255,0.09); }
-
-    .orb {
-      width:108px; height:108px; border-radius:50%; z-index:2;
-      background:radial-gradient(circle at 36% 32%,rgba(255,255,255,.95) 0%,rgba(255,255,255,.5) 55%,rgba(255,255,255,.2) 100%);
-      box-shadow:0 0 55px rgba(255,255,255,.22),0 0 110px rgba(255,255,255,.08);
-      transition:transform .4s ease;
-    }
-    .orb.inhale  { animation:cIn  var(--iDur,4s) ease-in  forwards; }
-    .orb.hold    { transform:scale(1.72); }
-    .orb.holdout { transform:scale(1.72); }
-    .orb.exhale  { animation:cOut var(--eDur,6s) ease-out forwards; }
-    @keyframes cIn  { from{transform:scale(1)}    to{transform:scale(1.72)} }
-    @keyframes cOut { from{transform:scale(1.72)} to{transform:scale(1)}    }
+    #svgCore { transition: r var(--breathDur,4s) ease-in-out; }
+    #svgHalo { transition: r var(--breathDur,4s) ease-in-out; }
 
     .s-phase {
       font-family: 'Cormorant Garamond', serif;
@@ -619,11 +595,19 @@
   </div>
 
   <div class="stage">
-    <div class="aura"></div>
-    <div class="aura"></div>
-    <div class="ring1"></div>
-    <div class="ring2"></div>
-    <div class="orb" id="orb"></div>
+    <svg width="280" height="280" viewBox="0 0 512 512">
+      <defs>
+        <radialGradient id="breathCore">
+          <stop offset="0%" stop-color="#ffffff"/>
+          <stop offset="100%" stop-color="#00d9ff" stop-opacity="0.2"/>
+        </radialGradient>
+        <filter id="breathBlur">
+          <feGaussianBlur stdDeviation="10"/>
+        </filter>
+      </defs>
+      <circle id="svgHalo" cx="256" cy="256" r="80" stroke="#00d9ff" stroke-opacity="0.2" stroke-width="2" fill="none"/>
+      <circle id="svgCore" cx="256" cy="256" r="60" fill="url(#breathCore)" filter="url(#breathBlur)"/>
+    </svg>
     <div class="s-msg" id="sMsg"></div>
   </div>
 
@@ -1274,9 +1258,14 @@ function runPhase(){
   if(!state.on) return;
   var ph=cfg.pat.phases[state.pIdx];
   state.sec=ph.d;
-  document.documentElement.style.setProperty('--iDur',ph.d+'s');
-  document.documentElement.style.setProperty('--eDur',ph.d+'s');
-  document.getElementById('orb').className='orb '+ph.t;
+  var isExpand=(ph.t==='inhale');
+  var isShrink=(ph.t==='exhale');
+  var dur=(isExpand||isShrink)?ph.d+'s':'0.4s';
+  var coreR=isShrink?60:95;
+  var haloR=isShrink?80:120;
+  document.documentElement.style.setProperty('--breathDur',dur);
+  document.getElementById('svgCore').setAttribute('r',coreR);
+  document.getElementById('svgHalo').setAttribute('r',haloR);
   document.getElementById('sPhase').textContent=ph.l;
   document.getElementById('sCount').textContent=state.sec;
   var msgEl=document.getElementById('sMsg');
@@ -1313,7 +1302,9 @@ function finish(){
     el.classList.remove('active');
     var v=el.querySelector('video'); if(v){ v.pause(); v.currentTime=0; }
   });
-  document.getElementById('orb').className='orb';
+  document.documentElement.style.setProperty('--breathDur','0.5s');
+  document.getElementById('svgCore').setAttribute('r','60');
+  document.getElementById('svgHalo').setAttribute('r','80');
   document.getElementById('sPhase').textContent=T[LANG].complete;
   document.getElementById('sCount').textContent='';
   document.getElementById('sMsg').classList.remove('show');
