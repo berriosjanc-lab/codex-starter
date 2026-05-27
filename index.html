@@ -195,50 +195,36 @@
       color:rgba(255,255,255,0.55);
     }
 
-    /* GEL BUTTONS */
+    /* TOP ACTION BUTTONS */
+    .top-actions {
+      position: absolute; top: 14px; left: 20px;
+      display: flex; flex-direction: column; gap: 7px;
+      z-index: 10;
+    }
     .btn-gel {
-      display: inline-flex; align-items: center; gap: 7px;
-      margin-top: 10px; padding: 11px 26px; border-radius: 50px;
-      font-family: 'Josefin Sans', sans-serif; font-size: 0.62rem;
-      letter-spacing: 3px; text-transform: uppercase; font-weight: 400;
+      display: inline-flex; align-items: center; gap: 6px;
+      padding: 8px 16px; border-radius: 50px;
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.58rem;
+      letter-spacing: 2.5px; text-transform: uppercase; font-weight: 400;
       cursor: pointer; position: relative; overflow: hidden;
-      color: rgba(255,255,255,0.92);
-      /* gel capsule base */
-      background: linear-gradient(
-        180deg,
-        rgba(0,217,255,0.22) 0%,
-        rgba(0,140,180,0.18) 40%,
-        rgba(0,80,120,0.28) 60%,
-        rgba(0,50,90,0.35) 100%
-      );
-      border: 1px solid rgba(0,217,255,0.35);
-      /* outer glow */
+      color: rgba(255,255,255,0.75);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.18);
       box-shadow:
-        0 2px 12px rgba(0,217,255,0.18),
-        0 1px 0 rgba(255,255,255,0.08) inset,
-        0 -1px 0 rgba(0,0,0,0.25) inset;
-      -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+        0 1px 0 rgba(255,255,255,0.14) inset,
+        0 -1px 0 rgba(0,0,0,0.15) inset,
+        0 2px 8px rgba(0,0,0,0.2);
+      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
       transition: all 0.2s ease;
     }
-    /* top gloss reflection */
     .btn-gel::before {
       content: '';
-      position: absolute; top: 0; left: 5%; right: 5%;
-      height: 45%; border-radius: 50px 50px 60% 60%;
-      background: linear-gradient(
-        180deg,
-        rgba(255,255,255,0.38) 0%,
-        rgba(255,255,255,0.08) 100%
-      );
+      position: absolute; top: 0; left: 8%; right: 8%;
+      height: 48%; border-radius: 50px 50px 60% 60%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.02) 100%);
       pointer-events: none;
     }
-    .btn-gel:active {
-      transform: scale(0.97);
-      box-shadow:
-        0 1px 6px rgba(0,217,255,0.12),
-        0 1px 0 rgba(255,255,255,0.06) inset,
-        0 -1px 0 rgba(0,0,0,0.3) inset;
-    }
+    .btn-gel:active { transform: scale(0.96); opacity: 0.8; }
 
     /* CIRCLE */
     .stage {
@@ -495,6 +481,11 @@
 <!-- SETUP -->
 <div class="screen" id="setup">
 
+  <div class="top-actions">
+    <button onclick="showHRV()" class="btn-gel">&#128202; Tendencia HRV</button>
+    <button onclick="showFreqMed()" class="btn-gel">&#127911; Frecuencias &amp; Meditar</button>
+  </div>
+
   <div class="lang-toggle">
     <button id="btnEs" class="on" onclick="setLang('es')">ES</button>
     <button id="btnEn" onclick="setLang('en')">EN</button>
@@ -600,10 +591,6 @@
   </div>
 
   <button class="btn-begin" id="btnBegin">Comenzar Sesi&oacute;n</button>
-
-  <button onclick="showHRV()" class="btn-gel">&#128202; Tendencia HRV</button>
-
-  <button onclick="showFreqMed()" class="btn-gel">&#127911; Frecuencias &amp; Meditar</button>
 
 </div>
 
