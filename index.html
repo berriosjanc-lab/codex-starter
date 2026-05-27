@@ -195,36 +195,26 @@
       color:rgba(255,255,255,0.55);
     }
 
-    /* TOP ACTION BUTTONS */
-    .top-actions {
-      position: absolute; top: 14px; left: 20px;
-      display: flex; flex-direction: column; gap: 7px;
+    /* TOP BAR */
+    .top-bar {
+      position: absolute; top: 14px; left: 16px; right: 16px;
+      display: flex; align-items: center; gap: 8px;
       z-index: 10;
     }
     .btn-gel {
-      display: inline-flex; align-items: center; gap: 6px;
-      padding: 8px 16px; border-radius: 50px;
-      font-family: 'Josefin Sans', sans-serif; font-size: 0.58rem;
-      letter-spacing: 2.5px; text-transform: uppercase; font-weight: 400;
+      flex: 1;
+      display: inline-flex; align-items: center; justify-content: center; gap: 5px;
+      padding: 8px 10px; border-radius: 50px;
+      font-family: 'Josefin Sans', sans-serif; font-size: 0.52rem;
+      letter-spacing: 1.8px; text-transform: uppercase; font-weight: 300;
       cursor: pointer; position: relative; overflow: hidden;
-      color: rgba(255,255,255,0.75);
-      background: rgba(255,255,255,0.08);
-      border: 1px solid rgba(255,255,255,0.18);
-      box-shadow:
-        0 1px 0 rgba(255,255,255,0.14) inset,
-        0 -1px 0 rgba(0,0,0,0.15) inset,
-        0 2px 8px rgba(0,0,0,0.2);
-      -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
-      transition: all 0.2s ease;
+      color: rgba(255,255,255,0.65);
+      background: rgba(255,255,255,0.09);
+      border: 1px solid rgba(255,255,255,0.16);
+      -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+      transition: all 0.2s ease; white-space: nowrap;
     }
-    .btn-gel::before {
-      content: '';
-      position: absolute; top: 0; left: 8%; right: 8%;
-      height: 48%; border-radius: 50px 50px 60% 60%;
-      background: linear-gradient(180deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0.02) 100%);
-      pointer-events: none;
-    }
-    .btn-gel:active { transform: scale(0.96); opacity: 0.8; }
+    .btn-gel:active { transform: scale(0.96); opacity: 0.75; }
 
     /* CIRCLE */
     .stage {
@@ -431,10 +421,9 @@
 
     /* LANG TOGGLE */
     .lang-toggle {
-      position:absolute; top:18px; right:20px;
       display:flex; background:rgba(255,255,255,0.08);
       border:1px solid rgba(255,255,255,0.2); border-radius:20px;
-      overflow:hidden; z-index:10;
+      overflow:hidden; flex-shrink:0;
     }
     .lang-toggle button {
       background:none; border:none; color:rgba(255,255,255,0.45);
@@ -481,14 +470,13 @@
 <!-- SETUP -->
 <div class="screen" id="setup">
 
-  <div class="top-actions">
-    <button onclick="showHRV()" class="btn-gel">&#128202; Tendencia HRV</button>
-    <button onclick="showFreqMed()" class="btn-gel">&#127911; Frecuencias &amp; Meditar</button>
-  </div>
-
-  <div class="lang-toggle">
-    <button id="btnEs" class="on" onclick="setLang('es')">ES</button>
-    <button id="btnEn" onclick="setLang('en')">EN</button>
+  <div class="top-bar">
+    <button onclick="showHRV()" class="btn-gel">&#128202; HRV</button>
+    <button onclick="showFreqMed()" class="btn-gel">&#127911; Frecuencias</button>
+    <div class="lang-toggle">
+      <button id="btnEs" class="on" onclick="setLang('es')">ES</button>
+      <button id="btnEn" onclick="setLang('en')">EN</button>
+    </div>
   </div>
 
   <div class="logo-wrap">
