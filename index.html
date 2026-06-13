@@ -67,6 +67,18 @@
     @keyframes drift3 { from { transform: translate(0,0) scale(1); }    to { transform: translate(-13vw,11vh) scale(1.22); } }
     @media (prefers-reduced-motion: reduce) { .aurora { animation: none; } }
 
+    /* SCENE BLURRED BACKGROUND */
+    #setupSceneBg {
+      position:fixed; inset:0; z-index:1;
+      background-size:cover; background-position:center;
+      filter:blur(36px) brightness(0.42) saturate(1.4);
+      transform:scale(1.12);
+      transition:background-image 0.9s ease, opacity 1s ease;
+      opacity:0;
+    }
+    body.scene-ready #setupSceneBg { opacity:1; }
+    body.sess-active #setupSceneBg { opacity:0; }
+
     /* SCREENS */
     .screen {
       position: fixed; inset: 0; z-index: 2;
@@ -139,61 +151,70 @@
     }
 
     .sec-lbl {
-      align-self: flex-start;
+      width: 100%; text-align: center;
       font-family: 'Josefin Sans', sans-serif;
       font-size: 0.6rem; letter-spacing: 4px; text-transform: uppercase;
-      color: rgba(237,231,217,0.38); margin-bottom: 12px; font-weight: 300;
+      color: rgba(237,231,217,0.45); margin-bottom: 12px; font-weight: 300;
+    }
+    .setup-header {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.05rem; font-weight: 300; font-style: italic;
+      color: rgba(237,231,217,0.72); text-align: center;
+      margin-bottom: 22px; line-height: 1.5;
     }
 
     /* DURATION */
-    .dur-row { display:flex; gap:10px; width:100%; margin-bottom:28px; }
+    .dur-row { display:flex; gap:10px; width:100%; margin-bottom:24px; }
     .dur-btn {
-      flex:1; padding:15px 0; border-radius:14px;
-      background:rgba(237,231,217,0.07); border:1px solid rgba(237,231,217,0.14);
-      color:rgba(237,231,217,0.6); font-size:0.95rem; cursor:pointer;
+      flex:1; padding:14px 0; border-radius:50px;
+      background:rgba(237,231,217,0.1); border:1.5px solid rgba(237,231,217,0.18);
+      color:rgba(237,231,217,0.55); font-size:0.95rem; cursor:pointer;
       transition:all 0.22s var(--ease); font-family:inherit;
     }
     .dur-btn.on {
-      background:rgba(237,231,217,0.2); border-color:rgba(237,231,217,0.6);
+      background:rgba(30,45,30,0.75); border-color:rgba(237,231,217,0.7);
       color:#f3efe4; font-weight:600;
+      -webkit-backdrop-filter:blur(10px); backdrop-filter:blur(10px);
     }
 
     /* SCENE CARDS */
-    .scenes-row { display:flex; gap:8px; width:100%; margin-bottom:28px; }
+    .scenes-row {
+      display:flex; gap:12px; width:100%; margin-bottom:24px;
+      overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none;
+    }
+    .scenes-row::-webkit-scrollbar { display:none; }
     .sc {
-      flex:1; border-radius:16px; cursor:pointer;
+      flex:0 0 148px; height:108px; border-radius:18px; cursor:pointer;
       position:relative; overflow:hidden;
-      box-shadow:inset 0 0 0 2px transparent;
-      transition:box-shadow 0.25s, transform 0.18s;
-      min-height:110px;
+      border:2px solid transparent;
+      transition:border-color 0.25s ease, transform 0.18s ease;
       -webkit-transform:translateZ(0); transform:translateZ(0);
       -webkit-mask-image:-webkit-radial-gradient(white,black);
     }
-    .sc.on { box-shadow:inset 0 0 0 2.5px rgba(237,231,217,0.92); }
-    .sc:active { transform:scale(0.95) translateZ(0); }
+    .sc.on { border-color:rgba(237,231,217,0.88); }
+    .sc:active { transform:scale(0.96) translateZ(0); }
     .sc img { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block; }
     .sc-overlay {
       position:absolute; inset:0; pointer-events:none;
+      background:linear-gradient(to top, rgba(0,0,0,0.52) 0%, transparent 55%);
     }
-    .sc-dot {
-      position:absolute; top:7px; right:7px;
-      width:16px; height:16px; border-radius:50%;
-      background:transparent; border:1.5px solid rgba(237,231,217,0.5);
-      display:flex; align-items:center; justify-content:center;
-      font-size:8px; font-weight:700; color:transparent;
-      transition:all 0.2s;
+    .sc-dot { display:none; }
+    .sc-check {
+      position:absolute; top:8px; right:8px;
+      width:22px; height:22px; border-radius:50%;
+      background:#f3efe4; display:flex; align-items:center; justify-content:center;
+      font-size:11px; color:#1a2b1a; font-weight:700;
+      opacity:0; transition:opacity 0.22s ease;
+      box-shadow:0 2px 8px rgba(0,0,0,0.35);
     }
-    .sc.on .sc-dot {
-      background:#f3efe4; border-color:#f3efe4; color:#333;
-    }
+    .sc.on .sc-check { opacity:1; }
     .sc-name {
       position:absolute; bottom:0; left:0; right:0;
-      text-align:center; padding:18px 4px 8px;
-      font-size:0.65rem; font-weight:600; color:#f3efe4;
+      text-align:center; padding:16px 4px 8px;
+      font-size:0.68rem; font-weight:600; color:#f3efe4;
       text-shadow:0 1px 6px rgba(0,0,0,0.7);
       letter-spacing:0.5px;
       font-family:'Josefin Sans',sans-serif;
-      background:linear-gradient(transparent, rgba(0,0,0,0.45));
     }
 
     /* PATTERNS */
@@ -225,15 +246,16 @@
 
     /* BEGIN */
     .btn-begin {
-      width:100%; padding:20px; border-radius:50px;
-      background:rgba(237,231,217,0.15); border:1.5px solid rgba(237,231,217,0.38);
-      color:#f3efe4; font-size:0.85rem; font-weight:400; letter-spacing:4px;
+      width:100%; padding:22px; border-radius:50px;
+      background:rgba(28,44,30,0.82); border:1.5px solid rgba(168,195,160,0.5);
+      color:#f3efe4; font-size:0.9rem; font-weight:400; letter-spacing:3.5px;
       text-transform: uppercase;
       cursor:pointer; font-family:'Josefin Sans',sans-serif;
       transition:all 0.22s var(--ease);
-      -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+      -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px);
+      box-shadow:0 4px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(237,231,217,0.1);
     }
-    .btn-begin:active { background:rgba(237,231,217,0.26); transform:scale(0.98); }
+    .btn-begin:active { background:rgba(40,64,42,0.9); transform:scale(0.98); }
 
     /* SESSION */
     #sess { justify-content:center; padding-top:0; }
@@ -528,6 +550,7 @@
 <body>
 
 <div id="bg"></div>
+<div id="setupSceneBg"></div>
 <div class="aurora a1"></div>
 <div class="aurora a2"></div>
 <div class="aurora a3"></div>
@@ -590,6 +613,8 @@
   <h1 class="h-title" id="txtTitle">CALMA</h1>
   <p class="h-sub" id="txtSub">Suelta la ansiedad.<br>Inhala paz y claridad.</p>
 
+  <p class="setup-header" id="txtSetupHdr">Configura tu experiencia de respiraci&oacute;n:</p>
+
   <p class="sec-lbl" id="txtDurLbl">&iquest;Cu&aacute;nto tiempo?</p>
   <div class="dur-row" id="durRow">
     <button class="dur-btn on" data-m="3">3 min</button>
@@ -603,28 +628,25 @@
     <!-- NOCHE -->
     <div class="sc on" data-s="ocean">
       <img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/198844-908857695_dqxlvu.jpg" alt="Noche"/>
-      <div class="sc-overlay">
-        <div class="sc-dot"></div>
-        <span class="sc-name" id="scName0">Noche</span>
-      </div>
+      <div class="sc-overlay"></div>
+      <div class="sc-check">&#10003;</div>
+      <span class="sc-name" id="scName0">Noche</span>
     </div>
 
     <!-- OCÉANO -->
     <div class="sc" data-s="forest">
       <img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/186070-876973719_ukldpc.jpg" alt="Océano"/>
-      <div class="sc-overlay">
-        <div class="sc-dot"></div>
-        <span class="sc-name" id="scName1">Oc&eacute;ano</span>
-      </div>
+      <div class="sc-overlay"></div>
+      <div class="sc-check">&#10003;</div>
+      <span class="sc-name" id="scName1">Oc&eacute;ano</span>
     </div>
 
     <!-- BOSQUE -->
     <div class="sc" data-s="sunset">
       <img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/163326-827461488_j4wvkr.jpg" alt="Bosque"/>
-      <div class="sc-overlay">
-        <div class="sc-dot"></div>
-        <span class="sc-name" id="scName2">Bosque</span>
-      </div>
+      <div class="sc-overlay"></div>
+      <div class="sc-check">&#10003;</div>
+      <span class="sc-name" id="scName2">Bosque</span>
     </div>
 
 
@@ -1064,7 +1086,8 @@ var T = {
   es: {
     logo:'Respirar', title:'CALMA',
     sub:'Suelta la ansiedad.<br>Inhala paz y claridad.',
-    durLbl:'\u00bfCu\u00e1nto tiempo?', sceneLbl:'Ambiente visual',
+    setupHdr:'Configura tu experiencia de respiraci\u00f3n:',
+    durLbl:'\u00bfCu\u00e1nto tiempo?', sceneLbl:'\u00bfQu\u00e9 ambiente?',
     patLbl:'\u00bfC\u00f3mo quieres sentirte?', begin:'Comenzar Sesi\u00f3n',
     end:'Terminar', complete:'Sesi\u00f3n completa',
     greet:{morning:'Buenos d\u00edas', afternoon:'Buenas tardes', evening:'Buenas noches', night:'Buenas noches'},
@@ -1089,8 +1112,9 @@ var T = {
   en: {
     logo:'Breathe', title:'CALM',
     sub:'Release anxiety.<br>Inhale peace and clarity.',
-    durLbl:'How long?', sceneLbl:'Visual scene',
-    patLbl:'How do you want to feel?', begin:'Start Session',
+    setupHdr:'Set up your breathing experience:',
+    durLbl:'How long?', sceneLbl:'What view?',
+    patLbl:'How do you want to feel?', begin:'Begin Session',
     end:'End', complete:'Session complete',
     greet:{morning:'Good morning', afternoon:'Good afternoon', evening:'Good evening', night:'Good evening'},
     suggested:'Suggested',
@@ -1248,6 +1272,17 @@ document.getElementById('durRow').addEventListener('click',function(e){
   b.classList.add('on');
 });
 
+var SCENE_IMGS={
+  ocean:'https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/198844-908857695_dqxlvu.jpg',
+  forest:'https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/186070-876973719_ukldpc.jpg',
+  sunset:'https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/163326-827461488_j4wvkr.jpg'
+};
+function setSetupBg(scene){
+  var el=document.getElementById('setupSceneBg');
+  el.style.backgroundImage='url('+SCENE_IMGS[scene]+')';
+  document.body.classList.add('scene-ready');
+}
+
 /* Scene */
 document.getElementById('scenesRow').addEventListener('click',function(e){
   var card=e.target.closest('.sc'); if(!card) return;
@@ -1257,7 +1292,9 @@ document.getElementById('scenesRow').addEventListener('click',function(e){
   var bg=document.getElementById('bg');
   bg.className=BG[cfg.scene]||'';
   bg.id='bg';
+  setSetupBg(cfg.scene);
 });
+setSetupBg(cfg.scene);
 
 /* Sound */
 document.getElementById('fab').addEventListener('click',function(){
@@ -1305,6 +1342,7 @@ function setLang(l){
   document.getElementById('txtLogo').textContent=t.logo;
   document.getElementById('txtTitle').textContent=t.greet[dayPart()];
   document.getElementById('txtSub').innerHTML=t.sub;
+  document.getElementById('txtSetupHdr').textContent=t.setupHdr;
   document.getElementById('txtDurLbl').textContent=t.durLbl;
   document.getElementById('txtSceneLbl').textContent=t.sceneLbl;
   document.getElementById('txtPatLbl').textContent=t.patLbl;
