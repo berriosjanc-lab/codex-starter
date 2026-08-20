@@ -1,10 +1,11 @@
 BEGIN:VCARD
 VERSION:3.0
-N:Berrios;Juan C;;;
-FN:Juan C Berrios
+N:Vendedor Juan;Rooms To Go;;;
+FN:Rooms To Go - Vendedor Juan
 ORG:Rooms To Go
 TITLE:Sales Professional
 TEL;TYPE=CELL:+17875184192
 TEL;TYPE=WORK:+17876531999
 EMAIL;TYPE=INTERNET:berriosjanc@gmail.com
+NOTE:Juan C Berrios
 END:VCARD
