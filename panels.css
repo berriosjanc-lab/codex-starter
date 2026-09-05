@@ -1,0 +1,147 @@
+/* Existing sound, meditation and HRV views. Shared CALMA theme. */
+    /* HRV TRACKER SCREEN */
+    .btn-back{align-self:flex-start;background:rgba(227,242,241,0.08);border:1px solid rgba(227,242,241,0.67);color:rgba(227,242,241,0.7);padding:9px 18px;border-radius:20px;font-size:0.875rem;cursor:pointer;font-family:inherit;letter-spacing:1px;margin-bottom:4px}
+    .hrv-hdr{display:flex;flex-direction:column;align-items:center;margin:8px 0 14px}
+    .hrv-hdr-sub{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300}
+    .hrv-hdr-title{font-family:'Manrope',sans-serif;font-size:1.7rem;font-weight:300;letter-spacing:0.6px;color:var(--text);margin:4px 0 0}
+    .hrv-hdr-title em{color:var(--accent);font-style:normal}
+    .hrv-hdr-line{width:32px;height:2px;background:var(--accent);border-radius:1px;margin-top:6px}
+    /* Tabs */
+    .hrv-tabs{display:flex;width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:4px;gap:3px;margin-bottom:14px}
+    .hrv-tab{flex:1;padding:10px 2px;border-radius:10px;background:none;border:1px solid transparent;color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.2px;cursor:pointer;transition:all 0.2s}
+    .hrv-tab.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.38);color:var(--accent)}
+    /* Stat cards */
+    .hrv-stats-grid{display:flex;gap:8px;width:100%;margin-bottom:12px}
+    .hrv-scard{flex:1;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:13px 9px;display:flex;flex-direction:column;gap:3px}
+    .hrv-scard-lbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300}
+    .hrv-scard-num{display:flex;align-items:baseline;gap:2px;margin:1px 0}
+    .hrv-scard-big{font-family:'Manrope',sans-serif;font-size:2rem;font-weight:300;color:var(--accent);letter-spacing:-1px;line-height:1}
+    .hrv-scard-unit{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(164,224,211,0.6);font-weight:300;letter-spacing:1px}
+    .hrv-scard-sub{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);font-weight:300}
+    /* Chart + info cards */
+    .hrv-tcard{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:14px 12px;margin-bottom:12px}
+    .hrv-card-lbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300;display:block;margin-bottom:12px}
+    #hrvChartSvg{width:100%;overflow:visible;display:block}
+    .hrv-chart-none{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);text-align:center;padding:20px 0;letter-spacing:0.5px}
+    /* Last session card */
+    .hrv-lstcard{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:14px 14px;margin-bottom:12px}
+    .hrv-lst-body{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .hrv-lst-hrv{display:flex;align-items:baseline;gap:3px}
+    .hrv-lst-big{font-family:'Manrope',sans-serif;font-size:2rem;font-weight:300;color:var(--accent);letter-spacing:-1px;line-height:1}
+    .hrv-lst-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+    .hrv-lst-tech{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);letter-spacing:0.5px}
+    .hrv-lst-date{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67)}
+    /* Registrar form */
+    .hrv-rblock{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:14px 14px;margin-bottom:12px}
+    .hrv-rlbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300;display:block;margin-bottom:10px}
+    .hrv-big-in{width:100%;background:rgba(0,0,0,0.2);border:1px solid rgba(227,242,241,0.1);border-radius:10px;padding:14px;outline:none;color:var(--text);font-family:'Manrope',sans-serif;font-size:1.8rem;font-weight:300;letter-spacing:0.6px;text-align:center;box-sizing:border-box;-moz-appearance:textfield}
+    .hrv-big-in::-webkit-inner-spin-button,.hrv-big-in::-webkit-outer-spin-button{-webkit-appearance:none}
+    .hrv-big-in::placeholder{color:rgba(227,242,241,0.67)}
+    .hrv-in-hint{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);margin-top:7px;letter-spacing:0.2px;display:block}
+    .hrv-chips{display:flex;flex-wrap:wrap;gap:7px}
+    .hrv-chip{padding:8px 13px;border-radius:10px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.12);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;cursor:pointer;letter-spacing:0.3px;transition:all 0.18s}
+    .hrv-chip.on{background:rgba(164,224,211,0.1);border-color:rgba(164,224,211,0.45);color:var(--accent)}
+    .hrv-moods{display:flex;gap:7px;width:100%}
+    .hrv-mood{flex:1;padding:9px 2px;border-radius:10px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);font-size:1.25rem;cursor:pointer;transition:all 0.18s;text-align:center}
+    .hrv-mood.on{background:rgba(164,224,211,0.1);border-color:rgba(164,224,211,0.4)}
+    .hrv-save-btn{width:100%;padding:17px;border-radius:14px;background:rgba(164,224,211,0.1);border:1px solid rgba(164,224,211,0.32);color:rgba(164,224,211,0.88);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;cursor:pointer;font-weight:300;transition:all 0.22s}
+    .hrv-save-btn:active{background:rgba(164,224,211,0.22)}
+    /* Historial */
+    .hrv-hist-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .hrv-hist-cnt{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);letter-spacing:1px}
+    .hrv-clear-btn{background:none;border:none;color:rgba(255,80,80,0.65);font-family:'Manrope',sans-serif;font-size:0.875rem;cursor:pointer}
+    .hrv-hitem{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:12px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+    .hrv-hi-hrv{display:flex;align-items:baseline;gap:2px;min-width:48px}
+    .hrv-hi-num{font-family:'Manrope',sans-serif;font-size:1.5rem;font-weight:300;color:var(--accent);letter-spacing:-0.5px;line-height:1}
+    .hrv-hi-ms{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(164,224,211,0.6);letter-spacing:1px;font-weight:300}
+    .hrv-hi-info{flex:1;display:flex;flex-direction:column;gap:2px}
+    .hrv-hi-tech{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);letter-spacing:0.3px}
+    .hrv-hi-date{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67)}
+    .hrv-hi-mood{font-size:1rem}
+    .hrv-hi-del{background:none;border:none;color:rgba(227,242,241,0.67);font-size:0.875rem;cursor:pointer;padding:4px;line-height:1}
+
+    /* FRECUENCIAS & MEDITAR */
+    #freqmed { padding: 0; }
+    .fm-back { position:absolute; top:18px; left:16px; }
+    .fm-header { padding: 28px 24px 0; text-align: center; }
+    .fm-header-sub { font-family:'Manrope',sans-serif; font-size:0.875rem; letter-spacing:0.6px; text-transform:uppercase; color:rgba(227,242,241,0.67); }
+    .fm-header-title { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; margin:4px 0 0; }
+    .fm-header-title em { font-style:italic; color:rgba(227,242,241,0.75); }
+    .fm-tabs {
+      display:flex; margin:18px 16px 0; border-radius:12px;
+      background:rgba(227,242,241,0.05); padding:4px; gap:4px;
+      position:sticky; top:0; z-index:5;
+      -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+    }
+    .fm-tab {
+      flex:1; padding:10px 8px; border:none; border-radius:9px;
+      background:transparent; color:rgba(227,242,241,0.67);
+      font-family:'Manrope',sans-serif; font-size:0.875rem;
+      letter-spacing:1px; cursor:pointer; transition:all 0.25s;
+    }
+    .fm-tab.active { background:rgba(227,242,241,0.12); color:var(--text); box-shadow:0 1px 8px rgba(0,0,0,0.3); }
+    .fm-panel { display:none; padding:14px 14px 100px; }
+    .fm-panel.active { display:block; }
+    .fm-section { margin-bottom:26px; }
+    .fm-section-hdr { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:0 4px; }
+    .fm-section-icon { font-size:1.3rem; }
+    .fm-section-info { flex:1; }
+    .fm-section-title { font-family:'Cormorant Garamond',serif; font-size:1.12rem; font-weight:400; }
+    .fm-section-sub { font-family:'Manrope',sans-serif; font-size:0.875rem; letter-spacing:0.6px; text-transform:uppercase; color:rgba(227,242,241,0.67); margin-top:2px; }
+    .fm-hz-badge { font-family:'Manrope',sans-serif; font-size:0.875rem; letter-spacing:0.6px; padding:3px 9px; border-radius:20px; border:1px solid rgba(227,242,241,0.15); color:rgba(227,242,241,0.67); white-space:nowrap; }
+    .fm-warning { display:flex; align-items:center; gap:8px; background:rgba(255,220,80,0.07); border:1px solid rgba(255,220,80,0.18); border-radius:10px; padding:9px 12px; margin-bottom:10px; font-family:'Manrope',sans-serif; font-size:0.875rem; color:rgba(255,220,80,0.8); letter-spacing:0.5px; }
+    .fm-playlist { display:flex; align-items:center; gap:12px; background:rgba(227,242,241,0.055); border:1px solid rgba(227,242,241,0.09); border-radius:12px; padding:11px 13px; margin-bottom:8px; text-decoration:none; color:var(--text); transition:background 0.2s,transform 0.15s; -webkit-tap-highlight-color:transparent; }
+    .fm-playlist:active { background:rgba(227,242,241,0.1); transform:scale(0.98); }
+    .fm-pl-art { width:44px; height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+    .fm-pl-art.hz432  { background:linear-gradient(135deg,rgba(120,200,120,0.28),rgba(80,160,80,0.08)); }
+    .fm-pl-art.hz528  { background:linear-gradient(135deg,rgba(255,180,100,0.28),rgba(220,120,60,0.08)); }
+    .fm-pl-art.binaural { background:linear-gradient(135deg,rgba(140,100,255,0.28),rgba(100,60,220,0.08)); }
+    .fm-pl-art.guiada { background:linear-gradient(135deg,rgba(255,150,150,0.28),rgba(200,80,80,0.08)); }
+    .fm-pl-info { flex:1; min-width:0; }
+    .fm-pl-name { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400; line-height:1.2; }
+    .fm-pl-meta { font-family:'Manrope',sans-serif; font-size:0.875rem; color:rgba(227,242,241,0.67); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+    .fm-pl-saves { font-family:'Manrope',sans-serif; font-size:0.875rem; color:rgba(164,224,211,0.75); letter-spacing:1px; margin-top:2px; }
+    .fm-pl-arrow { color:rgba(227,242,241,0.67); font-size:0.875rem; flex-shrink:0; }
+    /* MEDITAR TIMER */
+    .med-section-lbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);margin:20px 0 8px 4px}
+    .med-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+    .med-mode{background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);border-radius:12px;padding:12px 8px;cursor:pointer;transition:all 0.2s;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:5px}
+    .med-mode.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.4)}
+    .med-mode-icon{font-size:1.5rem}
+    .med-mode-name{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(227,242,241,0.67)}
+    .med-mode.on .med-mode-name{color:rgba(164,224,211,0.9)}
+    .med-durs{display:flex;gap:7px;flex-wrap:wrap}
+    .med-dur-btn{padding:8px 14px;border-radius:20px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s}
+    .med-dur-btn.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.4);color:rgba(164,224,211,0.9)}
+    .med-sounds-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+    .med-snd{padding:9px 6px;border-radius:10px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.5px;cursor:pointer;transition:all 0.2s}
+    .med-snd.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.4);color:rgba(164,224,211,0.9)}
+    .med-start-btn{display:block;width:100%;margin-top:24px;padding:15px;border-radius:14px;background:rgba(164,224,211,0.14);border:1px solid rgba(164,224,211,0.32);color:rgba(227,242,241,0.88);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+    .med-start-btn:active{background:rgba(164,224,211,0.26);transform:scale(0.98)}
+    #medDone{transition:opacity 0.35s ease}
+    .med-mode-lbl-active{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);text-align:center;margin-bottom:14px}
+    .med-ring-wrap{position:relative;width:188px;height:188px;margin:0 auto 16px}
+    .med-ring-svg{width:188px;height:188px;transform:rotate(-90deg)}
+    .med-ring-bg{fill:none;stroke:rgba(227,242,241,0.07);stroke-width:7}
+    .med-ring-fg{fill:none;stroke:rgba(164,224,211,0.6);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+    .med-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .med-time-disp{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;letter-spacing:0.6px;line-height:1}
+    .med-time-sub{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);margin-top:5px}
+    .med-guide-box{min-height:52px;margin:0 2px 16px;padding:12px 14px;background:rgba(227,242,241,0.04);border-radius:12px;border:1px solid rgba(227,242,241,0.07)}
+    .med-guide-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;font-weight:300;color:rgba(227,242,241,0.8);text-align:center;line-height:1.5;opacity:0;transition:opacity 0.9s ease}
+    .med-guide-text.show{opacity:1}
+    .med-controls{display:flex;gap:10px}
+    .med-ctrl{flex:1;padding:11px;border-radius:12px;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.12);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;cursor:pointer;transition:all 0.2s}
+    .med-ctrl-stop{background:rgba(255,80,80,0.07);border-color:rgba(255,80,80,0.2);color:rgba(255,130,130,0.7)}
+    .med-done-icon{font-size:2.6rem;text-align:center;margin:20px 0 10px}
+    .med-done-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;font-weight:300;color:rgba(227,242,241,0.85);text-align:center;padding:0 10px;line-height:1.5;margin-bottom:8px}
+    .med-done-stats{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;color:rgba(227,242,241,0.67);text-align:center;margin-bottom:4px}
+    .med-hist-hdr{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);margin:22px 0 8px 2px}
+    .med-hist-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(227,242,241,0.04);border-radius:10px;margin-bottom:6px}
+    .med-hist-icon{font-size:1.1rem}
+    .med-hist-info{flex:1}
+    .med-hist-mode{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1px;color:rgba(227,242,241,0.68)}
+    .med-hist-date{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1px;color:rgba(227,242,241,0.67);margin-top:2px}
+    .med-hist-dur{font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:rgba(164,224,211,0.65)}
+    .fm-coming { text-align:center; padding:60px 20px; color:rgba(227,242,241,0.67); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; }
+
