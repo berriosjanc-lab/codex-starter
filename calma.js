@@ -554,7 +554,7 @@ function renderHistorial(){
   cnt.textContent=recs.length+' registro'+(recs.length===1?'':'s');
   el.innerHTML='';
   if(!recs.length){
-    el.innerHTML='<p style="font-family:Josefin Sans,sans-serif;font-size:0.875rem;color:#b0c8ca;text-align:center;padding:24px 0;letter-spacing:0.5px">Sin registros aún</p>';
+    el.innerHTML='<p style="font-family:Manrope,sans-serif;font-size:0.875rem;color:#b0c8ca;text-align:center;padding:24px 0;letter-spacing:0.5px">Sin registros aún</p>';
     return;
   }
   recs.forEach(function(r){
@@ -586,7 +586,7 @@ function hideFreqMed(){
   document.getElementById('freqmed').classList.add('below');
 }
 function switchFmTab(idx){
-  if(idx===0 && medState && medState.on) medStop();
+  if(idx===0 && medState) medStop();
   [0,1].forEach(function(i){
     var b=document.getElementById('fmTab'+i);b.classList.toggle('active',i===idx);b.setAttribute('aria-pressed',String(i===idx));
     document.getElementById('fmPanel'+i).classList.toggle('active',i===idx);
@@ -603,11 +603,11 @@ function setNav(id){
   });
 }
 function goHome(){
-  if(medState.on) medStop();
+  medStop();
   showScreen('setup');setNav('navHome');
 }
 function navTo(where){
-  if(medState.on && where!=='med') medStop();
+  if(where!=='med') medStop();
   if(where==='data'){showHRV();setNav('navData');}
   else{showFreqMed();switchFmTab(where==='med'?1:0);setNav(where==='med'?'navMed':'navFreq');}
 }
@@ -843,7 +843,7 @@ function renderMedHist(){
   recs.sort(function(a,b){return b.id-a.id;}); recs=recs.slice(0,5);
   var el=document.getElementById('medHistList'); if(!el) return;
   if(!recs.length){
-    el.innerHTML='<div style="color:#b0c8ca;font-family:\'Josefin Sans\',sans-serif;font-size:0.875rem;letter-spacing:0px;padding:8px 4px">Sin sesiones aún</div>';
+    el.innerHTML='<div style="color:#b0c8ca;font-family:\'Manrope\',sans-serif;font-size:0.875rem;letter-spacing:0px;padding:8px 4px">Sin sesiones aún</div>';
     return;
   }
   el.innerHTML=recs.map(function(r){
