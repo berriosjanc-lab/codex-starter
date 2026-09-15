@@ -1,0 +1,1839 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <base href="https://respiraconcalma.online/"/>
+  <meta name="robots" content="noindex,nofollow"/>
+  <meta charset="UTF-8"/>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+  <title>Vista previa · CALMA</title>
+  <meta name="description" content="Un espacio para respirar a tu ritmo, meditar y acompañar tu pausa con sonidos de la naturaleza."/>
+  <link rel="icon" type="image/svg+xml" href="logo.svg"/>
+  <link rel="apple-touch-icon" href="apple-touch-icon.png"/>
+  <meta name="theme-color" content="#08262e"/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&amp;family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&amp;display=swap" rel="stylesheet"/>
+  <style>
+/* Existing sound, meditation and HRV views. Shared CALMA theme. */
+    /* HRV TRACKER SCREEN */
+    .btn-back{align-self:flex-start;background:rgba(227,242,241,0.08);border:1px solid rgba(227,242,241,0.67);color:rgba(227,242,241,0.7);padding:9px 18px;border-radius:20px;font-size:0.875rem;cursor:pointer;font-family:inherit;letter-spacing:1px;margin-bottom:4px}
+    .hrv-hdr{display:flex;flex-direction:column;align-items:center;margin:8px 0 14px}
+    .hrv-hdr-sub{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300}
+    .hrv-hdr-title{font-family:'Manrope',sans-serif;font-size:1.7rem;font-weight:300;letter-spacing:0.6px;color:var(--text);margin:4px 0 0}
+    .hrv-hdr-title em{color:var(--accent);font-style:normal}
+    .hrv-hdr-line{width:32px;height:2px;background:var(--accent);border-radius:1px;margin-top:6px}
+    /* Tabs */
+    .hrv-tabs{display:flex;width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:4px;gap:3px;margin-bottom:14px}
+    .hrv-tab{flex:1;padding:10px 2px;border-radius:10px;background:none;border:1px solid transparent;color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.2px;cursor:pointer;transition:all 0.2s}
+    .hrv-tab.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.38);color:var(--accent)}
+    /* Stat cards */
+    .hrv-stats-grid{display:flex;gap:8px;width:100%;margin-bottom:12px}
+    .hrv-scard{flex:1;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:13px 9px;display:flex;flex-direction:column;gap:3px}
+    .hrv-scard-lbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300}
+    .hrv-scard-num{display:flex;align-items:baseline;gap:2px;margin:1px 0}
+    .hrv-scard-big{font-family:'Manrope',sans-serif;font-size:2rem;font-weight:300;color:var(--accent);letter-spacing:-1px;line-height:1}
+    .hrv-scard-unit{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(164,224,211,0.6);font-weight:300;letter-spacing:1px}
+    .hrv-scard-sub{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);font-weight:300}
+    /* Chart + info cards */
+    .hrv-tcard{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:14px 12px;margin-bottom:12px}
+    .hrv-card-lbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300;display:block;margin-bottom:12px}
+    #hrvChartSvg{width:100%;overflow:visible;display:block}
+    .hrv-chart-none{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);text-align:center;padding:20px 0;letter-spacing:0.5px}
+    /* Last session card */
+    .hrv-lstcard{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:14px 14px;margin-bottom:12px}
+    .hrv-lst-body{display:flex;justify-content:space-between;align-items:center;margin-top:8px}
+    .hrv-lst-hrv{display:flex;align-items:baseline;gap:3px}
+    .hrv-lst-big{font-family:'Manrope',sans-serif;font-size:2rem;font-weight:300;color:var(--accent);letter-spacing:-1px;line-height:1}
+    .hrv-lst-right{display:flex;flex-direction:column;align-items:flex-end;gap:3px}
+    .hrv-lst-tech{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);letter-spacing:0.5px}
+    .hrv-lst-date{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67)}
+    /* Registrar form */
+    .hrv-rblock{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:14px;padding:14px 14px;margin-bottom:12px}
+    .hrv-rlbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);font-weight:300;display:block;margin-bottom:10px}
+    .hrv-big-in{width:100%;background:rgba(0,0,0,0.2);border:1px solid rgba(227,242,241,0.1);border-radius:10px;padding:14px;outline:none;color:var(--text);font-family:'Manrope',sans-serif;font-size:1.8rem;font-weight:300;letter-spacing:0.6px;text-align:center;box-sizing:border-box;-moz-appearance:textfield}
+    .hrv-big-in::-webkit-inner-spin-button,.hrv-big-in::-webkit-outer-spin-button{-webkit-appearance:none}
+    .hrv-big-in::placeholder{color:rgba(227,242,241,0.67)}
+    .hrv-in-hint{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);margin-top:7px;letter-spacing:0.2px;display:block}
+    .hrv-chips{display:flex;flex-wrap:wrap;gap:7px}
+    .hrv-chip{padding:8px 13px;border-radius:10px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.12);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;cursor:pointer;letter-spacing:0.3px;transition:all 0.18s}
+    .hrv-chip.on{background:rgba(164,224,211,0.1);border-color:rgba(164,224,211,0.45);color:var(--accent)}
+    .hrv-moods{display:flex;gap:7px;width:100%}
+    .hrv-mood{flex:1;padding:9px 2px;border-radius:10px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);font-size:1.25rem;cursor:pointer;transition:all 0.18s;text-align:center}
+    .hrv-mood.on{background:rgba(164,224,211,0.1);border-color:rgba(164,224,211,0.4)}
+    .hrv-save-btn{width:100%;padding:17px;border-radius:14px;background:rgba(164,224,211,0.1);border:1px solid rgba(164,224,211,0.32);color:rgba(164,224,211,0.88);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;cursor:pointer;font-weight:300;transition:all 0.22s}
+    .hrv-save-btn:active{background:rgba(164,224,211,0.22)}
+    /* Historial */
+    .hrv-hist-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+    .hrv-hist-cnt{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);letter-spacing:1px}
+    .hrv-clear-btn{background:none;border:none;color:rgba(255,80,80,0.65);font-family:'Manrope',sans-serif;font-size:0.875rem;cursor:pointer}
+    .hrv-hitem{width:100%;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.1);border-radius:12px;padding:13px;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+    .hrv-hi-hrv{display:flex;align-items:baseline;gap:2px;min-width:48px}
+    .hrv-hi-num{font-family:'Manrope',sans-serif;font-size:1.5rem;font-weight:300;color:var(--accent);letter-spacing:-0.5px;line-height:1}
+    .hrv-hi-ms{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(164,224,211,0.6);letter-spacing:1px;font-weight:300}
+    .hrv-hi-info{flex:1;display:flex;flex-direction:column;gap:2px}
+    .hrv-hi-tech{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67);letter-spacing:0.3px}
+    .hrv-hi-date{font-family:'Manrope',sans-serif;font-size:0.875rem;color:rgba(227,242,241,0.67)}
+    .hrv-hi-mood{font-size:1rem}
+    .hrv-hi-del{background:none;border:none;color:rgba(227,242,241,0.67);font-size:0.875rem;cursor:pointer;padding:4px;line-height:1}
+
+    /* FRECUENCIAS & MEDITAR */
+    #freqmed { padding: 0; }
+    .fm-back { position:absolute; top:18px; left:16px; }
+    .fm-header { padding: 28px 24px 0; text-align: center; }
+    .fm-header-sub { font-family:'Manrope',sans-serif; font-size:0.875rem; letter-spacing:0.6px; text-transform:uppercase; color:rgba(227,242,241,0.67); }
+    .fm-header-title { font-family:'Cormorant Garamond',serif; font-size:2rem; font-weight:300; margin:4px 0 0; }
+    .fm-header-title em { font-style:italic; color:rgba(227,242,241,0.75); }
+    .fm-tabs {
+      display:flex; margin:18px 16px 0; border-radius:12px;
+      background:rgba(227,242,241,0.05); padding:4px; gap:4px;
+      position:sticky; top:0; z-index:5;
+      -webkit-backdrop-filter:blur(12px); backdrop-filter:blur(12px);
+    }
+    .fm-tab {
+      flex:1; padding:10px 8px; border:none; border-radius:9px;
+      background:transparent; color:rgba(227,242,241,0.67);
+      font-family:'Manrope',sans-serif; font-size:0.875rem;
+      letter-spacing:1px; cursor:pointer; transition:all 0.25s;
+    }
+    .fm-tab.active { background:rgba(227,242,241,0.12); color:var(--text); box-shadow:0 1px 8px rgba(0,0,0,0.3); }
+    .fm-panel { display:none; padding:14px 14px 100px; }
+    .fm-panel.active { display:block; }
+    .fm-section { margin-bottom:26px; }
+    .fm-section-hdr { display:flex; align-items:center; gap:10px; margin-bottom:10px; padding:0 4px; }
+    .fm-section-icon { font-size:1.3rem; }
+    .fm-section-info { flex:1; }
+    .fm-section-title { font-family:'Cormorant Garamond',serif; font-size:1.12rem; font-weight:400; }
+    .fm-section-sub { font-family:'Manrope',sans-serif; font-size:0.875rem; letter-spacing:0.6px; text-transform:uppercase; color:rgba(227,242,241,0.67); margin-top:2px; }
+    .fm-hz-badge { font-family:'Manrope',sans-serif; font-size:0.875rem; letter-spacing:0.6px; padding:3px 9px; border-radius:20px; border:1px solid rgba(227,242,241,0.15); color:rgba(227,242,241,0.67); white-space:nowrap; }
+    .fm-warning { display:flex; align-items:center; gap:8px; background:rgba(255,220,80,0.07); border:1px solid rgba(255,220,80,0.18); border-radius:10px; padding:9px 12px; margin-bottom:10px; font-family:'Manrope',sans-serif; font-size:0.875rem; color:rgba(255,220,80,0.8); letter-spacing:0.5px; }
+    .fm-playlist { display:flex; align-items:center; gap:12px; background:rgba(227,242,241,0.055); border:1px solid rgba(227,242,241,0.09); border-radius:12px; padding:11px 13px; margin-bottom:8px; text-decoration:none; color:var(--text); transition:background 0.2s,transform 0.15s; -webkit-tap-highlight-color:transparent; }
+    .fm-playlist:active { background:rgba(227,242,241,0.1); transform:scale(0.98); }
+    .fm-pl-art { width:44px; height:44px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:1.3rem; flex-shrink:0; }
+    .fm-pl-art.hz432  { background:linear-gradient(135deg,rgba(120,200,120,0.28),rgba(80,160,80,0.08)); }
+    .fm-pl-art.hz528  { background:linear-gradient(135deg,rgba(255,180,100,0.28),rgba(220,120,60,0.08)); }
+    .fm-pl-art.binaural { background:linear-gradient(135deg,rgba(140,100,255,0.28),rgba(100,60,220,0.08)); }
+    .fm-pl-art.guiada { background:linear-gradient(135deg,rgba(255,150,150,0.28),rgba(200,80,80,0.08)); }
+    .fm-pl-info { flex:1; min-width:0; }
+    .fm-pl-name { font-family:'Cormorant Garamond',serif; font-size:1rem; font-weight:400; line-height:1.2; }
+    .fm-pl-meta { font-family:'Manrope',sans-serif; font-size:0.875rem; color:rgba(227,242,241,0.67); letter-spacing:1.5px; text-transform:uppercase; margin-top:3px; }
+    .fm-pl-saves { font-family:'Manrope',sans-serif; font-size:0.875rem; color:rgba(164,224,211,0.75); letter-spacing:1px; margin-top:2px; }
+    .fm-pl-arrow { color:rgba(227,242,241,0.67); font-size:0.875rem; flex-shrink:0; }
+    /* MEDITAR TIMER */
+    .med-section-lbl{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);margin:20px 0 8px 4px}
+    .med-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:4px}
+    .med-mode{background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);border-radius:12px;padding:12px 8px;cursor:pointer;transition:all 0.2s;color:var(--text);display:flex;flex-direction:column;align-items:center;gap:5px}
+    .med-mode.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.4)}
+    .med-mode-icon{font-size:1.5rem}
+    .med-mode-name{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1.5px;text-transform:uppercase;color:rgba(227,242,241,0.67)}
+    .med-mode.on .med-mode-name{color:rgba(164,224,211,0.9)}
+    .med-durs{display:flex;gap:7px;flex-wrap:wrap}
+    .med-dur-btn{padding:8px 14px;border-radius:20px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1px;cursor:pointer;transition:all 0.2s}
+    .med-dur-btn.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.4);color:rgba(164,224,211,0.9)}
+    .med-sounds-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px}
+    .med-snd{padding:9px 6px;border-radius:10px;background:rgba(227,242,241,0.05);border:1px solid rgba(227,242,241,0.1);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.5px;cursor:pointer;transition:all 0.2s}
+    .med-snd.on{background:rgba(164,224,211,0.12);border-color:rgba(164,224,211,0.4);color:rgba(164,224,211,0.9)}
+    .med-start-btn{display:block;width:100%;margin-top:24px;padding:15px;border-radius:14px;background:rgba(164,224,211,0.14);border:1px solid rgba(164,224,211,0.32);color:rgba(227,242,241,0.88);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;cursor:pointer;transition:all 0.2s}
+    .med-start-btn:active{background:rgba(164,224,211,0.26);transform:scale(0.98)}
+    #medDone{transition:opacity 0.35s ease}
+    .med-mode-lbl-active{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);text-align:center;margin-bottom:14px}
+    .med-ring-wrap{position:relative;width:188px;height:188px;margin:0 auto 16px}
+    .med-ring-svg{width:188px;height:188px;transform:rotate(-90deg)}
+    .med-ring-bg{fill:none;stroke:rgba(227,242,241,0.07);stroke-width:7}
+    .med-ring-fg{fill:none;stroke:rgba(164,224,211,0.6);stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset 1s linear}
+    .med-ring-inner{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+    .med-time-disp{font-family:'Cormorant Garamond',serif;font-size:2.5rem;font-weight:300;letter-spacing:0.6px;line-height:1}
+    .med-time-sub{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);margin-top:5px}
+    .med-guide-box{min-height:52px;margin:0 2px 16px;padding:12px 14px;background:rgba(227,242,241,0.04);border-radius:12px;border:1px solid rgba(227,242,241,0.07)}
+    .med-guide-text{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.05rem;font-weight:300;color:rgba(227,242,241,0.8);text-align:center;line-height:1.5;opacity:0;transition:opacity 0.9s ease}
+    .med-guide-text.show{opacity:1}
+    .med-controls{display:flex;gap:10px}
+    .med-ctrl{flex:1;padding:11px;border-radius:12px;background:rgba(227,242,241,0.06);border:1px solid rgba(227,242,241,0.12);color:rgba(227,242,241,0.67);font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;cursor:pointer;transition:all 0.2s}
+    .med-ctrl-stop{background:rgba(255,80,80,0.07);border-color:rgba(255,80,80,0.2);color:rgba(255,130,130,0.7)}
+    .med-done-icon{font-size:2.6rem;text-align:center;margin:20px 0 10px}
+    .med-done-phrase{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:1.18rem;font-weight:300;color:rgba(227,242,241,0.85);text-align:center;padding:0 10px;line-height:1.5;margin-bottom:8px}
+    .med-done-stats{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;color:rgba(227,242,241,0.67);text-align:center;margin-bottom:4px}
+    .med-hist-hdr{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:0.6px;text-transform:uppercase;color:rgba(227,242,241,0.67);margin:22px 0 8px 2px}
+    .med-hist-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(227,242,241,0.04);border-radius:10px;margin-bottom:6px}
+    .med-hist-icon{font-size:1.1rem}
+    .med-hist-info{flex:1}
+    .med-hist-mode{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1px;color:rgba(227,242,241,0.68)}
+    .med-hist-date{font-family:'Manrope',sans-serif;font-size:0.875rem;letter-spacing:1px;color:rgba(227,242,241,0.67);margin-top:2px}
+    .med-hist-dur{font-family:'Cormorant Garamond',serif;font-size:0.95rem;color:rgba(164,224,211,0.65)}
+    .fm-coming { text-align:center; padding:60px 20px; color:rgba(227,242,241,0.67); font-family:'Cormorant Garamond',serif; font-style:italic; font-size:1.2rem; }
+
+
+</style>
+  <style>
+:root {
+  color-scheme: dark;
+  --bg: #08262e;
+  --surface: #10343c;
+  --surface-soft: #153b43;
+  --text: #eef7f5;
+  --muted: #b0c8ca;
+  --accent: #a4e0d3;
+  --gold: #ddc18d;
+  --border: #31525a;
+  --ease: cubic-bezier(.22,.61,.36,1);
+  font-family: 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 16px;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); line-height: 1.55; }
+button, input, summary, a { -webkit-tap-highlight-color: transparent; }
+button, input { font: inherit; }
+button { cursor: pointer; touch-action: manipulation; }
+button, a, summary { outline-offset: 5px; }
+:focus-visible { outline: 2px solid var(--accent); }
+button { transition: background .2s, border-color .2s, color .2s; }
+button:disabled { cursor: wait; opacity: .65; }
+button:active:not(:disabled) { transform: translateY(1px); }
+input { color-scheme: dark; }
+img { max-width: 100%; }
+h1, h2, h3, p { margin: 0; }
+[hidden] { display: none !important; }
+.skip-link { position: fixed; top: -100px; left: 20px; z-index: 200; background: var(--accent); color: var(--bg); padding: 12px 20px; border-radius: 8px; }
+.skip-link:focus { top: 16px; }
+#bg { position: fixed; inset: 0; z-index: -1; background: radial-gradient(ellipse at 0 0, #154049 0, transparent 55%), var(--bg); }
+#nightOverlay { display: none !important; }
+.site-header { position: fixed; top: 0; left: 0; right: 0; z-index: 40; height: 88px; padding: 0 max(32px, calc((100vw - 1280px)/2)); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #35535a80; background: #08262ef2; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+.brand { color: var(--text); text-decoration: none; display: flex; align-items: center; gap: 12px; }
+.brand img { border-radius: 12px; }
+.brand-word { font-size: 1.2rem; letter-spacing: 5px; line-height: 1.3; font-weight: 600; }
+.brand-word > span { display: block; font-size: .75rem; letter-spacing: .35px; color: var(--muted); font-weight: 400; margin-top: 4px; }
+.lang-toggle { display: flex; padding: 3px; border: 1px solid var(--border); border-radius: 100px; background: #163840; }
+.lang-toggle button { border: 0; color: var(--muted); background: transparent; font-size: .875rem; min-width: 41px; min-height: 36px; border-radius: 100px; }
+.lang-toggle button.on { background: #31545b; color: var(--text); }
+.tabbar { position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 45; display: flex; align-items: center; gap: 6px; }
+.tab-item { display: flex; align-items: center; justify-content: center; gap: 9px; padding: 12px 15px; border-radius: 100px; border: 1px solid transparent; background: none; color: var(--muted); font-size: .875rem; }
+.tab-item .ti-ic { width: 19px; height: 19px; flex-shrink: 0; }
+.tab-item.on { color: var(--accent); background: #24474d; border-color: #3e656b; }
+.tab-item:hover { color: var(--text); background: #24474d; }
+.screen { width: min(100% - 64px, 1200px); margin: 0 auto; padding: 119px 0 32px; }
+.screen.out, .screen.below { display: none !important; }
+.welcome { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px; margin-bottom: 29px; }
+.eyebrow { color: var(--accent); text-transform: uppercase; font-size: .75rem; font-weight: 600; letter-spacing: 2px; margin-bottom: 7px; }
+.h-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: clamp(2.6rem, 4.1vw, 3.5rem); font-weight: 400; letter-spacing: -.8px; line-height: 1.05; }
+.h-title em { color: var(--accent); font-weight: 400; }
+.h-sub { font-size: 1rem; color: var(--muted); margin-top: 10px; }
+.welcome-note { color: var(--muted); font-size: .875rem; padding-bottom: 4px; }
+.practice-layout { display: grid; grid-template-columns: 1.18fr 1fr; gap: 24px; align-items: stretch; }
+.practice-view { position: relative; border-radius: 26px; overflow: hidden; isolation: isolate; min-height: 522px; display: flex; flex-direction: column; background: #12383f; border: 1px solid #537071; box-shadow: 0 20px 70px #00192033; }
+#setupSceneBg { position: absolute; inset: 0; z-index: -3; background-position: center; background-size: cover; background-image: url('https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/198844-908857695_dqxlvu.jpg'); transition: opacity .4s; }
+.practice-shade { position: absolute; inset: 0; z-index: -2; background: linear-gradient(180deg,#061a2370 0%,#061a232e 40%,#031e28e8 100%); }
+.practice-topline { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 25px 25px 0; }
+.scene-pill { display: inline-flex; padding: 7px 13px; border: 1px solid #d9e8e04d; border-radius: 100px; background: #092b39a3; font-size: .875rem; backdrop-filter: blur(10px); }
+.practice-label { font-size: .75rem; font-weight: 500; letter-spacing: 1.8px; text-shadow: 0 2px 6px #061e28; }
+.preview-center { flex: 1; display: grid; place-items: center; position: relative; min-height: 260px; padding: 40px 18px; }
+.preview-orbit { width: 240px; height: 240px; position: absolute; border-radius: 50%; border: 1px solid #e7fff04a; }
+.preview-orbit span { display: block; position: absolute; inset: 17px; border-radius: 50%; border: 1px solid #e2fff033; }
+.preview-orbit span:nth-child(2) { inset: 35px; background: #133d443d; backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); border-color: #e2fff02b; }
+.preview-orbit span:nth-child(3) { inset: -13px; border-color: #d9ffef14; }
+.preview-words { position: relative; text-align: center; display: flex; flex-direction: column; align-items: center; text-shadow: 0 2px 18px #002931; }
+.preview-kicker { font-size: .75rem; font-weight: 500; letter-spacing: 2.5px; color: #d8e9e6; }
+.preview-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 3.5rem; font-weight: 400; line-height: 1.15; margin: 8px 0 6px; }
+.preview-caption { font-size: .875rem; color: #deebe8; }
+.practice-bottom { padding: 12px 36px 25px; text-align: center; }
+.session-summary { font-size: .875rem; color: #e1eeee; margin-bottom: 13px; }
+.btn-begin { min-height: 55px; width: 100%; border-radius: 100px; border: 1px solid #c4f6e7; background: var(--accent); color: #10393b; font-size: 1rem; font-weight: 700; box-shadow: 0 8px 30px #06242b2b; }
+.btn-begin::before { content: '▶'; display: inline-block; font-size: .75rem; margin-right: 12px; }
+.btn-begin:hover { background: #c4f0e5; }
+.practice-hint { color: #c8dcda; font-size: .75rem; margin-top: 12px; }
+.session-settings { border-radius: 26px; border: 1px solid #31525b; background: #10333ce6; padding: 25px; }
+.settings-heading { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 25px; }
+.settings-heading h2 { font-size: 1.0625rem; font-weight: 500; }
+.settings-index { color: #9db8bc; font-size: .75rem; letter-spacing: 1px; white-space: nowrap; }
+.setting-block + .setting-block { margin-top: 24px; }
+.sec-lbl { display: flex; align-items: center; gap: 9px; font-size: .875rem; font-weight: 500; color: #dfedeb; margin-bottom: 11px; }
+.sec-lbl > span { font-size: .75rem; color: #9dbabf; font-weight: 400; }
+.pat-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pat-wrap { min-width: 0; }
+.pat-btn { display: flex; flex-direction: column; align-items: flex-start; width: 100%; height: 100%; gap: 8px; padding: 14px; text-align: left; background: #12363e; border: 1px solid #38565d; border-radius: 14px; color: var(--text); }
+.pat-btn:hover { border-color: #90b6b6; background: #1b4148; }
+.pat-btn.on { border-color: var(--accent); background: #264a50; box-shadow: inset 0 0 0 .5px var(--accent); }
+.pat-icon { display: flex; align-items: center; justify-content: space-between; width: 100%; color: var(--accent); }
+.pat-icon svg { width: 20px; height: 20px; }
+.selection-mark { width: 13px; height: 13px; border: 1px solid #63858a; border-radius: 50%; }
+.pat-btn.on .selection-mark { border: 4px solid var(--accent); background: #264a50; }
+.pat-btn .pn { display: block; font-size: .875rem; font-weight: 500; line-height: 1.4; }
+.pat-btn .pt { color: var(--muted); font-size: .75rem; line-height: 1.4; }
+.dur-row { display: flex; gap: 8px; }
+.dur-btn { flex: 1; min-height: 43px; border-radius: 10px; background: #12363e; color: var(--muted); border: 1px solid #38565d; font-size: .875rem; }
+.dur-btn.on { color: var(--accent); background: #264a50; border-color: var(--accent); }
+.scenes-row { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 10px; }
+.sc { height: 91px; border: 1px solid #52666b; position: relative; border-radius: 12px; overflow: hidden; padding: 0; background: #1d4148; }
+.sc img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.sc.on { border: 2px solid var(--accent); }
+.sc-overlay { position: absolute; inset: 0; background: linear-gradient(transparent,#001a25cc); }
+.sc-name { position: absolute; bottom: 8px; left: 11px; color: #fff; font-size: .875rem; font-weight: 500; text-shadow: 0 1px 8px #001620; }
+.sc-check { display: none; position: absolute; top: 6px; right: 6px; width: 18px; height: 18px; border-radius: 50%; background: var(--accent); color: #0b3138; font-size: .75rem; font-weight: 700; line-height: 18px; }
+.sc.on .sc-check { display: block; }
+.hrv-optional { margin-top: 21px; padding-top: 16px; border-top: 1px solid #31525b; }
+.hrv-optional summary { color: var(--muted); cursor: pointer; font-size: .875rem; min-height: 30px; }
+.hrv-optional summary span { font-size: .75rem; color: #b2c7c6; margin-left: 10px; }
+.hrv-input-row { display: flex; align-items: center; gap: 12px; margin-top: 12px; }
+.hrv-input-lbl { font-size: .875rem; color: var(--muted); }
+.hrv-num-input { min-width: 0; width: 125px; padding: 8px 12px; background: #092a32; border: 1px solid #537479; border-radius: 8px; color: var(--text); }
+.hrv-optional p { font-size: .875rem; color: var(--muted); margin-top: 9px; }
+.quiet-footer { display: flex; align-items: center; gap: 10px; padding: 23px 3px 0; color: var(--muted); font-size: .875rem; }
+.footer-mark { color: var(--gold); font-size: 1.2rem; }
+.footer-word { font-size: .75rem; letter-spacing: 3px; margin-left: auto; color: #a1bfc2; }
+/* Session: animation is driven by the actual phase duration in calma.js. */
+body.sess-active .site-header, body.sess-active .tabbar { display: none; }
+#sess { position: fixed; inset: 0; width: 100%; margin: 0; z-index: 60; min-height: 100dvh; padding: 110px 20px 115px; background: var(--bg); overflow-y: auto; isolation: isolate; }
+#sceneBg { position: fixed; inset: 0; z-index: -2; background-size: cover; background-position: center; }
+#sceneBg::after { content: ''; position: absolute; inset: 0; background: linear-gradient(#03232cb3,#03232c70,#03232cd9); }
+.yt-wrap { position: absolute; inset: 0; display: none; }
+.yt-wrap.active { display: block; }
+.yt-wrap video { width: 100%; height: 100%; object-fit: cover; }
+#sess-ui { min-height: calc(100dvh - 225px); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.sess-hdr { position: fixed; top: 0; left: 0; right: 0; display: flex; align-items: center; justify-content: space-between; padding: max(25px,env(safe-area-inset-top)) max(25px, calc((100vw - 1120px)/2)); gap: 20px; }
+.btn-end, .fab { border: 1px solid #a8c9c080; background: #10343cd9; border-radius: 100px; color: var(--text); min-height: 46px; padding: 10px 21px; font-size: .875rem; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+.sess-clock { font-size: 1.1rem; color: var(--text); font-variant-numeric: tabular-nums; padding: 10px 15px; border-radius: 100px; background: #10343ca8; }
+.session-intro { color: #e4eee9; text-align: center; font-size: .875rem; letter-spacing: 1px; margin-bottom: 22px; }
+.stage { position: relative; width: min(330px,80vw); aspect-ratio: 1; display: grid; place-items: center; isolation: isolate; }
+.breath-track { position: absolute; inset: 0; border: 1px solid #c0eadd55; border-radius: 50%; }
+.breath-track::after { content: ''; position: absolute; inset: 16px; border: 1px solid #c0eadd20; border-radius: 50%; }
+.breath-disc { position: absolute; inset: 18px; border: 1px solid #bbecdc9c; border-radius: 50%; background: radial-gradient(circle at 35% 25%,#b4e8d966,#72c1b733 65%); box-shadow: 0 0 60px #a2e2cc1c,inset 0 0 45px #c3efe233; transform: scale(.58); transition: transform var(--breathDur,4s) linear; z-index: -1; backdrop-filter: blur(7px); -webkit-backdrop-filter: blur(7px); }
+.breath-center { text-align: center; padding: 15px; }
+.s-phase { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 2.7rem; line-height: 1.15; max-width: 280px; text-shadow: 0 2px 20px #00212d; }
+.s-count { font-size: 2.5rem; font-weight: 400; min-height: 62px; font-variant-numeric: tabular-nums; }
+.s-msg { margin-top: 27px; text-align: center; font-family: 'Cormorant Garamond', Georgia, serif; font-style: italic; font-size: 1.7rem; line-height: 1.4; min-height: 38px; opacity: 0; transition: opacity .25s; color: var(--text); }
+.s-msg.show { opacity: 1; }
+.s-cycle { margin-top: 12px; font-size: .875rem; color: #d0e3df; min-height: 22px; }
+.session-comfort { font-size: .875rem; color: #d0e3df; margin-top: 7px; }
+.fab { position: fixed; bottom: max(27px,env(safe-area-inset-bottom)); left: 50%; transform: translateX(-50%); display: flex; align-items: center; justify-content: center; gap: 9px; white-space: nowrap; }
+.fab:active:not(:disabled) { transform: translateX(-50%); }
+.fab.off { color: #c5d9d6; }
+/* Bring retained sound, meditation and HRV views into the new visual system. */
+#hrv, #freqmed { max-width: 820px; padding: 115px 0 45px; }
+#hrv .hrv-hdr { align-items: flex-start; margin: 22px 0 25px; }
+.hrv-hdr-title, .fm-header-title { font-family: 'Cormorant Garamond', Georgia, serif; font-size: 2.8rem; font-weight: 400; line-height: 1.1; letter-spacing: -.5px; }
+.hrv-hdr-sub, .fm-header-sub { font-size: .75rem; color: var(--accent); letter-spacing: 2px; margin-bottom: 8px; }
+.panel-description { margin-top: 12px; font-size: 1rem; color: var(--muted); }
+.local-note { font-size: .875rem; color: var(--muted); margin-top: 6px; }
+.hrv-tabs, .fm-tabs { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: 14px; }
+.hrv-tabs { margin-bottom: 20px; }
+.hrv-tab, .fm-tab { min-height: 46px; font-size: .875rem; }
+.hrv-tab.on, .fm-tab.active { background: #294e54; color: var(--accent); border-color: #779c9f; }
+.hrv-stats-grid { gap: 14px; margin-bottom: 18px; }
+.hrv-scard { min-width: 0; padding: 20px; background: var(--surface); border-color: var(--border); border-radius: 18px; gap: 8px; }
+.hrv-scard-lbl, .hrv-card-lbl, .hrv-rlbl { font-size: .875rem; color: var(--muted); }
+.hrv-scard-big, .hrv-lst-big { font-size: 2.3rem; line-height: 1.2; }
+.hrv-scard-sub { font-size: .75rem; color: var(--muted); }
+.hrv-tcard, .hrv-lstcard, .hrv-rblock { background: var(--surface); border-color: var(--border); border-radius: 18px; padding: 22px; margin-bottom: 18px; }
+.hrv-mood, .hrv-chip, .med-dur-btn, .med-snd, .med-ctrl { min-height: 45px; }
+.hrv-chart-none, .hrv-in-hint { color: var(--muted); font-size: .875rem; }
+.hrv-clear-btn, .hrv-hi-del { color: #ffb5b0; min-height: 44px; min-width: 44px; }
+.hrv-hitem { background: var(--surface); border-color: var(--border); padding: 15px; }
+.hrv-hi-info, .hrv-lst-right { min-width: 0; overflow-wrap: anywhere; }
+.hrv-hi-date, .hrv-lst-date { font-size: .75rem; }
+.hrv-save-btn, .med-start-btn { background: var(--accent); color: #10393b; border: 1px solid #c4f6e7; font-size: 1rem; font-weight: 700; text-transform: none; letter-spacing: 0; border-radius: 100px; min-height: 54px; }
+.hrv-save-btn:hover, .med-start-btn:hover { background: #c4f0e5; }
+.fm-header { text-align: left; padding: 22px 0 0; }
+.fm-header-title em { color: var(--accent); }
+.fm-tabs { position: static; margin: 25px 0 0; }
+.fm-panel { width: 100%; padding: 22px 0 0; }
+.sound-intro { font-size: .875rem; color: var(--muted); margin: 0 0 24px; }
+.fm-section { padding: 22px; border: 1px solid var(--border); border-radius: 20px; background: var(--surface); margin-bottom: 20px; }
+.fm-section-hdr { margin-bottom: 16px; }
+.fm-section-title { font-size: 1.5rem; line-height: 1.2; }
+.fm-section-sub, .fm-pl-meta { font-size: .75rem; color: var(--muted); letter-spacing: .3px; }
+.fm-playlist { padding: 14px; background: #1a4149; border-color: #3c5c62; }
+.fm-playlist:hover { background: #275159; }
+.fm-pl-name { font-family: 'Manrope', sans-serif; font-size: .9375rem; line-height: 1.5; }
+.fm-pl-arrow { color: var(--accent); font-size: 1.2rem; }
+.fm-warning { font-size: .875rem; color: #f3dca8; }
+.med-section-lbl { font-size: .875rem; text-transform: none; color: var(--muted); margin: 21px 0 12px; letter-spacing: 0; }
+.med-modes { gap: 13px; }
+.med-mode { background: var(--surface); border: 1px solid var(--border); padding: 22px 12px; border-radius: 18px; gap: 12px; }
+.med-mode.on { background: #264a50; border-color: var(--accent); }
+.med-mode-name { font-size: .875rem; text-transform: none; letter-spacing: .2px; color: var(--text); }
+.med-mode.on .med-mode-name { color: var(--accent); }
+.med-durs { gap: 10px; }
+.med-dur-btn { flex: 1; white-space: nowrap; background: var(--surface); border-color: var(--border); }
+.med-sounds-grid { gap: 12px; }
+.med-snd { background: var(--surface); border-color: var(--border); font-size: .875rem; }
+.med-dur-btn.on, .med-snd.on, .hrv-chip.on, .hrv-mood.on { background: #264a50; border-color: var(--accent); color: var(--accent); }
+.med-ring-wrap, .med-ring-svg { width: 245px; height: 245px; }
+.med-ring-wrap { margin: 32px auto 24px !important; }
+.med-time-disp { font-family: 'Manrope',sans-serif; font-size: 2.6rem; }
+.med-time-sub, #medTimeDisp { font-family: 'Manrope',sans-serif !important; font-size: .875rem !important; color: var(--muted) !important; letter-spacing: 0 !important; }
+.med-guide-box { background: var(--surface); border-color: var(--border); padding: 22px; }
+.med-guide-text { font-size: 1.6rem; line-height: 1.45; }
+.med-done-phrase { font-size: 1.8rem; }
+.med-hist-item { background: var(--surface); padding: 15px; }
+.med-hist-mode { font-size: .875rem; }
+.med-hist-date { font-size: .75rem; }
+.med-controls { margin-top: 24px !important; }
+.btn-back { min-height: 44px; border-color: var(--border); font-size: .875rem; color: var(--muted); padding: 9px 18px; }
+.app-notice { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 100; background: #244c54; color: var(--text); border: 1px solid #77a9aa; box-shadow: 0 5px 30px #00131d80; border-radius: 15px; padding: 14px 20px; width: max-content; max-width: calc(100% - 32px); font-size: .875rem; }
+.noscript-note { position: fixed; inset: auto 16px 110px; z-index: 100; background: var(--surface); border: 1px solid var(--accent); padding: 20px; }
+@media (min-width: 1250px) { .practice-view { min-height: 550px; } .session-settings { padding: 27px 29px; } .pat-btn { padding: 15px 17px; } }
+@media (max-width: 1000px) and (min-width: 761px) { .tab-item { padding: 12px 10px; gap: 6px; } .tabbar { left: 53%; } .brand-word > span { max-width: 130px; } .screen { width: calc(100% - 40px); } .practice-layout { gap: 16px; grid-template-columns: 1fr 1fr; } .session-settings { padding: 20px; } .settings-index { display: none; } .pat-btn { padding: 12px 10px; } .practice-bottom { padding: 12px 23px 23px; } .practice-topline { padding: 23px 20px 0; } .practice-label { letter-spacing: .5px; } }
+@media (max-width: 760px) {
+  .site-header { height: 77px; padding: 0 21px; }
+  .brand img { width: 36px; height: 36px; border-radius: 9px; }
+  .brand-word { font-size: 1.05rem; letter-spacing: 4px; }
+  .brand-word > span { font-size: .75rem; letter-spacing: 0; }
+  .lang-toggle button { min-width: 37px; min-height: 35px; }
+  .screen { width: calc(100% - 36px); padding: 102px 0 111px; }
+  .welcome { margin-bottom: 23px; }
+  .h-title { font-size: 2.75rem; }
+  .h-sub { font-size: .9375rem; margin-top: 9px; }
+  .eyebrow { font-size: .75rem; }
+  .welcome-note { display: none; }
+  .practice-layout { grid-template-columns: minmax(0,1fr); gap: 18px; }
+  .practice-view { min-height: 361px; border-radius: 23px; }
+  .practice-topline { padding: 19px 19px 0; }
+  .scene-pill { padding: 5px 11px; }
+  .practice-label { font-size: .75rem; letter-spacing: 1px; }
+  .preview-center { min-height: 190px; padding: 25px 10px 20px; }
+  .preview-orbit { width: 162px; height: 162px; }
+  .preview-orbit span { inset: 12px; }
+  .preview-orbit span:nth-child(2) { inset: 25px; }
+  .preview-orbit span:nth-child(3) { inset: -10px; }
+  .preview-title { font-size: 2.8rem; margin: 4px 0; }
+  .preview-caption { font-size: .75rem; }
+  .preview-kicker { font-size: .75rem; letter-spacing: 1.6px; }
+  .practice-bottom { padding: 4px 24px 20px; }
+  .session-summary { margin-bottom: 10px; }
+  .practice-hint { margin-top: 10px; font-size: .75rem; }
+  .session-settings { border-radius: 23px; padding: 23px 20px; }
+  .settings-heading { margin-bottom: 24px; }
+  .settings-index { display: none; }
+  .pat-btn { padding: 15px; }
+  .sc { height: 96px; }
+  .tabbar { top: auto; left: 0; right: 0; bottom: 0; transform: none; justify-content: space-around; gap: 2px; padding: 9px 12px max(12px,env(safe-area-inset-bottom)); border-top: 1px solid #35535a; background: #08262ef5; backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+  .tab-item { flex: 1; flex-direction: column; gap: 4px; padding: 8px 5px; border-radius: 15px; font-size: .75rem; min-height: 56px; }
+  .tab-item .ti-ic { width: 22px; height: 22px; }
+  .tab-item .ti-lb { font-size: .875rem; }
+  .tab-item.on { border-color: transparent; background: #23484f; }
+  .quiet-footer { align-items: flex-start; padding: 20px 3px 0; font-size: .875rem; }
+  .footer-word { display: none; }
+  #hrv, #freqmed { padding: 100px 0 115px; }
+  .hrv-hdr-title, .fm-header-title { font-size: 2.6rem; }
+  .hrv-stats-grid { gap: 9px; }
+  .hrv-scard { padding: 14px 10px; gap: 7px; }
+  .hrv-scard-big { font-size: 1.8rem; }
+  .hrv-scard-lbl { font-size: .75rem; letter-spacing: 0; }
+  .hrv-scard-num { flex-wrap: wrap; }
+  .hrv-scard-sub { font-size: .75rem; overflow-wrap: anywhere; }
+  .hrv-tab { font-size: .875rem; letter-spacing: 0; }
+  .hrv-tcard, .hrv-rblock, .hrv-lstcard { padding: 17px; }
+  .fm-section { padding: 18px 14px; }
+  .fm-section-hdr { gap: 8px; flex-wrap: wrap; }
+  .fm-section-title { font-size: 1.3rem; }
+  .fm-section-icon { display: none; }
+  .fm-section-sub { letter-spacing: 0; line-height: 1.6; }
+  .fm-playlist { gap: 10px; padding: 13px 10px; }
+  .fm-pl-art { width: 36px; height: 40px; }
+  .fm-pl-name { font-size: .9375rem; }
+  .fm-pl-meta { letter-spacing: 0; line-height: 1.5; }
+  .fm-hz-badge { font-size: .75rem; letter-spacing: 0; }
+  .med-durs { gap: 7px; }
+  .med-dur-btn { min-width: 74px; padding: 10px; font-size: .875rem; }
+  .med-sounds-grid { gap: 9px; }
+  .med-snd { font-size: .875rem; letter-spacing: 0; }
+  #sess { padding: 100px 20px 110px; }
+  #sess-ui { min-height: calc(100dvh - 210px); }
+  .stage { width: min(300px,80vw); }
+  .s-phase { font-size: 2.4rem; }
+  .s-msg { font-size: 1.6rem; }
+  .sess-hdr { padding: max(23px,env(safe-area-inset-top)) 23px 10px; }
+  .app-notice { bottom: calc(95px + env(safe-area-inset-bottom)); }
+}
+@media (max-width: 360px) { .screen { width: calc(100% - 28px); } .site-header { padding: 0 15px; } .brand { gap: 8px; } .brand-word > span { max-width: 135px; } .session-settings { padding: 22px 15px; } .pat-btn { padding: 12px; } .practice-label { letter-spacing: .2px; } .h-title { font-size: 2.5rem; } .hrv-stats-grid { flex-wrap: wrap; } .hrv-scard { min-width: 90px; } }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+  .breath-disc { transform: scale(.83) !important; }
+  .yt-wrap video { visibility: hidden; }
+}
+
+</style>
+</head>
+<body>
+
+<a class="skip-link" href="#setup">Ir a mi sesión</a>
+<div id="bg" aria-hidden="true"></div>
+<div id="nightOverlay" hidden></div>
+<header class="site-header">
+  <a class="brand" href="#" onclick="goHome(); return false" aria-label="CALMA, inicio">
+    <img src="logo.svg" width="42" height="42" alt=""/>
+    <span class="brand-word">CALMA<span id="txtLogo">respira y vuelve a ti</span></span>
+  </a>
+  <div class="lang-toggle" aria-label="Idioma de respiración">
+    <button id="btnEs" class="on" onclick="setLang('es')" aria-label="Español" aria-pressed="true">ES</button>
+    <button id="btnEn" onclick="setLang('en')" aria-label="English" aria-pressed="false">EN</button>
+  </div>
+</header>
+<main>
+<section class="screen" id="setup" tabindex="-1" aria-label="Respiración guiada">
+  <div class="welcome">
+    <div>
+      <p class="eyebrow" id="txtTitle">TU MOMENTO DE CALMA</p>
+      <h1 class="h-title" id="welcomeTitle">Vuelve a tu <em>calma.</em></h1>
+      <p class="h-sub" id="txtSub">Baja el ritmo. Este momento es para ti.</p>
+    </div>
+    <span class="welcome-note" id="welcomeNote">Un respiro a la vez.</span>
+  </div>
+  <div class="practice-layout">
+    <div class="practice-view">
+      <div id="setupSceneBg" aria-hidden="true"></div>
+      <div class="practice-shade" aria-hidden="true"></div>
+      <div class="practice-topline"><span class="scene-pill" id="previewScene">Noche</span><span class="practice-label" id="previewLabel">RESPIRACIÓN GUIADA</span></div>
+      <div class="preview-center">
+        <div class="preview-orbit" aria-hidden="true"><span></span><span></span><span></span></div>
+        <div class="preview-words"><span class="preview-kicker" id="previewKicker">ESTÁS AQUÍ</span><span class="preview-title" id="previewTitle">Respira.</span><span class="preview-caption" id="previewCaption">Lo demás puede esperar.</span></div>
+      </div>
+      <div class="practice-bottom">
+        <p class="session-summary" id="sessionSummary">3 minutos para ti</p>
+        <button class="btn-begin" id="btnBegin">Comenzar sesión</button>
+        <p class="practice-hint" id="practiceHint">Sigue el círculo. Encuentra tu propio ritmo.</p>
+      </div>
+    </div>
+    <aside class="session-settings" aria-label="Configurar sesión">
+      <div class="settings-heading"><h2 id="txtSetupHdr">Tu pausa, a tu manera</h2><span class="settings-index" aria-hidden="true">01 — 03</span></div>
+      <div class="setting-block">
+        <h3 class="sec-lbl" id="txtPatLbl"><span>01</span> ¿Cómo quieres sentirte?</h3>
+        <div class="pat-list" id="patList" role="group" aria-labelledby="txtPatLbl"></div>
+      </div>
+      <div class="setting-block">
+        <h3 class="sec-lbl" id="txtDurLbl"><span>02</span> Tiempo para ti</h3>
+        <div class="dur-row" id="durRow" role="group" aria-labelledby="txtDurLbl">
+          <button class="dur-btn on" data-m="3" aria-pressed="true">3 min</button>
+          <button class="dur-btn" data-m="5" aria-pressed="false">5 min</button>
+          <button class="dur-btn" data-m="10" aria-pressed="false">10 min</button>
+        </div>
+      </div>
+      <div class="setting-block">
+        <h3 class="sec-lbl" id="txtSceneLbl"><span>03</span> Elige tu paisaje</h3>
+        <div class="scenes-row" id="scenesRow" role="group" aria-labelledby="txtSceneLbl">
+          <button class="sc on" data-s="ocean" aria-pressed="true"><img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/198844-908857695_dqxlvu.jpg" width="200" height="140" alt=""/><span class="sc-overlay"></span><span class="sc-check" aria-hidden="true">✓</span><span class="sc-name" id="scName0">Noche</span></button>
+          <button class="sc" data-s="forest" aria-pressed="false"><img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/186070-876973719_ukldpc.jpg" width="200" height="140" alt=""/><span class="sc-overlay"></span><span class="sc-check" aria-hidden="true">✓</span><span class="sc-name" id="scName1">Océano</span></button>
+          <button class="sc" data-s="sunset" aria-pressed="false"><img src="https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/163326-827461488_j4wvkr.jpg" width="200" height="140" alt=""/><span class="sc-overlay"></span><span class="sc-check" aria-hidden="true">✓</span><span class="sc-name" id="scName2">Bosque</span></button>
+        </div>
+      </div>
+      <details class="hrv-optional">
+        <summary id="hrvOptionalLabel">Añadir HRV de hoy <span>Opcional</span></summary>
+        <div class="hrv-input-row">
+          <label for="hrvInput" class="hrv-input-lbl">HRV (ms)</label>
+          <input type="number" id="hrvInput" class="hrv-num-input" placeholder="Ej. 42" min="10" max="250" step="1" inputmode="numeric" aria-describedby="hrvHint"/>
+        </div>
+        <p id="hrvHint">Escribe el valor de tu reloj o app de salud.</p>
+      </details>
+    </aside>
+  </div>
+  <div class="quiet-footer"><span class="footer-mark" aria-hidden="true">✧</span><p id="footerNote">No tienes que resolverlo todo ahora.</p><span class="footer-word">CALMA</span></div>
+</section>
+
+<!-- SESSION -->
+<div class="screen below" id="sess">
+  <div id="sceneBg">
+
+    <div class="yt-wrap" id="yt-ocean"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/198844-908857695_dqxlvu.mp4"></video></div>
+    <div class="yt-wrap" id="yt-forest"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/186070-876973719_ukldpc.mp4"></video></div>
+    <div class="yt-wrap" id="yt-sunset"><video muted loop playsinline preload="none" src="https://res.cloudinary.com/dtsljzbhu/video/upload/163326-827461488_j4wvkr.mp4"></video></div>
+
+
+  </div>
+
+  <div id="sess-ui">
+
+  <div class="sess-hdr">
+    <button class="btn-end" id="btnEnd">Terminar</button>
+    <span class="sess-clock" id="clock" role="timer" aria-label="Tiempo restante"></span>
+  </div>
+
+  <div class="session-intro" id="sessionTechnique"></div>
+  <div class="stage" id="breathStage">
+    <div class="breath-track" aria-hidden="true"></div>
+    <div class="breath-disc" id="breathDisc" aria-hidden="true"></div>
+    <div class="breath-center"><div class="s-phase" id="sPhase" aria-live="polite"></div><div class="s-count" id="sCount" aria-hidden="true"></div></div>
+  </div>
+  <div class="s-msg show" id="sMsg"></div>
+  <div class="s-cycle" id="sCycle"></div>
+  <p class="session-comfort" id="sessionComfort">Respira suavemente, sin forzar.</p>
+  </div><!-- /sess-ui -->
+
+  <button class="fab" id="fab" aria-label="Silenciar sonido" aria-pressed="true"><span id="soundIcon" aria-hidden="true">♫</span><span id="soundLabel">Sonido activado</span></button>
+
+</div>
+
+<!-- HRV TRACKER -->
+<section class="screen below" id="hrv" style="display:none">
+
+  <button class="btn-back" id="btnHrvBack">&#8592; Volver</button>
+
+  <div class="hrv-hdr">
+    <span class="hrv-hdr-sub">CALMA</span>
+    <h2 class="hrv-hdr-title">Mi <em>bienestar</em></h2>
+    <p class="panel-description">Tu registro personal de respiración y meditación.</p><p class="local-note">Los registros se guardan solo en este navegador.</p>
+  </div>
+
+  <div class="hrv-tabs">
+    <button class="hrv-tab on" data-panel="dashboard">Resumen</button>
+    <button class="hrv-tab" data-panel="registrar">+ Registrar</button>
+    <button class="hrv-tab" data-panel="historial">Historial</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="panel-dashboard" style="width:100%">
+    <div class="hrv-stats-grid">
+      <div class="hrv-scard">
+        <span class="hrv-scard-lbl">PROMEDIO</span>
+        <div class="hrv-scard-num"><span class="hrv-scard-big" id="statProm">&mdash;</span><span class="hrv-scard-unit">ms</span></div>
+        <span class="hrv-scard-sub">Total</span>
+      </div>
+      <div class="hrv-scard">
+        <span class="hrv-scard-lbl">7 D&Iacute;AS</span>
+        <div class="hrv-scard-num"><span class="hrv-scard-big" id="stat7d">&mdash;</span><span class="hrv-scard-unit">ms</span></div>
+      </div>
+      <div class="hrv-scard">
+        <span class="hrv-scard-lbl">RACHA</span>
+        <div class="hrv-scard-num"><span class="hrv-scard-big" id="statRacha">&mdash;</span><span class="hrv-scard-unit">d</span></div>
+        <span class="hrv-scard-sub">Consecutivos</span>
+      </div>
+    </div>
+
+    <div class="hrv-tcard">
+      <span class="hrv-card-lbl">TENDENCIA HRV</span>
+      <svg id="hrvChartSvg" viewBox="0 0 300 110" preserveAspectRatio="none" style="display:none"></svg>
+      <p class="hrv-chart-none" id="hrvChartNone">Sin registros a&uacute;n</p>
+    </div>
+
+    <div class="hrv-lstcard" id="lastSessCard" style="display:none">
+      <span class="hrv-card-lbl">&Uacute;LTIMA SESI&Oacute;N</span>
+      <div class="hrv-lst-body">
+        <div class="hrv-lst-hrv">
+          <span class="hrv-lst-big" id="lastHrvVal">&mdash;</span>
+          <span class="hrv-scard-unit">ms</span>
+        </div>
+        <div class="hrv-lst-right">
+          <span class="hrv-lst-tech" id="lastTech"></span>
+          <span class="hrv-lst-date" id="lastDate"></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGISTRAR -->
+  <div id="panel-registrar" style="display:none;width:100%">
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">TU HRV (MS)</span>
+      <input type="number" id="regHrv" class="hrv-big-in" aria-label="HRV en milisegundos" placeholder="Ej: 42" min="10" max="250" inputmode="numeric"/>
+      <span class="hrv-in-hint">Encu&eacute;ntralo en tu reloj o app de salud &rarr; HRV</span>
+    </div>
+
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">T&Eacute;CNICA</span>
+      <div class="hrv-chips" id="techChips">
+        <button class="hrv-chip on" data-v="4-7-8">4-7-8</button>
+        <button class="hrv-chip" data-v="Box Breathing">Box Breathing</button>
+        <button class="hrv-chip" data-v="Coherente">Coherente</button>
+        <button class="hrv-chip" data-v="Wim Hof">Wim Hof</button>
+        <button class="hrv-chip" data-v="Otra">Otra</button>
+      </div>
+    </div>
+
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">DURACI&Oacute;N</span>
+      <div class="hrv-chips" id="durChips">
+        <button class="hrv-chip" data-v="3">3&prime;</button>
+        <button class="hrv-chip on" data-v="5">5&prime;</button>
+        <button class="hrv-chip" data-v="10">10&prime;</button>
+        <button class="hrv-chip" data-v="15">15&prime;</button>
+        <button class="hrv-chip" data-v="20">20&prime;</button>
+      </div>
+    </div>
+
+    <div class="hrv-rblock">
+      <span class="hrv-rlbl">&iquest;C&Oacute;MO TE SIENTES?</span>
+      <div class="hrv-moods" id="moodChips">
+        <button class="hrv-mood" data-v="1">&#128560;</button>
+        <button class="hrv-mood" data-v="2">&#128532;</button>
+        <button class="hrv-mood on" data-v="3">&#128528;</button>
+        <button class="hrv-mood" data-v="4">&#128578;</button>
+        <button class="hrv-mood" data-v="5">&#128524;</button>
+      </div>
+    </div>
+
+    <button class="hrv-save-btn" id="btnHrvSave">Guardar Registro</button>
+  </div>
+
+  <!-- HISTORIAL -->
+  <div id="panel-historial" style="display:none;width:100%">
+    <div class="hrv-hist-hdr">
+      <span class="hrv-hist-cnt" id="histCnt">0 registros</span>
+      <button class="hrv-clear-btn" id="btnClearAll">Borrar todo</button>
+    </div>
+    <div id="histList"></div>
+  </div>
+
+</section>
+
+
+<!-- FRECUENCIAS & MEDITAR -->
+<div class="screen below" id="freqmed" style="display:none">
+
+  <button class="btn-back" id="btnFmBack">&#8592; Volver</button>
+
+  <div class="fm-header">
+    <div class="fm-header-sub">SONIDO &amp; MEDITACIÓN</div>
+    <h2 class="fm-header-title">Encuentra tu <em>pausa.</em></h2>
+  </div>
+
+  <div class="fm-tabs">
+    <button class="fm-tab active" id="fmTab0" onclick="switchFmTab(0)">&#127911; Frecuencias</button>
+    <button class="fm-tab" id="fmTab1" onclick="switchFmTab(1)">&#129496; Meditar</button>
+  </div>
+
+  <!-- TAB 0: FRECUENCIAS -->
+  <div class="fm-panel active" id="fmPanel0"><p class="sound-intro">Elige qué escuchar. Los enlaces abren una búsqueda en Spotify.</p>
+
+    <!-- 432 Hz -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#127807;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">432 Hz &mdash; Armon&iacute;a Natural</div>
+          <div class="fm-section-sub">Sue&ntilde;o &bull; Relajaci&oacute;n &bull; Equilibrio</div>
+        </div>
+        <div class="fm-hz-badge">432 HZ</div>
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/search/432hz%20feel%20good%20relaxation%20healing" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz432">&#127807;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">432Hz: Feel Good</div>
+          <div class="fm-pl-meta">Spotify &bull; Oficial</div>
+
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/432%20hz%20sleep%20relax" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz432">&#127769;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">432 Hz Sleep Music</div>
+          <div class="fm-pl-meta">Relajaci&oacute;n profunda &bull; Noche</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/432%20hz%20deep%20healing%20meditation" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz432">&#10024;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">432 Hz Deep Healing</div>
+          <div class="fm-pl-meta">Alivio del estr&eacute;s &bull; Restauraci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+    <!-- 528 Hz -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#10084;&#65039;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">528 Hz &mdash; Frecuencia del Amor</div>
+          <div class="fm-section-sub">Sanaci&oacute;n &bull; ADN &bull; Solfeggio</div>
+        </div>
+        <div class="fm-hz-badge">528 HZ</div>
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/search/528%20hz%20love%20frequency%20healing" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz528">&#10084;&#65039;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">528 Hz Love Frequency</div>
+          <div class="fm-pl-meta">Sanaci&oacute;n &bull; Transformaci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/solfeggio%20528%20hz%20meditation%20healing" target="_blank" rel="noopener">
+        <div class="fm-pl-art hz528">&#127774;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Solfeggio 528 Hz</div>
+          <div class="fm-pl-meta">Frecuencias sagradas &bull; Meditaci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+    <!-- Binaural Beats -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#127911;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">Binaural Beats</div>
+          <div class="fm-section-sub">Ondas cerebrales &bull; Focus &bull; Theta</div>
+        </div>
+        <div class="fm-hz-badge">BINAURAL</div>
+      </div>
+      <div class="fm-warning">
+        &#127911;&nbsp; Requieren aud&iacute;fonos est&eacute;reo para funcionar correctamente
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/search/binaural%20beats%20alpha%20focus%20concentration" target="_blank" rel="noopener">
+        <div class="fm-pl-art binaural">&#128301;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Alpha Waves &mdash; Focus</div>
+          <div class="fm-pl-meta">8&ndash;14 Hz &bull; Concentraci&oacute;n</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/binaural%20beats%20theta%20sleep%20meditation" target="_blank" rel="noopener">
+        <div class="fm-pl-art binaural">&#127769;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Theta Waves &mdash; Sue&ntilde;o</div>
+          <div class="fm-pl-meta">4&ndash;8 Hz &bull; Estado hipn&oacute;gico</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/binaural%20beats%20delta%20deep%20sleep" target="_blank" rel="noopener">
+        <div class="fm-pl-art binaural">&#128171;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Delta Waves &mdash; Descanso</div>
+          <div class="fm-pl-meta">0.5&ndash;4 Hz &bull; Sue&ntilde;o profundo</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+    <!-- Meditacion Guiada -->
+    <div class="fm-section">
+      <div class="fm-section-hdr">
+        <div class="fm-section-icon">&#129504;</div>
+        <div class="fm-section-info">
+          <div class="fm-section-title">Meditaci&oacute;n Guiada</div>
+          <div class="fm-section-sub">Espa&ntilde;ol &bull; Ingl&eacute;s &bull; Podcast</div>
+        </div>
+      </div>
+      <a class="fm-playlist" href="https://open.spotify.com/search/Andr%C3%A9s%20Salgado%20psic%C3%B3logo%20meditaci%C3%B3n" target="_blank" rel="noopener">
+        <div class="fm-pl-art guiada">&#127908;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Andr&eacute;s Salgado</div>
+          <div class="fm-pl-meta">Psic&oacute;logo &bull; Podcast &bull; Espa&ntilde;ol</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/meditaci%C3%B3n%20guiada%20en%20espa%C3%B1ol%20ansiedad%20mindfulness" target="_blank" rel="noopener">
+        <div class="fm-pl-art guiada">&#127466;&#127480;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Meditaci&oacute;n Guiada ES</div>
+          <div class="fm-pl-meta">Ansiedad &bull; Mindfulness &bull; Espa&ntilde;ol</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+      <a class="fm-playlist" href="https://open.spotify.com/search/guided%20meditation%20english%20anxiety%20mindfulness" target="_blank" rel="noopener">
+        <div class="fm-pl-art guiada">&#127468;&#127463;</div>
+        <div class="fm-pl-info">
+          <div class="fm-pl-name">Guided Meditation EN</div>
+          <div class="fm-pl-meta">Anxiety &bull; Mindfulness &bull; English</div>
+        </div>
+        <div class="fm-pl-arrow">&#8599;</div>
+      </a>
+    </div>
+
+  </div><!-- /fmPanel0 -->
+
+  <!-- TAB 1: MEDITAR -->
+  <div class="fm-panel" id="fmPanel1"><p class="sound-intro">Elige un modo y un sonido. La guía de voz está en español.</p>
+
+    <!-- CONFIG (se oculta al iniciar) -->
+    <div id="medSetup">
+      <div class="med-section-lbl">Modo</div>
+      <div class="med-modes">
+        <button class="med-mode on" data-m="0"><span class="med-mode-icon">&#9775;&#65039;</span><span class="med-mode-name">Silencio</span></button>
+        <button class="med-mode" data-m="1"><span class="med-mode-icon">&#128134;</span><span class="med-mode-name">Body Scan</span></button>
+        <button class="med-mode" data-m="2"><span class="med-mode-icon">&#9728;&#65039;</span><span class="med-mode-name">Gratitud</span></button>
+        <button class="med-mode" data-m="3"><span class="med-mode-icon">&#127956;&#65039;</span><span class="med-mode-name">Visualizaci&oacute;n</span></button>
+      </div>
+      <div class="med-section-lbl">Duraci&oacute;n</div>
+      <div class="med-durs">
+        <button class="med-dur-btn" data-d="3">3 min</button>
+        <button class="med-dur-btn" data-d="5">5 min</button>
+        <button class="med-dur-btn on" data-d="10">10 min</button>
+        <button class="med-dur-btn" data-d="15">15 min</button>
+        <button class="med-dur-btn" data-d="20">20 min</button>
+      </div>
+      <div class="med-section-lbl">Sonido ambiente</div>
+      <div class="med-sounds-grid">
+        <button class="med-snd on" data-s="0">&#127783; Lluvia</button>
+        <button class="med-snd" data-s="1">&#127754; Olas</button>
+        <button class="med-snd" data-s="2">&#128293; Fuego</button>
+        <button class="med-snd" data-s="3">&#127810; Viento</button>
+        <button class="med-snd" data-s="4">&#128276; Cuencos</button>
+        <button class="med-snd" data-s="-1">&#128263; Sin ambiente</button>
+      </div>
+    </div>
+
+    <!-- MODO ACTIVO: etiqueta -->
+    <div class="med-mode-lbl-active" id="medModeLabel" style="display:none;margin-top:10px"></div>
+
+    <!-- RELOJ — siempre visible -->
+    <div class="med-ring-wrap" id="medRingWrap" style="display:none;margin-top:18px">
+      <svg class="med-ring-svg" viewBox="0 0 188 188">
+        <circle class="med-ring-bg" cx="94" cy="94" r="82"/>
+        <circle class="med-ring-fg" id="medRingFg" cx="94" cy="94" r="82"
+          stroke-dasharray="515.22" stroke-dashoffset="515.22"/>
+      </svg>
+      <div class="med-ring-inner">
+        <div class="med-time-disp" id="medElapsedDisp">0:00</div>
+        <div class="med-time-sub">&#9203; transcurrido</div>
+        <div  id="medTimeDisp"></div>
+      </div>
+    </div>
+
+    <!-- TEXTO GUÍA (oculto hasta iniciar) -->
+    <div class="med-guide-box" id="medGuideBox" style="display:none;margin-top:14px">
+      <div class="med-guide-text" id="medGuideText"></div>
+    </div>
+
+    <!-- COMENZAR (se oculta al iniciar) -->
+    <button class="med-start-btn" id="btnMedStart" style="margin-top:18px">&#9654; Comenzar</button>
+
+    <!-- CONTROLES ACTIVOS: Pausa + Detener (ocultos hasta iniciar) -->
+    <div class="med-controls" id="medCtrl" style="display:none;margin-top:14px">
+      <button class="med-ctrl" id="btnMedPause">&#9646;&#9646; Pausa</button>
+      <button class="med-ctrl med-ctrl-stop" id="btnMedStop">&#9632; Detener</button>
+    </div>
+
+    <!-- DONE -->
+    <div id="medDone" style="display:none;opacity:0;margin-top:10px">
+      <div class="med-done-icon">&#10024;</div>
+      <div class="med-done-phrase" id="medDonePhrase"></div>
+      <div class="med-done-stats" id="medDoneStats"></div>
+      <button class="med-start-btn" id="btnMedAgain">Meditar de nuevo</button>
+      <div class="med-hist-hdr">Sesiones recientes</div>
+      <div id="medHistList"></div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- BOTTOM NAV -->
+</main>
+<nav class="tabbar" id="tabbar" aria-label="Navegación principal">
+  <button class="tab-item on" id="navHome" onclick="goHome()">
+    <svg class="ti-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 8h12a3 3 0 1 0-3-3M3 12h16a3 3 0 1 1-3 3M3 16h5a3 3 0 1 1-3 3"/></svg><span class="ti-lb" id="navHomeLbl">Respirar</span>
+  </button>
+  <button class="tab-item" id="navFreq" onclick="navTo('freq')">
+    <svg class="ti-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 18V5l12-2v13M9 8l12-2"/><ellipse cx="6" cy="18" rx="3" ry="3"/><ellipse cx="18" cy="16" rx="3" ry="3"/></svg><span class="ti-lb" id="navFreqLbl">Sonido</span>
+  </button>
+  <button class="tab-item" id="navMed" onclick="navTo('med')">
+    <svg class="ti-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><path d="m8 11 4-3 4 3 4 2M8 11l-4 2M9 14l-5 4c-2 2 0 3 3 3h10c3 0 5-1 3-3l-5-4M12 10v5"/></svg><span class="ti-lb" id="navMedLbl">Meditar</span>
+  </button>
+  <button class="tab-item" id="navData" onclick="navTo('data')">
+    <svg class="ti-ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><span class="ti-lb" id="navDataLbl">Datos</span>
+  </button>
+</nav>
+
+<div id="appNotice" class="app-notice" role="status" hidden></div>
+<noscript><p class="noscript-note">Activa JavaScript para usar las sesiones de respiración y meditación.</p></noscript>
+<script>
+var LANG = 'es';
+
+var T = {
+  es: {
+    logo:'Respirar', title:'CALMA',
+    sub:'Suelta la ansiedad.<br>Inhala paz y claridad.',
+    setupHdr:'Configura tu experiencia de respiraci\u00f3n:',
+    durLbl:'\u00bfCu\u00e1nto tiempo?', sceneLbl:'\u00bfQu\u00e9 ambiente?',
+    patLbl:'\u00bfC\u00f3mo quieres sentirte?', begin:'Comenzar Sesi\u00f3n',
+    end:'Terminar', complete:'Sesi\u00f3n completa',
+    greet:{morning:'Buenos d\u00edas', afternoon:'Buenas tardes', evening:'Buenas noches', night:'Buenas noches'},
+    suggested:'Sugerido',
+    nav:{home:'Respirar', freq:'Sonido', med:'Meditar', data:'Datos'},
+    cycle:'Ciclo', cycles:'ciclos', cycle1:'ciclo',
+    scenes:['Noche','Oc\u00e9ano','Bosque'],
+    phases:{inhale:'Inhala', hold:'Sost\u00e9n', exhale:'Exhala', holdout:'Sost\u00e9n'},
+    msgs:{
+      inhale: ['Abre el pecho','Llena los pulmones','Recibe la calma','Bienvenida, paz','Espacio para ti'],
+      hold:   ['Qu\u00e9date aqu\u00ed','Siente el silencio','Todo est\u00e1 bien','En este momento'],
+      exhale: ['Suelta la tensi\u00f3n','Libera lo que pesa','D\u00e9jalo ir','Cuerpo, rel\u00e1jate','Que todo salga'],
+      holdout:['Descansa','Vac\u00edo y libre','En calma']
+    },
+    pats:[
+      { name:'\ud83c\udf0a Calmar la mente',  sub:'Equilibrio total \u00b7 4-4-4-4',     info:'Equilibra el sistema nervioso. Ideal para reducir el estr\u00e9s y mejorar la concentraci\u00f3n.' },
+      { name:'\ud83c\udf19 Dormir profundo',   sub:'Relajaci\u00f3n profunda \u00b7 4-7-8', info:'Calma la ansiedad r\u00e1pidamente e induce el sue\u00f1o. Muy efectiva antes de dormir.' },
+      { name:'\ud83c\udf3f Soltar tensi\u00f3n', sub:'Exhala largo \u00b7 5-2-7',           info:'Activa el sistema parasimp\u00e1tico para relajaci\u00f3n profunda. Perfecta para soltar tensiones.' },
+      { name:'\u26a1 Activar energ\u00eda',     sub:'Ritmo activo \u00b7 3-3',             info:'Aumenta la energ\u00eda y el enfoque mental. Ideal para empezar el d\u00eda.' }
+    ]
+  },
+  en: {
+    logo:'Breathe', title:'CALM',
+    sub:'Release anxiety.<br>Inhale peace and clarity.',
+    setupHdr:'Set up your breathing experience:',
+    durLbl:'How long?', sceneLbl:'What view?',
+    patLbl:'How do you want to feel?', begin:'Begin Session',
+    end:'End', complete:'Session complete',
+    greet:{morning:'Good morning', afternoon:'Good afternoon', evening:'Good evening', night:'Good evening'},
+    suggested:'Suggested',
+    nav:{home:'Breathe', freq:'Sound', med:'Meditate', data:'Data'},
+    cycle:'Cycle', cycles:'cycles', cycle1:'cycle',
+    scenes:['Night','Ocean','Forest'],
+    phases:{inhale:'Inhale', hold:'Hold', exhale:'Exhale', holdout:'Hold'},
+    msgs:{
+      inhale: ['Open your chest','Fill your lungs','Welcome the calm','Peace flows in','Space for you'],
+      hold:   ['Stay here','Feel the stillness','All is well','In this moment'],
+      exhale: ['Release the tension','Let it all go','Set it free','Relax your body','Let it out'],
+      holdout:['Rest now','Empty and free','In stillness']
+    },
+    pats:[
+      { name:'🌊 Calm the mind',    sub:'Total balance · 4-4-4-4',      info:'Balances the nervous system. Great for reducing stress and improving focus.' },
+      { name:'🌙 Deep sleep',        sub:'Deep relaxation · 4-7-8',   info:'Quickly calms anxiety and helps induce sleep. Very effective before bed.' },
+      { name:'🌿 Release tension', sub:'Long exhale · 5-2-7',           info:'Activates the parasympathetic system for deep relaxation. Perfect for releasing tension.' },
+      { name:'⚡ Boost energy',       sub:'Active rhythm · 3-3',           info:'Increases energy and mental focus. Ideal for starting the day or when fatigue sets in.' }
+    ]
+  }
+};
+
+
+var selectedPatIndex = null;
+var extraCopy = {
+  es: {brand:'respira y vuelve a ti', title:'Vuelve a tu <em>calma.</em>', sub:'Baja el ritmo. Este momento es para ti.', setup:'Tu pausa, a tu manera', duration:'Tiempo para ti', scene:'Elige tu paisaje', pattern:'¿Cómo quieres sentirte?', begin:'Comenzar sesión', note:'Un respiro a la vez.', here:'ESTÁS AQUÍ', breathe:'Respira.', caption:'Lo demás puede esperar.', label:'RESPIRACIÓN GUIADA', hint:'Sigue el círculo. Encuentra tu propio ritmo.', footer:'No tienes que resolverlo todo ahora.', soundOn:'Sonido activado', soundOff:'Sin sonido', comfort:'Respira suavemente, sin forzar.'},
+  en: {brand:'breathe and come back to you', title:'Come back to <em>calm.</em>', sub:'Slow down. This moment is yours.', setup:'Your pause, your way', duration:'Time for yourself', scene:'Choose your view', pattern:'How do you want to feel?', begin:'Begin session', note:'One breath at a time.', here:'YOU ARE HERE', breathe:'Breathe.', caption:'Everything else can wait.', label:'GUIDED BREATHING', hint:'Follow the circle. Find your own rhythm.', footer:'You don’t have to solve it all right now.', soundOn:'Sound on', soundOff:'Sound off', comfort:'Breathe gently, without forcing.'}
+};
+var PAT_ICONS = [
+  '<path d="M3 9h12a3 3 0 1 0-3-3M3 14h16a3 3 0 1 1-3 3M3 19h5"/>',
+  '<path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/>',
+  '<path d="M20 4C8 2 3 9 6 15s14 2 14-11Z M5 20 16 9"/>',
+  '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.5 1.5m11 11L19 19M5 19l1.5-1.5m11-11L19 5"/>'
+];
+T.es.pats.forEach(function(p,i){ p.name=['Calmar la mente','Preparar el descanso','Soltar tensión','Encontrar energía'][i]; p.sub=['Ritmo en caja · 4–4–4–4','Pausa larga · 4–7–8','Exhalación larga · 5–2–7','Ritmo continuo · 3–3'][i]; });
+T.en.pats.forEach(function(p,i){ p.name=['Calm the mind','Unwind for sleep','Release tension','Find your energy'][i]; p.sub=['Box breathing · 4–4–4–4','Long hold · 4–7–8','Long exhale · 5–2–7','Continuous · 3–3'][i]; });
+
+var PATS_BASE = [
+  { timing:'4\u20134\u20134\u20134', phases:[{t:'inhale',d:4},{t:'hold',d:4},{t:'exhale',d:4},{t:'holdout',d:4}] },
+  { timing:'4\u20137\u20138',        phases:[{t:'inhale',d:4},{t:'hold',d:7},{t:'exhale',d:8}] },
+  { timing:'5\u20132\u20137',        phases:[{t:'inhale',d:5},{t:'hold',d:2},{t:'exhale',d:7}] },
+  { timing:'3\u20133',              phases:[{t:'inhale',d:3},{t:'exhale',d:3}] }
+];
+
+function buildPats(){
+  return PATS_BASE.map(function(p,i){
+    return {
+      name: T[LANG].pats[i].name,
+      sub:  T[LANG].pats[i].sub,
+      timing: p.timing,
+      info: T[LANG].pats[i].info,
+      phases: p.phases.map(function(ph){
+        return {l:T[LANG].phases[ph.t], t:ph.t, d:ph.d};
+      })
+    };
+  });
+}
+
+var PATS = buildPats();
+
+var BG = { ocean:'night', forest:'', sunset:'forest' };
+var cfg = { dur:3, scene:'ocean', pat:PATS[0] };
+var SCENE_SND = { ocean:'wind', forest:'ocean', sunset:'birds' };
+var state = { on:false, pIdx:0, sec:0, cyc:0, sessLeft:0 };
+var tPhase=null, tSess=null, tBegin=null, soundOn=true;
+var actx=null, audioBufs={}, activeChimes=[];
+var ambiEl=null, ambiTimer=null;
+var msgIdxMap={inhale:0,hold:0,exhale:0,holdout:0};
+
+var SOUND_URLS = {
+  ocean: 'olas.mp3',
+  river: 'lluvia.mp3',
+  wind:  'viento.mp3',
+  birds: 'viento.mp3'
+};
+
+/* Audio */
+function getCtx(){
+  if(!actx) actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended') actx.resume();
+  return actx;
+}
+
+
+function startAmbience(){
+  if(!soundOn) return;
+  var url=SOUND_URLS[SCENE_SND[cfg.scene]]; if(!url) return;
+  stopAmbience();
+  var a=new Audio(url);a.crossOrigin="anonymous"; a.loop=true; a.volume=0; ambiEl=a;
+  a.play().catch(function(){if(ambiEl===a) notifyApp(LANG==='es'?'No se pudo reproducir el ambiente. Puedes seguir respirando.':'The ambient audio could not play. You can keep breathing.');});
+  ambiTimer=setInterval(function(){
+    if(ambiEl!==a){clearInterval(ambiTimer);return;}
+    a.volume=Math.min(a.volume+0.025,0.28);
+    if(a.volume>=0.28){clearInterval(ambiTimer);ambiTimer=null;}
+  },100);
+}
+
+function stopAmbience(){
+  clearInterval(ambiTimer); ambiTimer=null;
+  if(ambiEl){ambiEl.pause();ambiEl.removeAttribute('src');ambiEl.load();ambiEl=null;}
+}
+
+function chime(freq,dur){
+  if(!soundOn) return;
+  try {
+    var c=getCtx(),o=c.createOscillator(),g=c.createGain();
+    o.type='sine';o.frequency.value=freq;
+    g.gain.setValueAtTime(0,c.currentTime);
+    g.gain.linearRampToValueAtTime(.07,c.currentTime+.08);
+    g.gain.exponentialRampToValueAtTime(.001,c.currentTime+dur);
+    o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+dur);
+    activeChimes.push(o);
+    o.onended=function(){activeChimes=activeChimes.filter(function(x){return x!==o;});o.disconnect();g.disconnect();};
+  } catch(e){}
+}
+
+function haptic(type){
+  // Vibration is hardware-only: never simulate it with a loud audio pulse.
+  if(soundOn && navigator.vibrate) navigator.vibrate(type==='inhale'?30:20);
+}
+
+/* Build initial pattern buttons via setLang */
+setLang('es');
+
+/* Night mode: auto-select Noche + dim if 20:00–6:00 */
+function applyNightMode(){
+  // Maintain the night scene without placing a dimming layer over readable text.
+  var h=new Date().getHours();
+  if(h>=20||h<6) cfg.scene='ocean';
+  updatePreview();
+}
+applyNightMode();
+
+/* Duration */
+document.getElementById('durRow').addEventListener('click',function(e){
+  var b=e.target.closest('.dur-btn'); if(!b) return;
+  cfg.dur=parseInt(b.dataset.m,10);
+  document.getElementById('durRow').querySelectorAll('.dur-btn').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});
+  b.classList.add('on');b.setAttribute('aria-pressed','true');updatePreview();
+});
+
+var SCENE_IMGS={
+  ocean:'https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/198844-908857695_dqxlvu.jpg',
+  forest:'https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/186070-876973719_ukldpc.jpg',
+  sunset:'https://res.cloudinary.com/dtsljzbhu/video/upload/so_3/163326-827461488_j4wvkr.jpg'
+};
+function setSetupBg(scene){
+  var el=document.getElementById('setupSceneBg');
+  el.style.backgroundImage='url('+SCENE_IMGS[scene]+')';
+  document.body.classList.add('scene-ready');
+}
+
+/* Scene */
+document.getElementById('scenesRow').addEventListener('click',function(e){
+  var card=e.target.closest('.sc'); if(!card) return;
+  cfg.scene=card.dataset.s;
+  document.querySelectorAll('.sc').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});
+  card.classList.add('on');card.setAttribute('aria-pressed','true');updatePreview();
+  var bg=document.getElementById('bg');
+  bg.className=BG[cfg.scene]||'';
+  bg.id='bg';
+  setSetupBg(cfg.scene);
+});
+setSetupBg(cfg.scene);
+
+/* Sound and session actions */
+document.getElementById('fab').addEventListener('click',function(){
+  soundOn=!soundOn;updateSoundButton();
+  if(!soundOn){stopAmbience();activeChimes.forEach(function(o){try{o.stop();}catch(e){}});}
+  else if(state.on) startAmbience();
+});
+document.getElementById('btnBegin').addEventListener('click',function(){
+  if(state.on) return;
+  try{getCtx();}catch(e){}
+  begin();
+});
+document.getElementById('btnEnd').addEventListener('click',finish);
+
+/* Helpers */
+function fmt(s){ var m=Math.floor(s/60),ss=s%60; return m+':'+(ss<10?'0':'')+ss; }
+
+function dayPart(){
+  var h=new Date().getHours();
+  if(h>=5&&h<12) return 'morning';
+  if(h>=12&&h<19) return 'afternoon';
+  if(h>=19&&h<23) return 'evening';
+  return 'night';
+}
+/* pattern suggested by time of day: morning→energy, afternoon→calm, evening→release, night→sleep */
+function suggestedPat(){
+  var p=dayPart();
+  return p==='morning'?3 : p==='afternoon'?0 : p==='evening'?2 : 1;
+}
+
+function setLang(l){
+  if(!T[l]) return;
+  LANG=l;
+  document.documentElement.lang=l;
+  var t=T[l], c=extraCopy[l];
+  var values={txtLogo:c.brand,txtTitle:t.greet[dayPart()],txtSub:c.sub,txtSetupHdr:c.setup,btnBegin:c.begin,btnEnd:t.end,welcomeNote:c.note,previewKicker:c.here,previewTitle:c.breathe,previewCaption:c.caption,previewLabel:c.label,practiceHint:c.hint,footerNote:c.footer,sessionComfort:c.comfort};
+  Object.keys(values).forEach(function(id){document.getElementById(id).textContent=values[id];});
+  document.getElementById('welcomeTitle').innerHTML=c.title;
+  [['txtPatLbl','01',c.pattern],['txtDurLbl','02',c.duration],['txtSceneLbl','03',c.scene]].forEach(function(v){document.getElementById(v[0]).innerHTML='<span>'+v[1]+'</span> '+v[2];});
+  ['scName0','scName1','scName2'].forEach(function(id,i){document.getElementById(id).textContent=t.scenes[i];});
+  [['navHomeLbl','home'],['navFreqLbl','freq'],['navMedLbl','med'],['navDataLbl','data']].forEach(function(v){document.getElementById(v[0]).textContent=t.nav[v[1]];});
+  ['es','en'].forEach(function(code){var b=document.getElementById(code==='es'?'btnEs':'btnEn');b.classList.toggle('on',l===code);b.setAttribute('aria-pressed',String(l===code));});
+  if(selectedPatIndex===null) selectedPatIndex=suggestedPat();
+  PATS=buildPats(); cfg.pat=PATS[selectedPatIndex];
+  var pl=document.getElementById('patList'); pl.innerHTML='';
+  PATS.forEach(function(p,i){
+    var wrap=document.createElement('div'); wrap.className='pat-wrap';
+    var b=document.createElement('button'); b.type='button';
+    b.className='pat-btn'+(i===selectedPatIndex?' on':'');
+    b.setAttribute('aria-pressed',String(i===selectedPatIndex));
+    b.innerHTML='<span class="pat-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">'+PAT_ICONS[i]+'</svg><span class="selection-mark"></span></span><span class="pn">'+p.name+'</span><span class="pt">'+p.sub+'</span>';
+    b.addEventListener('click',function(){selectedPatIndex=i;cfg.pat=p;pl.querySelectorAll('.pat-btn').forEach(function(x){x.classList.remove('on');x.setAttribute('aria-pressed','false');});b.classList.add('on');b.setAttribute('aria-pressed','true');updatePreview();});
+    wrap.appendChild(b); pl.appendChild(wrap);
+  });
+  document.getElementById('hrvOptionalLabel').innerHTML=l==='es'?'Añadir HRV de hoy <span>Opcional</span>':'Add today’s HRV <span>Optional</span>';
+  document.getElementById('hrvHint').textContent=l==='es'?'Escribe el valor de tu reloj o app de salud.':'Enter the reading from your watch or health app.';
+  updatePreview(); updateSoundButton();
+}
+
+function updatePreview(){
+  var label=LANG==='es'?' minutos · ':' minutes · ';
+  document.getElementById('sessionSummary').textContent=cfg.dur+label+cfg.pat.name;
+  document.getElementById('previewScene').textContent=T[LANG].scenes[['ocean','forest','sunset'].indexOf(cfg.scene)];
+}
+
+function updateSoundButton(){
+  var c=extraCopy[LANG], b=document.getElementById('fab');
+  document.getElementById('soundLabel').textContent=soundOn?c.soundOn:c.soundOff;
+  document.getElementById('soundIcon').textContent=soundOn?'♫':'−';
+  b.setAttribute('aria-pressed',String(soundOn));
+  b.setAttribute('aria-label',LANG==='es'?(soundOn?'Silenciar sonido':'Activar sonido'):(soundOn?'Mute sound':'Enable sound'));
+  b.classList.toggle('off',!soundOn);
+}
+
+function notifyApp(message){
+  var el=document.getElementById('appNotice');
+  el.textContent=message; el.hidden=false;
+  clearTimeout(notifyApp.timer);
+  notifyApp.timer=setTimeout(function(){el.hidden=true;},6000);
+}
+
+function activateScene(s){
+  document.getElementById('sceneBg').style.backgroundImage='url('+SCENE_IMGS[s]+')';
+  document.querySelectorAll('.yt-wrap').forEach(function(el){
+    el.classList.remove('active');
+    var v=el.querySelector('video'); if(v) v.pause();
+  });
+  var wrap=document.getElementById('yt-'+s);
+  if(wrap){
+    wrap.classList.add('active');
+    var v=wrap.querySelector('video');
+    if(v && !window.matchMedia('(prefers-reduced-motion: reduce)').matches){v.currentTime=0;v.play().catch(function(){/* Local still image remains visible. */});}
+  }
+}
+
+function begin(){
+  if(state.on) return;
+  if(medState.on) medStop();
+  clearTimeout(state.finishTimer);clearInterval(tSess);
+  state.on=true;state.pIdx=-1;state.cyc=0;state.startedAt=Date.now();state.sessLeft=cfg.dur*60;state.elapsed=0;
+  msgIdxMap={inhale:0,hold:0,exhale:0,holdout:0};
+  document.getElementById('btnBegin').disabled=true;
+  document.body.classList.add('sess-active');
+  showScreen('sess');
+  document.getElementById('btnEnd').disabled=false;
+  document.getElementById('btnEnd').focus();
+  document.getElementById('sessionTechnique').textContent=cfg.pat.name+' · '+cfg.pat.timing;
+  activateScene(cfg.scene);startAmbience();
+  runPhase();tSess=setInterval(runPhase,80);
+}
+
+function runPhase(){
+  if(!state.on) return;
+  state.elapsed=Math.max(0,(Date.now()-state.startedAt)/1000);
+  if(state.elapsed>=cfg.dur*60){finish();return;}
+  state.sessLeft=Math.max(0,Math.ceil(cfg.dur*60-state.elapsed));
+  var frame=breathingFrame(state.elapsed,cfg.pat.phases),ph=cfg.pat.phases[frame.index];
+  if(state.pIdx!==frame.index||state.cyc!==frame.cycle){
+    state.pIdx=frame.index;state.cyc=frame.cycle;
+    document.getElementById('sPhase').textContent=ph.l;
+    var msgs=T[LANG].msgs[ph.t]||[];
+    if(msgs.length){document.getElementById('sMsg').textContent=msgs[msgIdxMap[ph.t]++%msgs.length];document.getElementById('sMsg').classList.add('show');}
+    haptic(ph.t);chime(ph.t==='inhale'?528:ph.t==='exhale'?396:432,.7);
+  }
+  state.sec=Math.ceil(ph.d-frame.position);
+  document.getElementById('clock').textContent=fmt(state.sessLeft);
+  document.getElementById('sCount').textContent=state.sec;
+  document.getElementById('sCycle').textContent=T[LANG].cycle+' '+(state.cyc+1);
+  var disc=document.getElementById('breathDisc');
+  disc.style.setProperty('--breathDur','.08s');
+  disc.style.transform='scale('+frame.scale.toFixed(4)+')';
+}
+
+function breathingFrame(elapsed,phases){
+  var total=phases.reduce(function(n,p){return n+p.d;},0);
+  var cycle=Math.floor(elapsed/total),position=elapsed%total,index=0;
+  while(index<phases.length-1&&position>=phases[index].d){position-=phases[index].d;index++;}
+  var ph=phases[index],fraction=position/ph.d;
+  var size=ph.t==='inhale'?fraction:ph.t==='exhale'?1-fraction:ph.t==='hold'?1:0;
+  return {index:index,cycle:cycle,position:position,scale:.58+.42*size};
+}
+
+function finish(){
+  if(!state.on) return;
+  state.on=false;clearTimeout(tBegin);clearInterval(tPhase);clearInterval(tSess);
+  var elapsed=Math.min(cfg.dur*60,Math.max(0,(Date.now()-state.startedAt)/1000));
+  var complete=elapsed>=cfg.dur*60;
+  var hrv=Number(document.getElementById('hrvInput').value);
+  if(elapsed>=1) addRecord({id:Date.now(),date:todayStr(),hrv:(hrv>=10&&hrv<=250)?hrv:null,technique:cfg.pat.name,duration:Math.round(elapsed/60*100)/100,elapsed_seconds:Math.floor(elapsed),completed:complete,mood:null});
+  stopAmbience();activeChimes.forEach(function(o){try{o.stop();}catch(e){}});
+  document.querySelectorAll('.yt-wrap video').forEach(function(v){v.pause();});
+  document.getElementById('btnEnd').disabled=true;
+  document.getElementById('sPhase').textContent=complete?T[LANG].complete:(LANG==='es'?'Gracias por parar.':'Thank you for pausing.');
+  document.getElementById('sCount').textContent='';
+  document.getElementById('sMsg').textContent=LANG==='es'?'Lleva esta calma contigo.':'Take this calm with you.';
+  document.getElementById('sCycle').textContent=fmt(Math.floor(elapsed));
+  state.finishTimer=setTimeout(function(){
+    document.body.classList.remove('sess-active');document.getElementById('btnBegin').disabled=false;
+    showScreen('setup');setNav('navHome');document.getElementById('btnBegin').focus();
+  },1600);
+}
+
+/* ===== HRV TRACKER ===== */
+var MOODS = {1:'😰',2:'😔',3:'😐',4:'🙂',5:'😌'};
+
+function getRecords(){
+  try{var records=JSON.parse(localStorage.getItem('calma_records')||'[]');return Array.isArray(records)?records.filter(function(r){return r&&typeof r==='object'&&Number.isFinite(r.id)&&typeof r.date==='string';}):[];}
+  catch(e){return [];}
+}
+function saveRecords(r){
+  try{localStorage.setItem('calma_records',JSON.stringify(r));return true;}
+  catch(e){notifyApp('No se pudo guardar el registro en este navegador.');return false;}
+}
+function addRecord(rec){
+  var r=getRecords(); r.push(rec);
+  r.sort(function(a,b){return a.id-b.id;});
+  return saveRecords(r);
+}
+function todayStr(date){
+  var d=date||new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+function escapeHTML(value){
+  return String(value==null?'':value).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});
+}
+function fmtDate(ds){
+  var d=new Date(ds+'T12:00:00');
+  var M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return d.getDate()+' '+M[d.getMonth()]+' '+d.getFullYear();
+}
+function fmtDateShort(ds){
+  var d=new Date(ds+'T12:00:00');
+  var M=['Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov','Dic'];
+  return d.getDate()+' '+M[d.getMonth()];
+}
+
+function showHRV(){
+  var v=parseInt(document.getElementById('hrvInput').value,10);
+  if(v>=10&&v<=250) document.getElementById('regHrv').value=v;
+  showScreen('hrv');switchTab('dashboard');
+}
+function hideHRV(){
+  document.getElementById('hrv').classList.add('below');
+}
+
+function switchTab(name){
+  document.querySelectorAll('.hrv-tab').forEach(function(t){
+    t.classList.toggle('on', t.dataset.panel===name);
+  });
+  ['dashboard','registrar','historial'].forEach(function(p){
+    var el=document.getElementById('panel-'+p);
+    if(el) el.style.display=(p===name)?'':'none';
+  });
+  if(name==='dashboard') renderDashboard();
+  if(name==='historial') renderHistorial();
+}
+
+document.querySelectorAll('.hrv-tab').forEach(function(t){
+  t.addEventListener('click',function(){ switchTab(t.dataset.panel); });
+});
+
+/* Chips */
+function initChips(groupId){
+  document.getElementById(groupId).addEventListener('click',function(e){
+    var c=e.target.closest('.hrv-chip,.hrv-mood'); if(!c) return;
+    document.getElementById(groupId).querySelectorAll('.hrv-chip,.hrv-mood')
+      .forEach(function(x){x.classList.remove('on');});
+    c.classList.add('on');
+  });
+}
+initChips('techChips'); initChips('durChips'); initChips('moodChips');
+
+/* Save record */
+document.getElementById('btnHrvSave').addEventListener('click',function(){
+  var hrv=parseInt(document.getElementById('regHrv').value,10);
+  var tech=document.querySelector('#techChips .hrv-chip.on');
+  var dur=document.querySelector('#durChips .hrv-chip.on');
+  var mood=document.querySelector('#moodChips .hrv-mood.on');
+  var rec={
+    id:Date.now(), date:todayStr(),
+    hrv:(hrv>=10&&hrv<=250)?hrv:null,
+    technique:tech?tech.dataset.v:null,
+    duration:dur?parseInt(dur.dataset.v):null,
+    mood:mood?parseInt(mood.dataset.v):null
+  };
+  var value=document.getElementById('regHrv').value;
+  if(value && !(hrv>=10&&hrv<=250)){notifyApp('Escribe un HRV entre 10 y 250 ms, o deja el campo vacío.');return;}
+  if(!addRecord(rec)) return;
+  document.getElementById('regHrv').value='';
+  switchTab('dashboard');
+});
+
+/* Delete all */
+document.getElementById('btnClearAll').addEventListener('click',function(){
+  if(confirm('¿Borrar todos los registros?')){ saveRecords([]); renderHistorial(); renderDashboard(); }
+});
+
+/* Back */
+
+
+/* Dashboard */
+function renderDashboard(){
+  var recs=getRecords();
+  var withHrv=recs.filter(function(r){return typeof r.hrv==='number'&&Number.isFinite(r.hrv)&&r.hrv>=10&&r.hrv<=250;});
+  var sevenAgo=todayStr(new Date(Date.now()-6*24*60*60*1000));
+
+  // Stats
+  var prom=withHrv.length?Math.round(withHrv.reduce(function(s,r){return s+r.hrv;},0)/withHrv.length):'—';
+  var last7=withHrv.filter(function(r){return r.date>=sevenAgo;});
+  var avg7=last7.length?Math.round(last7.reduce(function(s,r){return s+r.hrv;},0)/last7.length):'—';
+  // Streak
+  var dates=[...new Set(recs.map(function(r){return r.date;}))].sort();
+  var streak=0, check=todayStr();
+  for(var i=dates.length-1;i>=0;i--){
+    if(dates[i]===check){ streak++; check=todayStr(new Date(new Date(check+'T12:00:00').getTime()-86400000)); }
+    else break;
+  }
+  document.getElementById('statProm').textContent=prom;
+  document.getElementById('stat7d').textContent=avg7;
+  document.getElementById('statRacha').textContent=streak||'—';
+
+  // Chart
+  var byDate={};
+  withHrv.forEach(function(r){
+    if(!byDate[r.date]) byDate[r.date]=[];
+    byDate[r.date].push(r.hrv);
+  });
+  var chartDates=Object.keys(byDate).sort().slice(-30);
+  var chartData=chartDates.map(function(d){
+    var vals=byDate[d];
+    return{date:d,hrv:Math.round(vals.reduce(function(s,v){return s+v;},0)/vals.length)};
+  });
+  var svg=document.getElementById('hrvChartSvg');
+  var none=document.getElementById('hrvChartNone');
+  if(chartData.length<1){ svg.style.display='none'; none.style.display=''; }
+  else { svg.style.display=''; none.style.display='none'; drawHRVChart(chartData); }
+
+  // Last session
+  var last=recs.length?recs[recs.length-1]:null;
+  var lcard=document.getElementById('lastSessCard');
+  if(last){ lcard.style.display='';
+    document.getElementById('lastHrvVal').textContent=last.hrv||'—';
+    var techStr=(last.technique||last.med_mode||'')+' · '+(last.duration||last.med_dur||0)+' min';
+    document.getElementById('lastTech').textContent=techStr||'—';
+    document.getElementById('lastDate').textContent=fmtDate(last.date);
+  } else { lcard.style.display='none'; }
+}
+
+function drawHRVChart(data){
+  var svg=document.getElementById('hrvChartSvg');
+  var W=300,H=110,PL=30,PR=10,PT=8,PB=22;
+  var cW=W-PL-PR, cH=H-PT-PB;
+  var vals=data.map(function(d){return d.hrv;});
+  var minV=Math.min.apply(null,vals), maxV=Math.max.apply(null,vals);
+  if(maxV===minV){minV-=10;maxV+=10;}
+  var pad=Math.max(Math.round((maxV-minV)*0.2),4);
+  minV-=pad; maxV+=pad;
+  var n=data.length;
+  function xf(i){return n>1?PL+i/(n-1)*cW:PL+cW/2;}
+  function yf(v){return PT+cH-(v-minV)/(maxV-minV)*cH;}
+
+  var html='';
+  // Horizontal grid lines (4 levels)
+  for(var g=0;g<4;g++){
+    var gv=minV+(maxV-minV)*g/3;
+    var gy=yf(gv);
+    html+='<line x1="'+PL+'" y1="'+gy.toFixed(1)+'" x2="'+(W-PR)+'" y2="'+gy.toFixed(1)+'" stroke="rgba(237,231,217,0.07)" stroke-width="1"/>';
+    html+='<text x="'+(PL-4)+'" y="'+(gy+3).toFixed(1)+'" fill="#b0c8ca" font-size="7.5" text-anchor="end" font-family="Manrope,sans-serif">'+Math.round(gv)+'</text>';
+  }
+  // Line
+  var path=data.map(function(d,i){return(i===0?'M':'L')+xf(i).toFixed(1)+','+yf(d.hrv).toFixed(1);}).join(' ');
+  // Area fill
+  var area=path+' L'+xf(n-1).toFixed(1)+','+(H-PB)+' L'+xf(0).toFixed(1)+','+(H-PB)+' Z';
+  html+='<path d="'+area+'" fill="rgba(168,195,160,0.07)"/>';
+  html+='<path d="'+path+'" fill="none" stroke="#a8c3a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity="0.8"/>';
+  // Dots (open circles matching screenshot)
+  data.forEach(function(d,i){
+    html+='<circle cx="'+xf(i).toFixed(1)+'" cy="'+yf(d.hrv).toFixed(1)+'" r="3" fill="#1a1a2e" stroke="#a8c3a0" stroke-width="1.5" opacity="0.9"/>';
+  });
+  // Date labels (first, last, middle if many)
+  var labelIdx=[0];
+  if(n>4) labelIdx.push(Math.floor(n/2));
+  if(n>1) labelIdx.push(n-1);
+  labelIdx=labelIdx.filter(function(v,i,a){return a.indexOf(v)===i;});
+  labelIdx.forEach(function(i){
+    html+='<text x="'+xf(i).toFixed(1)+'" y="'+(H-4)+'" fill="#b0c8ca" font-size="7.5" text-anchor="middle" font-family="Manrope,sans-serif">'+fmtDateShort(data[i].date)+'</text>';
+  });
+  svg.innerHTML=html;
+}
+
+/* Historial */
+function renderHistorial(){
+  var recs=getRecords().slice().reverse();
+  var el=document.getElementById('histList');
+  var cnt=document.getElementById('histCnt');
+  cnt.textContent=recs.length+' registro'+(recs.length===1?'':'s');
+  el.innerHTML='';
+  if(!recs.length){
+    el.innerHTML='<p style="font-family:Manrope,sans-serif;font-size:0.875rem;color:#b0c8ca;text-align:center;padding:24px 0;letter-spacing:0.5px">Sin registros aún</p>';
+    return;
+  }
+  recs.forEach(function(r){
+    var item=document.createElement('div'); item.className='hrv-hitem';
+    var techStr=escapeHTML(r.technique||r.med_mode||'Sesión')+' · '+escapeHTML(r.duration||r.med_dur||0)+' min';
+    item.innerHTML=
+      '<div class="hrv-hi-hrv"><span class="hrv-hi-num">'+escapeHTML(r.hrv||'—')+'</span>'
+      +'<span class="hrv-hi-ms">ms</span></div>'
+      +'<div class="hrv-hi-info"><span class="hrv-hi-tech">'+techStr+'</span>'
+      +'<span class="hrv-hi-date">'+fmtDate(r.date)+'</span></div>'
+      +(r.mood?'<span class="hrv-hi-mood">'+MOODS[r.mood]+'</span>':'')
+      +'<button class="hrv-hi-del" aria-label="Eliminar registro" data-id="'+r.id+'">&#10005;</button>';
+    item.querySelector('.hrv-hi-del').addEventListener('click',function(){
+      var id=parseInt(this.dataset.id);
+      saveRecords(getRecords().filter(function(x){return x.id!==id;}));
+      renderHistorial(); renderDashboard();
+    });
+    el.appendChild(item);
+  });
+}
+
+document.getElementById('btnHrvBack').addEventListener('click', goHome);
+
+/* ── FRECUENCIAS & MEDITAR ── */
+function showFreqMed(){
+  showScreen('freqmed');
+}
+function hideFreqMed(){
+  document.getElementById('freqmed').classList.add('below');
+}
+function switchFmTab(idx){
+  if(idx===0 && medState) medStop();
+  [0,1].forEach(function(i){
+    var b=document.getElementById('fmTab'+i);b.classList.toggle('active',i===idx);b.setAttribute('aria-pressed',String(i===idx));
+    document.getElementById('fmPanel'+i).classList.toggle('active',i===idx);
+  });
+  setNav(idx===1?'navMed':'navFreq');
+}
+document.getElementById('btnFmBack').addEventListener('click', goHome);
+
+/* ── BOTTOM NAV ── */
+function setNav(id){
+  ['navHome','navFreq','navMed','navData'].forEach(function(n){
+    var el=document.getElementById(n);el.classList.toggle('on',n===id);
+    if(n===id) el.setAttribute('aria-current','page');else el.removeAttribute('aria-current');
+  });
+}
+function goHome(){
+  medStop();
+  showScreen('setup');setNav('navHome');
+}
+function navTo(where){
+  if(where!=='med') medStop();
+  if(where==='data'){showHRV();setNav('navData');}
+  else{showFreqMed();switchFmTab(where==='med'?1:0);setNav(where==='med'?'navMed':'navFreq');}
+}
+
+function showScreen(id){
+  ['setup','sess','hrv','freqmed'].forEach(function(name){
+    var el=document.getElementById(name),selected=name===id;
+    el.classList.remove('out');el.classList.toggle('below',!selected);
+    el.style.display=selected?'':'none';
+    el.setAttribute('aria-hidden',String(!selected));
+    el.inert=!selected;
+  });
+  document.body.dataset.section=id;
+  window.scrollTo({top:0,behavior:'instant'});
+  var current=document.getElementById(id);current.setAttribute('tabindex','-1');current.focus({preventScroll:true});
+}
+
+/* ── MEDITAR ── */
+var medCfg={mode:0,dur:10,snd:0};
+var medState={on:false,paused:false,elapsed:0,total:0,interval:null,guideIdx:0};
+var medAudioEl=null;
+var medGuideAudioEl=null;
+var MED_SND=['Lluvia2.mp3','olas.mp3','fuego.mp3','viento.mp3','cuencos.mp3'];
+var MED_GUIDE_AUDIO=['silencio.mp3','bodyscan.mp3','gratitud.mp3','visualizacion.mp3'];
+
+var MED_MODES=[
+  {name:'Silencio',       icon:'🧘'},
+  {name:'Body Scan',      icon:'🧘'},
+  {name:'Gratitud',       icon:'☀️'},
+  {name:'Visualización',  icon:'⛺'}
+];
+
+var MED_PHRASES=[
+  'Cada momento de quietud te acerca más a ti mismo.',
+  'La paz que encontraste aquí siempre estará contigo.',
+  'Has dedicado tiempo a lo más importante: tú.',
+  'La mente descansada ve con claridad lo que el ruido oculta.',
+  'Has plantado una semilla de calma que seguirá creciendo.',
+  'El silencio interior es el mayor regalo que puedes darte.'
+];
+
+// Guidance: f = fraction of session duration when text appears
+var MED_GUIDES=[
+  [ // Silencio
+    {f:0.04,t:'Cierra los ojos. Siente tu respiración.'},
+    {f:0.22,t:'Deja pasar los pensamientos sin seguirlos.'},
+    {f:0.45,t:'Vuelve siempre al ritmo suave de tu aliento.'},
+    {f:0.66,t:'Estás en paz. Solo existe este momento.'},
+    {f:0.86,t:'Permite que todo sea exactamente como es.'}
+  ],
+  [ // Body Scan
+    {f:0.05,t:'Lleva tu atención a los pies y los dedos…'},
+    {f:0.18,t:'Sube lentamente por tobillos y pantorrillas…'},
+    {f:0.32,t:'Rodillas y muslos. Siente el peso del cuerpo…'},
+    {f:0.46,t:'Abdomen y espalda baja. Respira aquí…'},
+    {f:0.60,t:'Pecho y corazón. Nota cada latido…'},
+    {f:0.73,t:'Hombros, brazos, manos. Suelta toda tensión…'},
+    {f:0.86,t:'Cuello, mandíbula, frente. Todo se relaja.'}
+  ],
+  [ // Gratitud
+    {f:0.05,t:'Piensa en tres cosas que agradeces hoy.'},
+    {f:0.22,t:'Alguien que te ha dado amor o apoyo.'},
+    {f:0.38,t:'Una fortaleza o habilidad que valoras en ti.'},
+    {f:0.54,t:'Un momento de belleza que viviste.'},
+    {f:0.70,t:'Siente la gratitud expandirse en tu pecho.'},
+    {f:0.86,t:'Mereces todo el amor que das a los demás.'}
+  ],
+  [ // Visualización
+    {f:0.05,t:'Imagina un lugar que te traiga calma y paz…'},
+    {f:0.20,t:'Siente la textura del suelo bajo tus pies…'},
+    {f:0.36,t:'Escucha los sonidos de ese lugar…'},
+    {f:0.52,t:'Siente el aire en tu piel, la temperatura…'},
+    {f:0.68,t:'Eres libre aquí. Nada puede hacerte daño.'},
+    {f:0.85,t:'Lleva esta paz contigo al abrir los ojos.'}
+  ]
+];
+
+function medBell(freq,dur){
+  try{
+    var ctx=getCtx(),osc=ctx.createOscillator(),gain=ctx.createGain();
+    osc.connect(gain);gain.connect(ctx.destination);osc.type='sine';osc.frequency.value=freq;
+    gain.gain.setValueAtTime(.07,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+dur);
+    osc.start();osc.stop(ctx.currentTime+dur);
+    medChimes.push(osc);
+    osc.onended=function(){medChimes=medChimes.filter(function(x){return x!==osc;});osc.disconnect();gain.disconnect();};
+  }catch(e){}
+}
+
+var medAudioCtx=null,medSource=null,medChimes=[];
+var medAmbientGain=null;
+
+function medGetCtx(){
+  medAudioCtx=getCtx();return medAudioCtx;
+}
+function medSetAmbientGain(val,rampSec){
+  if(!medAmbientGain||!medAudioCtx) return;
+  var g=medAmbientGain.gain;
+  g.cancelScheduledValues(medAudioCtx.currentTime);
+  g.setValueAtTime(g.value,medAudioCtx.currentTime);
+  if(rampSec) g.linearRampToValueAtTime(val,medAudioCtx.currentTime+rampSec);
+  else g.setValueAtTime(val,medAudioCtx.currentTime);
+}
+function medStopGuideAudio(){
+  if(medGuideAudioEl){try{medGuideAudioEl.pause(); medGuideAudioEl.src='';}catch(e){} medGuideAudioEl=null;}
+}
+function medStartGuideAudio(modeIdx){
+  medStopGuideAudio();
+  if(modeIdx===0) return;
+  var a=new Audio(MED_GUIDE_AUDIO[modeIdx]);medGuideAudioEl=a;
+  medSetAmbientGain(.05,.5);
+  a.addEventListener('ended',function(){if(medGuideAudioEl===a) medSetAmbientGain(.22,2);});
+  // Begin inside the user's tap, including Safari's audio permission gesture.
+  a.play().catch(function(){
+    if(medGuideAudioEl===a&&medState.on){medSetAmbientGain(.22,1);notifyApp('La voz no pudo reproducirse. Puedes seguir la guía en pantalla.');}
+  });
+}
+function medStopAudio(){
+  if(medAudioEl){medAudioEl.pause();medAudioEl.removeAttribute('src');medAudioEl.load();medAudioEl=null;}
+  if(medSource){try{medSource.disconnect();}catch(e){}medSource=null;}
+  if(medAmbientGain){try{medAmbientGain.disconnect();}catch(e){}medAmbientGain=null;}
+}
+function medStartAudio(sndIdx){
+  medStopAudio();if(sndIdx<0) return;
+  var a=new Audio(MED_SND[sndIdx]);a.crossOrigin="anonymous";a.loop=true;a.volume=.22;medAudioEl=a;
+  try{
+    var ctx=medGetCtx();a.volume=1;
+    medSource=ctx.createMediaElementSource(a);medAmbientGain=ctx.createGain();medAmbientGain.gain.value=0;
+    medSource.connect(medAmbientGain);medAmbientGain.connect(ctx.destination);medSetAmbientGain(.22,1);
+  }catch(e){a.volume=.22;}
+  a.play().catch(function(){if(medAudioEl===a&&medState.on) notifyApp('No se pudo reproducir el ambiente. Puedes continuar sin sonido.');});
+}
+
+function medFmt(s){var m=Math.floor(s/60),ss=s%60;return m+':'+(ss<10?'0':'')+ss;}
+
+function medUpdateRing(elapsed,total){
+  var frac=total>0?Math.min(1,elapsed/total):0;
+  var el=document.getElementById('medRingFg');
+  if(el) el.style.strokeDashoffset=(515.22*(1-frac));
+}
+
+function medSpeak(text){
+  try{
+    if(!window.speechSynthesis) return;
+    speechSynthesis.cancel();
+    var u=new SpeechSynthesisUtterance(text);
+    u.lang='es-ES'; u.rate=0.76; u.pitch=1.12; u.volume=0.88;
+    // Prefer a high-quality female voice (Monica es-ES, Paulina es-MX)
+    var voices=speechSynthesis.getVoices();
+    var best=voices.find(function(v){return /Monica|Paulina/i.test(v.name);})
+      ||voices.find(function(v){return v.lang.startsWith('es')&&v.localService;})
+      ||voices.find(function(v){return v.lang.startsWith('es');});
+    if(best) u.voice=best;
+    speechSynthesis.speak(u);
+  }catch(e){}
+}
+function medShowGuide(text){
+  var el=document.getElementById('medGuideText');
+  el.textContent=text;el.classList.add('show');
+}
+
+function medTick(){
+  if(!medState.on||medState.paused) return;
+  medState.elapsed=Math.min(medState.total,Math.floor((medState.elapsedMs+Math.max(0,Date.now()-medState.segmentStartedAt))/1000));
+  var rem=Math.max(0,medState.total-medState.elapsed);
+  document.getElementById('medElapsedDisp').textContent=medFmt(medState.elapsed);
+  document.getElementById('medTimeDisp').textContent=medFmt(rem)+' restantes';
+  medUpdateRing(medState.elapsed,medState.total);
+  var guides=MED_GUIDES[medCfg.mode],guide=null;
+  while(medState.guideIdx<guides.length&&medState.elapsed>=Math.floor(guides[medState.guideIdx].f*medState.total)) guide=guides[medState.guideIdx++];
+  if(guide) medShowGuide(guide.t);
+  if(medState.elapsed>=medState.total) medComplete();
+}
+
+function medComplete(){
+  if(!medState.on) return;
+  clearInterval(medState.interval);medState.on=false;medState.paused=false;
+  medStopAudio();medStopGuideAudio();
+  medChimes.forEach(function(o){try{o.stop();}catch(e){}});
+  if(medCfg.snd>=0||medCfg.mode!==0) medBell(396,2);
+  addRecord({id:Date.now(),date:todayStr(),med_mode:MED_MODES[medCfg.mode].name,med_dur:medCfg.dur,med_snd:medCfg.snd,elapsed_seconds:medState.total,completed:true});
+  document.getElementById('medCtrl').style.display='none';
+  document.getElementById('medGuideBox').style.display='none';
+  var done=document.getElementById('medDone');done.style.display='';done.style.opacity='1';
+  document.getElementById('medDonePhrase').textContent=MED_PHRASES[Math.floor(Math.random()*MED_PHRASES.length)];
+  document.getElementById('medDoneStats').textContent=MED_MODES[medCfg.mode].name+' · '+medCfg.dur+' minutos';
+  renderMedHist();
+}
+
+function medStart(){
+  if(medState.on) return;
+  medChimes.forEach(function(o){try{o.stop();}catch(e){}});
+  medState.elapsed=0;medState.elapsedMs=0;medState.segmentStartedAt=Date.now();medState.total=medCfg.dur*60;
+  medState.paused=false;medState.on=true;medState.guideIdx=0;
+  medStartAudio(medCfg.snd);
+  if(medCfg.snd>=0||medCfg.mode!==0) medBell(528,1.2);
+  medStartGuideAudio(medCfg.mode);
+  document.getElementById('medSetup').style.display='none';document.getElementById('btnMedStart').style.display='none';document.getElementById('medDone').style.display='none';
+  document.getElementById('medModeLabel').textContent=MED_MODES[medCfg.mode].name;
+  ['medModeLabel','medRingWrap','medGuideBox','medCtrl'].forEach(function(id){document.getElementById(id).style.display='';});
+  document.getElementById('medElapsedDisp').textContent='0:00';
+  document.getElementById('medTimeDisp').textContent=medFmt(medState.total)+' restantes';medUpdateRing(0,medState.total);
+  medShowGuide('Acomódate. Este momento es para ti.');
+  document.getElementById('btnMedPause').innerHTML='&#9646;&#9646; Pausa';
+  clearInterval(medState.interval);medState.interval=setInterval(medTick,250);
+  document.getElementById('btnMedPause').focus({preventScroll:true});
+}
+
+function medPause(){
+  if(!medState.on) return;
+  if(!medState.paused){
+    medState.elapsedMs+=Math.max(0,Date.now()-medState.segmentStartedAt);medState.paused=true;
+    if(medAudioEl) medAudioEl.pause();if(medGuideAudioEl) medGuideAudioEl.pause();
+    medChimes.forEach(function(o){try{o.stop();}catch(e){}});
+  }else{
+    medState.segmentStartedAt=Date.now();medState.paused=false;
+    try{medGetCtx();}catch(e){}
+    if(medGuideAudioEl&&!medGuideAudioEl.ended) medGuideAudioEl.play().catch(function(){notifyApp('La voz no pudo reanudarse.');});
+    if(medAudioEl) medAudioEl.play().catch(function(){notifyApp('El sonido no pudo reanudarse.');});
+  }
+  document.getElementById('btnMedPause').innerHTML=medState.paused?'&#9654; Reanudar':'&#9646;&#9646; Pausa';
+}
+
+function medStop(){
+  clearInterval(medState.interval);medState.on=false;medState.paused=false;
+  medStopAudio();medStopGuideAudio();
+  medChimes.forEach(function(o){try{o.stop();}catch(e){}});
+  ['medCtrl','medGuideBox','medModeLabel','medRingWrap','medDone'].forEach(function(id){document.getElementById(id).style.display='none';});
+  document.getElementById('medSetup').style.display='';document.getElementById('btnMedStart').style.display='';
+}
+
+function renderMedHist(){
+  var recs=getRecords().filter(function(r){return r.med_mode;});
+  recs.sort(function(a,b){return b.id-a.id;}); recs=recs.slice(0,5);
+  var el=document.getElementById('medHistList'); if(!el) return;
+  if(!recs.length){
+    el.innerHTML='<div style="color:#b0c8ca;font-family:\'Manrope\',sans-serif;font-size:0.875rem;letter-spacing:0px;padding:8px 4px">Sin sesiones aún</div>';
+    return;
+  }
+  el.innerHTML=recs.map(function(r){
+    return '<div class="med-hist-item"><div class="med-hist-icon">&#129496;</div><div class="med-hist-info"><div class="med-hist-mode">'+escapeHTML(r.med_mode)+'</div><div class="med-hist-date">'+escapeHTML(r.date)+'</div></div><div class="med-hist-dur">'+escapeHTML(r.med_dur)+' min</div></div>';
+  }).join('');
+}
+
+// Wire selectors
+document.querySelectorAll('.med-mode').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.med-mode').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on'); medCfg.mode=parseInt(this.dataset.m);
+  });
+});
+document.querySelectorAll('.med-dur-btn').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.med-dur-btn').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on'); medCfg.dur=parseInt(this.dataset.d);
+  });
+});
+document.querySelectorAll('.med-snd').forEach(function(b){
+  b.addEventListener('click',function(){
+    document.querySelectorAll('.med-snd').forEach(function(x){x.classList.remove('on');});
+    this.classList.add('on'); medCfg.snd=parseInt(this.dataset.s);
+  });
+});
+document.getElementById('btnMedStart').addEventListener('click',medStart);
+document.getElementById('btnMedPause').addEventListener('click',medPause);
+document.getElementById('btnMedStop').addEventListener('click',medStop);
+document.getElementById('btnMedAgain').addEventListener('click',function(){
+  document.getElementById('medDone').style.display='none';
+  document.getElementById('medModeLabel').style.display='none';
+  document.getElementById('medRingWrap').style.display='none';
+  document.getElementById('medSetup').style.display='';
+  document.getElementById('btnMedStart').style.display='';
+});
+
+// Accessible state for the retained selector controls.
+function syncPressed(){
+  document.querySelectorAll('.med-mode,.med-dur-btn,.med-snd,.hrv-chip,.hrv-mood,.hrv-tab').forEach(function(el){el.setAttribute('aria-pressed',String(el.classList.contains('on')));});
+}
+document.addEventListener('click',syncPressed);
+document.querySelectorAll('.hrv-mood').forEach(function(el,i){el.setAttribute('aria-label',['Muy inquieto','Desanimado','Neutral','Bien','En calma'][i]);});
+document.querySelectorAll('#hrv,#freqmed').forEach(function(el){el.lang='es';});
+document.getElementById('medGuideText').setAttribute('aria-live','polite');
+document.getElementById('medElapsedDisp').setAttribute('role','timer');
+document.getElementById('hrvChartSvg').setAttribute('role','img');
+document.getElementById('hrvChartSvg').setAttribute('aria-label','Tendencia del promedio diario de HRV, en milisegundos');
+document.addEventListener('visibilitychange',function(){if(!document.hidden){if(state.on)runPhase();if(medState.on)medTick();}});
+window.addEventListener('pagehide',function(){
+  if(state.on){clearInterval(tSess);state.on=false;}
+  document.body.classList.remove('sess-active');document.getElementById('btnBegin').disabled=false;
+  clearTimeout(state.finishTimer);stopAmbience();medStop();
+  activeChimes.forEach(function(o){try{o.stop();}catch(e){}});
+  document.querySelectorAll('.yt-wrap video').forEach(function(v){v.pause();});
+});
+window.addEventListener('pageshow',function(e){if(e.persisted){showScreen('setup');setNav('navHome');}});
+syncPressed();setNav('navHome');
+
+</script>
+</body>
+</html>
